@@ -553,7 +553,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
     <div class="lch-sec"><span class="n">&nbsp;</span><h3 style="color:#5b6672!important;font-weight:400;font-size:13.5px">ACME Certificate-as-a-Service &mdash; ACME only <em style="font-style:normal;color:#8a94a0!important">(interim flow &mdash; will be matched to the real portal next)</em></h3></div>
     <div class="lch-grid" id="prods-acme" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div>
     <div class="lch-sec"><span class="n">2</span><h3>Customer &amp; server details</h3></div>
-    <div class="lch-fields">
+    <div class="lch-fields" style="display:none">
       <div class="lch-f"><label>Customer name</label><input id="f-name" value="Arun Kumar"></div>
       <div class="lch-f"><label>Customer email</label><input id="f-email" value="arun@customer-demo.in"></div>
       <div class="lch-f"><label>Domain to secure</label><input id="f-domain" value="shop.customer-demo.in"></div>
@@ -562,8 +562,8 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
       </div>
     </div>
     <div class="lch-foot">
-      <div class="lch-pass">Demo terminal password for every customer session: <code>default@123</code></div>
-      <button class="btn-lch" id="b-start">Place simulated order &rarr;</button>
+      
+      <button class="btn-lch" id="b-start" style="display:none">Place simulated order &rarr;</button>
     </div>
   </div>
 </div></section>
@@ -721,18 +721,18 @@ function renderSetup(){
       <div class="cd">${p.vendor} &middot; ${code}</div>
       <div class="pr"><b>$${p.price.toFixed(2)}</b><i>/ year</i></div>
       <span class="cap ${p.type==="automate"?"cap-both":"cap-acme"}">${p.type==="automate"?"AGENT + ACME":"ACME ONLY"}</span>`;
-    el.onclick=()=>{document.querySelectorAll(".lch-card").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); S.code=code;};
+    el.onclick=()=>{document.querySelectorAll(".lch-card").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); S.code=code; setTimeout(()=>$("b-start").click(),150);};
     (p.type==="automate"?both:acme).appendChild(el);
   }
-  both.querySelector(".lch-card").click();
+  setTimeout(()=>{ const fc=both.querySelector(".lch-card"); if(fc)fc.click(); },50);
 }
 document.addEventListener("DOMContentLoaded",()=>{
   renderSetup(); simGo("s-setup",0);
   $("b-start").onclick=()=>{
-    const name=$("f-name").value.trim(), email=$("f-email").value.trim();
-    let dom=$("f-domain").value.trim().toLowerCase().replace(/^https?:\/\//,"").replace(/\/.*$/,"").replace(/^www\./,"");
-    if(!name||!email||!dom){alert("Please fill customer name, email and domain.");return;}
-    S={...S, name, email, domain:dom, simEnv:$("f-env").value, ids:makeIds(), product:PRODUCTS[S.code],
+    /* Auto-fill demo values — no manual entry needed */
+    const name="Alex Johnson", email="alex@customer-demo.in";
+    let dom="shop.customer-demo.in";
+    S={...S, name, email, domain:dom, simEnv:$("f-env")?$("f-env").value:"linux", ids:makeIds(), product:PRODUCTS[S.code],
        loginLink:"https://sandbox.autoinstallssl.app/login/"+uuid().replace(/-/g,""),
        method:null, cfg:{env:null, agentTypeName:null}, fin:{env:null, validation:"file", provider:"", www:"both", cpMode:"file"}};
     renderEmail(); simGo("s-email",1);
@@ -765,7 +765,7 @@ function renderEmail(){
 function certDays(){const now=new Date();if(now>new Date("2029-03-15"))return 47;if(now>new Date("2027-03-15"))return 100;return 199;}
 function certRenewAt(){return Math.floor(certDays()*0.7);}
 function certExpiry(off=0){return today(certDays()+(off||0));}
-function certRenewNote(){return "reissues automatically at ~"+certRenewAt()+" days";}
+function certRenewNote(){return "reissues automatically every "+certDays()+" days";}
 
 function fill(tpl){
   const p=S.product,i=S.ids;
@@ -778,7 +778,7 @@ function fill(tpl){
     .replaceAll("{{STDAVAIL}}",p.wc?"0 of 0 available":"0 of 1 available")
     .replaceAll("{{WCAVAIL}}",p.wc?"0 of 1 available":"0 of 0 available")
     .replaceAll("{{CERTVALIDITY}}",certDays())
-    .replaceAll("{{CERTRENEW}}",certRenewAt());
+    .replaceAll("{{CERTRENEW}}",certDays());
 }
 function spinner(on){ $("mainspinner")?.classList.toggle("visually-hidden",!on); }
 function fbURL(route){
@@ -1102,7 +1102,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(T.presenter&&!T.busy&&!T.done) $("b-autotype").click(); };
   $("b-reset-term").onclick=()=>startTerminal(T.renewal);
   $("b-renew").onclick=()=>{ startTerminal(true); simGo("s-term",4); };
-  const rdSpan=$("b-renew-days");if(rdSpan)rdSpan.textContent=certRenewAt();
+  const rdSpan=$("b-renew-days");if(rdSpan)rdSpan.textContent=certDays();
 });
 function openTerminal(){ startTerminal(false); simGo("s-term",3); }
 function backToPortal(){ simGo("s-portal",2); }
@@ -1111,9 +1111,9 @@ function startTerminal(renewal){
   T.ix=0;T.busy=false;T.buf="";T.done=false;T.presenter=false;
   $("b-presenter").innerHTML="&#9654; Presenter auto-run";
   tOut().innerHTML="";
-  $("t-title").textContent=renewal?`auto-reissue · ${S.domain} · ${certRenewAt()} days later`:`${S.termUser}@${S.termHost} — ${S.domain}`;
+  $("t-title").textContent=renewal?`auto-reissue · ${S.domain} · ${certDays()} days later`:`${S.termUser}@${S.termHost} — ${S.domain}`;
   tPrint(renewal
-    ?`<span class="ta">── FAST-FORWARD &#9193; ${certRenewAt()} days later — nobody is logged in. The cert is nearing expiry. Press Enter or "Type it for me" to watch the auto-reissue run on its own. ──</span>`
+    ?`<span class="ta">── FAST-FORWARD &#9193; ${certDays()} days later — nobody is logged in. The certificate is being reissued automatically. Press Enter or "Type it for me" to watch. ──</span>`
     :`<span class="td2">── Simulated customer server. Follow the instruction panel → · password: default@123 ──</span>`);
   setPrompt(); railUpdate();
 }
@@ -1246,7 +1246,7 @@ function buildScript(){
       L("[INFO] Authorizing "+d+" [http-01 via IIS] …",1300), g("[INFO] Authorization valid"),
       L("[INFO] Downloading certificate …",800), g("[INFO] Certificate "+certCN+" issued — "+p.issuer),
       g("[INFO] Installed to My store · IIS binding *:443 updated"),
-      a("[INFO] Scheduled task created — reissues certificate automatically every ~"+certRenewAt()+" days."));
+      a("[INFO] Scheduled task created — reissues certificate automatically every "+certDays()+" days."));
   } else if(t==="Certbot"){
     issued.push(
       L("Saving debug log to /var/log/letsencrypt/letsencrypt.log",300),
@@ -1258,7 +1258,7 @@ function buildScript(){
       dim("Key is saved at:         /etc/letsencrypt/live/"+d+"/privkey.pem"),
       dim("This certificate expires on "+certExpiry()+" ("+certDays()+" days)."),
       g("Deployed certificate to "+(env==="autoInstallApache"?"Apache VirtualHost":"nginx server block")+" · reloaded"),
-      a("Certbot has set up a scheduled task to automatically reissue this certificate every ~"+certRenewAt()+" days."));
+      a("Certbot has set up a scheduled task to automatically reissue this certificate every "+certDays()+" days."));
   } else { // acme.sh (Acme env, cPanel, CaaS)
     issued.push(
       L("[Info] Create account key ok.",450),
@@ -1270,7 +1270,7 @@ function buildScript(){
       L("[Info] Downloading cert …",600), g("[Info] Cert success — issuer: "+p.issuer),
       dim("[Info] Cert: ~/.acme.sh/"+d+"_ecc/fullchain.cer  · valid "+today()+" → "+certExpiry()+" ("+certDays()+" days)"),
       ...(t==="AcmeSh"?[L("[Info] Deploying via cpanel_uapi …",700),g("[Info] Certificate installed to cPanel · SSL active")]:[]),
-      a("⟳ acme.sh cron reissues this certificate automatically every ~"+certRenewAt()+" days (at 70% of "+certDays()+"-day validity)."));
+      a("⟳ acme.sh cron reissues this certificate automatically every "+certDays()+" days."));
   }
   steps.push({ what:"Run the install command — <b>exactly what the portal showed</b>. Watch validation, issuance and install happen end to end.",
     expect:finalCmd, out:issued });
@@ -1285,8 +1285,8 @@ function renewalScript(){
   const p=S.product,d=S.domain,t=S.fin.agentTypeName||"AIS",caas=p.type==="caas";
   const L=(x,dl)=>({t:x,d:dl}); const g=x=>({h:`<span class="tg">${esc(x)}</span>`,d:150}); const dim=x=>({h:`<span class="td2">${esc(x)}</span>`,d:100}); const a=x=>({h:`<span class="ta">${esc(x)}</span>`,d:150});
   let out;
-  if(!caas&&t==="AIS") out=[a(`── ${today(certRenewAt())} 02:00:11 · autoinstall-ssl renewal service ──`),
-    L("checking "+d+" — cert age "+certRenewAt()+" days → auto-reissuing",900),
+  if(!caas&&t==="AIS") out=[a(`── ${today(certDays())} 02:00:11 · autoinstall-ssl renewal service ──`),
+    L("checking "+d+" — cert age "+certDays()+" days → auto-reissuing",900),
     L("reissue via DigiCert … validation reused … issued",1500),
     L("installed new chain · web server reloaded",700),
     g("✔ "+d+" renewed — next check tomorrow 02:00"),dim("(the customer slept through all of this)")];
@@ -1294,20 +1294,20 @@ function renewalScript(){
     L("Processing /etc/letsencrypt/renewal/"+d+".conf",900),
     L("Renewing certificate for "+d+" … http-01 … success",1500),
     g("Congratulations, all renewals succeeded — reloaded web server"),dim("(the customer slept through all of this)")];
-  else if(t==="SimpleAcme") out=[a(`── ${today(certRenewAt())} 02:00:03 · Task Scheduler: simple-acme renew ──`),
+  else if(t==="SimpleAcme") out=[a(`── ${today(certDays())} 02:00:03 · Task Scheduler: simple-acme renew ──`),
     L("[INFO] Renewing "+d+" … authorization valid … issued",1600),
     g("[INFO] Certificate renewed · IIS binding updated"),dim("(the customer slept through all of this)")];
   else out=[a(`── ${today(60)} 00:47:02 · cron: ~/.acme.sh/acme.sh --cron ──`),
     L("[Info] Renewing: "+d,900),
     L("[Info] Challenge validated · new 90-day certificate issued by "+p.issuer,1500),
-    g("[Info] ✔ "+d+" renewed automatically — next renewal in ~"+certRenewAt()+" days"),dim("(the customer slept through all of this)")];
-  return [{prompt:"",show:"(press Enter)",expect:"",what:`Nothing to type — press <b>Enter</b> (or the button) to let ${certRenewAt()} days pass and watch the certificate auto-reissue run unattended.`,out}];
+    g("[Info] ✔ "+d+" reissued automatically — next reissue in "+certDays()+" days"),dim("(the customer slept through all of this)")];
+  return [{prompt:"",show:"(press Enter)",expect:"",what:`Nothing to type — press <b>Enter</b> (or the button) to let ${certDays()} days pass and watch the certificate auto-reissue run unattended.`,out}];
 }
 
 /* ═════════ done ═════════ */
 function renderDone(){
   const p=S.product,i=S.ids,d=S.domain,cn=p.wc?"*."+d:d, agent=(S.method!=="acme"&&p.type!=="caas");
-  $("d-summary").innerHTML=`<b>${esc(cn)}</b> is secured with ${esc(p.name)} — issued by ${p.vendor}, installed ${agent?"by the AutoInstall SSL® agent":"via ACME ("+(S.fin.agentTypeName==="Certbot"?"certbot":S.fin.agentTypeName==="SimpleAcme"?"simple-acme":"acme.sh")+")"}, and set to reissue itself automatically every ~${certRenewAt()} days. Subscription #${i.orderId} keeps issuing certificates for 12 months with zero manual work.`;
+  $("d-summary").innerHTML=`<b>${esc(cn)}</b> is secured with ${esc(p.name)} — issued by ${p.vendor}, installed ${agent?"by the AutoInstall SSL® agent":"via ACME ("+(S.fin.agentTypeName==="Certbot"?"certbot":S.fin.agentTypeName==="SimpleAcme"?"simple-acme":"acme.sh")+")"}, and set to reissue itself automatically every ${certDays()} days. Subscription #${i.orderId} keeps issuing certificates for 12 months with zero manual work.`;
   const rows=[["Common name",`<span class="mono">${esc(cn)}</span>`],
     ["Product",esc(p.name)+` <span style="color:#8a94a0;font-size:12px">(${agent?"Agent install":"ACME install"})</span>`],
     ["Issuer chain",`<span class="mono">${esc(p.issuer)} → ${esc(p.root)}</span>`],
