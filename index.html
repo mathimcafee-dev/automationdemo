@@ -587,7 +587,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
         <table class="otable" id="m-table"></table>
         <div class="mail-cta"><button class="btn-sim" id="b-openlink" style="font-size:15px;padding:13px 30px"></button></div>
         <div class="mail-link" id="m-link"></div>
-        <div class="mail-foot">Need help? Reply to this email or reach us at support@autoinstall.app.<br>AutoInstall SSL &middot; A The SSL Store&trade; Company</div>
+        <div class="mail-foot">AutoInstall SSL &middot; A The SSL Store&trade; Company</div>
       </div>
     </div></div>
   </div>
@@ -753,11 +753,12 @@ function renderEmail(){
     ["Amount","$"+p.price.toFixed(2)],["Status","✅ Active — certificate generation pending"]];
   const isAutoP=p.type==="automate";
   $("m-table").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td></tr>`).join("")
-    + `<tr><td>Certificate Generation Link</td><td><a href="javascript:void(0);" onclick="document.getElementById('b-openlink').click()" style="color:#1e5799;word-break:break-all;font-size:12.5px">${isAutoP?S.loginLink:"https://secure.autoinstall.app/acme/"+S.ids.orderId}</a></td></tr>`;
+    + (isAutoP?`<tr><td>Certificate Generation Link</td><td><a href="javascript:void(0);" onclick="document.getElementById(\'b-openlink\').click()" style="color:#1e5799;word-break:break-all;font-size:12.5px">${S.loginLink}</a></td></tr>`:"");
   const isAuto=p.type==="automate";
   $("b-openlink").textContent=isAuto?"Generate Your Certificate":"View Your ACME Credentials";
-  $("m-link").innerHTML="Or paste this link into your browser:<br>"+(isAuto
-    ? S.loginLink : `https://secure.autoinstall.app/acme/${i.orderId}`);
+  $("m-link").innerHTML=isAuto
+    ? "Or paste this link into your browser:<br>"+S.loginLink
+    : "";
   $("b-openlink").onclick=()=>{ if(isAuto){ portalRoute("enroll"); } else { portalRoute("caas"); } simGo("s-portal",2); };
 }
 
