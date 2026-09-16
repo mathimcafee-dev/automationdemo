@@ -372,6 +372,7 @@ body{background:#eef1f5;}
 .fb-url{flex:1;background:#fff;border:1px solid #c8cdd4;border-radius:14px;padding:4px 14px;font-size:12.5px;color:#444;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .fb-url b{color:#1a7f37;font-weight:500;}
 .portal-frame{max-width:1140px;margin:0 auto 26px;padding:0 16px;}
+.caas-portal .header .logo img{display:none!important}.caas-portal .header .logo::before{content:"Certificate-as-a-Service";font-weight:700;font-size:18px;color:#14395e;letter-spacing:.3px}
 .portal-frame-in{border:1px solid #c8cdd4;border-top:0;background:#fff;box-shadow:0 12px 30px rgba(13,42,71,.12);}
 /* sim CTA under the portal */
 .simcta{max-width:1140px;margin:0 auto 40px;padding:0 16px;}
@@ -554,8 +555,8 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
     <div class="lch-grid" id="prods-acme" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div>
     <div class="lch-sec"><span class="n">2</span><h3>Customer &amp; server details</h3></div>
     <div class="lch-fields">
-      <div class="lch-f"><label>Customer name</label><input id="f-name" value="Arun Kumar"></div>
-      <div class="lch-f"><label>Customer email</label><input id="f-email" value="arun@customer-demo.in"></div>
+      <div class="lch-f"><label>Customer name</label><input id="f-name" value="Mathivanan Kathirvel"></div>
+      <div class="lch-f"><label>Customer email</label><input id="f-email" value="mathivanan@customer-demo.in"></div>
       <div class="lch-f"><label>Domain to secure</label><input id="f-domain" value="shop.customer-demo.in"></div>
       <div class="lch-f"><label>Customer's server</label>
         <select id="f-env"><option value="linux" selected>Linux &mdash; Ubuntu 22.04 &middot; nginx</option><option value="windows">Windows Server 2022 &middot; IIS</option><option value="cpanel">cPanel hosting (SSH access)</option></select>
@@ -574,19 +575,19 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
   <div class="mailbox">
     <div class="mail-meta">
       <div class="subj" id="m-subj"></div>
-      <div><b>From:</b> Easy Security Orders &lt;orders@autoinstall.app&gt;</div>
+      <div><b>From:</b> AutoInstall SSL Orders &lt;orders@autoinstall.app&gt;</div>
       <div><b>To:</b> <span id="m-to"></span></div>
       <div><b>Date:</b> <span id="m-date"></span></div>
     </div>
     <div><div class="mail-inner">
-      <div class="mail-brand">EASY SECURITY <span style="font-weight:400;opacity:.7">&middot; Powered by The SSL Store&trade;</span></div>
+      <div class="mail-brand">AutoInstall SSL <span style="font-weight:400;opacity:.7">&middot; Powered by The SSL Store&trade;</span></div>
       <div class="mail-card">
         <h2>Your certificate subscription is active &#127881;</h2>
         <p style="font-size:13.5px">Hi <span id="m-name"></span>, thanks for your order. Your SSL subscription is active — the last step is generating and installing the certificate on your server. It takes about five minutes. The certificate reissues automatically — your subscription renews annually with zero manual work.</p>
         <table class="otable" id="m-table"></table>
         <div class="mail-cta"><button class="btn-sim" id="b-openlink" style="font-size:15px;padding:13px 30px"></button></div>
         <div class="mail-link" id="m-link"></div>
-        <div class="mail-foot">Need help? Reply to this email or reach us at support@autoinstall.app.<br>AutoInstall SSL &middot; A The SSL Store&trade; Partner</div>
+        <div class="mail-foot">Need help? Reply to this email or reach us at support@autoinstall.app.<br>AutoInstall SSL &middot; A The SSL Store&trade; Company</div>
       </div>
     </div></div>
   </div>
@@ -730,7 +731,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   renderSetup(); simGo("s-setup",0);
   $("b-start").onclick=()=>{
     /* Auto-fill demo values — no manual entry needed */
-    const name="Alex Johnson", email="alex@customer-demo.in";
+    const name=$("f-name").value||"Mathivanan Kathirvel", email=$("f-email").value||"mathivanan@customer-demo.in";
     let dom="shop.customer-demo.in";
     S={...S, name, email, domain:dom, simEnv:$("f-env")?$("f-env").value:"linux", ids:makeIds(), product:PRODUCTS[S.code],
        loginLink:"https://sandbox.autoinstallssl.app/login/"+uuid().replace(/-/g,""),
@@ -794,7 +795,7 @@ function portalRoute(route){
   else if(route==="setup"){ root.innerHTML=PORTAL_CHROME; $("pp-body").innerHTML=fill(TPL.setup); initBrand(); initSetupPage(); }
   else if(route==="manage"){ root.innerHTML=PORTAL_CHROME; $("pp-body").innerHTML=fill(TPL.manage); initBrand(); initManage(); }
   else if(route==="final"){ root.innerHTML=PORTAL_CHROME; $("pp-body").innerHTML=fill(TPL.final); initBrand(); initFinal(); }
-  else if(route==="caas"){ root.innerHTML=PORTAL_CHROME; $("pp-body").innerHTML=fill(TPL.caas); initBrand(true); initCaas(); }
+  else if(route==="caas"){ root.innerHTML=PORTAL_CHROME; $("pp-body").innerHTML=fill(TPL.caas); initBrand(true); initCaas(); $("portal-root").classList.add("caas-portal"); }
   window.scrollTo({top:0});
 }
 function initBrand(caas){
