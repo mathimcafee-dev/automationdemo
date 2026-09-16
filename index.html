@@ -563,7 +563,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
     </div>
     <div class="lch-foot">
       
-      <button class="btn-lch" id="b-start" style="display:none">Place simulated order &rarr;</button>
+      <button class="btn-lch" id="b-start">Place simulated order &rarr;</button>
     </div>
   </div>
 </div></section>
@@ -574,7 +574,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
   <div class="mailbox">
     <div class="mail-meta">
       <div class="subj" id="m-subj"></div>
-      <div><b>From:</b> Easy Security Orders &lt;orders@easysecurity.in&gt;</div>
+      <div><b>From:</b> Easy Security Orders &lt;orders@autoinstall.app&gt;</div>
       <div><b>To:</b> <span id="m-to"></span></div>
       <div><b>Date:</b> <span id="m-date"></span></div>
     </div>
@@ -586,7 +586,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
         <table class="otable" id="m-table"></table>
         <div class="mail-cta"><button class="btn-sim" id="b-openlink" style="font-size:15px;padding:13px 30px"></button></div>
         <div class="mail-link" id="m-link"></div>
-        <div class="mail-foot">Need help? Reply to this email or reach us at support@easysecurity.in.<br>Easy Security &middot; Coimbatore, India &middot; A The SSL Store&trade; Partner</div>
+        <div class="mail-foot">Need help? Reply to this email or reach us at support@autoinstall.app.<br>AutoInstall SSL &middot; A The SSL Store&trade; Partner</div>
       </div>
     </div></div>
   </div>
@@ -721,10 +721,10 @@ function renderSetup(){
       <div class="cd">${p.vendor} &middot; ${code}</div>
       <div class="pr"><b>$${p.price.toFixed(2)}</b><i>/ year</i></div>
       <span class="cap ${p.type==="automate"?"cap-both":"cap-acme"}">${p.type==="automate"?"AGENT + ACME":"ACME ONLY"}</span>`;
-    el.onclick=()=>{document.querySelectorAll(".lch-card").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); S.code=code; setTimeout(()=>$("b-start").click(),400);};
+    el.onclick=()=>{document.querySelectorAll(".lch-card").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); S.code=code;};
     (p.type==="automate"?both:acme).appendChild(el);
   }
-  setTimeout(()=>{ const fc=both.querySelector(".lch-card"); if(fc)fc.click(); },50);
+  /* no auto-select — user picks a product manually */
 }
 document.addEventListener("DOMContentLoaded",()=>{
   renderSetup(); simGo("s-setup",0);
@@ -752,11 +752,11 @@ function renderEmail(){
     ["Amount","$"+p.price.toFixed(2)],["Status","✅ Active — certificate generation pending"]];
   const isAutoP=p.type==="automate";
   $("m-table").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td></tr>`).join("")
-    + `<tr><td>Certificate Generation Link</td><td><a href="javascript:void(0);" onclick="document.getElementById('b-openlink').click()" style="color:#1e5799;word-break:break-all;font-size:12.5px">${isAutoP?S.loginLink:"https://secure.easysecurity.in/acme/"+S.ids.orderId}</a></td></tr>`;
+    + `<tr><td>Certificate Generation Link</td><td><a href="javascript:void(0);" onclick="document.getElementById('b-openlink').click()" style="color:#1e5799;word-break:break-all;font-size:12.5px">${isAutoP?S.loginLink:"https://secure.autoinstall.app/acme/"+S.ids.orderId}</a></td></tr>`;
   const isAuto=p.type==="automate";
   $("b-openlink").textContent=isAuto?"Generate Your Certificate":"View Your ACME Credentials";
   $("m-link").innerHTML="Or paste this link into your browser:<br>"+(isAuto
-    ? S.loginLink : `https://secure.easysecurity.in/acme/${i.orderId}`);
+    ? S.loginLink : `https://secure.autoinstall.app/acme/${i.orderId}`);
   $("b-openlink").onclick=()=>{ if(isAuto){ portalRoute("enroll"); } else { portalRoute("caas"); } simGo("s-portal",2); };
 }
 
@@ -784,7 +784,7 @@ function spinner(on){ $("mainspinner")?.classList.toggle("visually-hidden",!on);
 function fbURL(route){
   const g=uuid();
   const map={enroll:"enrollmentOption",setup:"setup",manage:"manage",final:"aisinstruction",caas:"acme-service"};
-  $("fb-url").textContent=(route==="caas"?"secure.easysecurity.in":"sandbox.autoinstallssl.app")+"/"+map[route]+"/"+S.ids.pin+"?guid="+g;
+  $("fb-url").textContent=(route==="caas"?"autoinstall.app":"sandbox.autoinstallssl.app")+"/"+map[route]+"/"+S.ids.pin+"?guid="+g;
 }
 function portalRoute(route){
   S.route=route; fbURL(route);
