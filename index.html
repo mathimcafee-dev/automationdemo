@@ -553,7 +553,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
     <div class="lch-sec"><span class="n">&nbsp;</span><h3 style="color:#5b6672!important;font-weight:400;font-size:13.5px">ACME Certificate-as-a-Service &mdash; ACME only <em style="font-style:normal;color:#8a94a0!important">(interim flow &mdash; will be matched to the real portal next)</em></h3></div>
     <div class="lch-grid" id="prods-acme" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div>
     <div class="lch-sec"><span class="n">2</span><h3>Customer &amp; server details</h3></div>
-    <div class="lch-fields" style="display:none">
+    <div class="lch-fields">
       <div class="lch-f"><label>Customer name</label><input id="f-name" value="Arun Kumar"></div>
       <div class="lch-f"><label>Customer email</label><input id="f-email" value="arun@customer-demo.in"></div>
       <div class="lch-f"><label>Domain to secure</label><input id="f-domain" value="shop.customer-demo.in"></div>
@@ -721,7 +721,7 @@ function renderSetup(){
       <div class="cd">${p.vendor} &middot; ${code}</div>
       <div class="pr"><b>$${p.price.toFixed(2)}</b><i>/ year</i></div>
       <span class="cap ${p.type==="automate"?"cap-both":"cap-acme"}">${p.type==="automate"?"AGENT + ACME":"ACME ONLY"}</span>`;
-    el.onclick=()=>{document.querySelectorAll(".lch-card").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); S.code=code; setTimeout(()=>$("b-start").click(),150);};
+    el.onclick=()=>{document.querySelectorAll(".lch-card").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); S.code=code; setTimeout(()=>$("b-start").click(),400);};
     (p.type==="automate"?both:acme).appendChild(el);
   }
   setTimeout(()=>{ const fc=both.querySelector(".lch-card"); if(fc)fc.click(); },50);
