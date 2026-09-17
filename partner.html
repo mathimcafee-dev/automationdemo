@@ -13,21 +13,22 @@ h1,h2,h3{font-family:'Yantramanav',Arial,sans-serif}
 .top{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
 .top h1{font-weight:900;font-size:20px}
 .badge{background:var(--orange);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 10px;border-radius:99px}
-.wrap{max-width:1060px;margin:26px auto;padding:0 16px;display:grid;grid-template-columns:1fr 330px;gap:22px}
-@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+.wrap{max-width:1160px;margin:26px auto;padding:0 16px;display:flex;flex-direction:column;gap:22px}
 .card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:22px}
 .card h2{font-weight:900;font-size:20px;color:var(--navy);margin-bottom:4px}
 .sub{font-size:13px;color:var(--gray);margin-bottom:18px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
-.field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px}
+.field input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.row2{grid-template-columns:1fr}}
 .colors{display:flex;gap:14px;flex-wrap:wrap}
 .colors .field{flex:1;min-width:90px}
 .colors input[type=color]{width:100%;height:40px;padding:2px;cursor:pointer}
 .btn{font-family:'Yantramanav';font-weight:700;font-size:15px;border:none;border-radius:6px;padding:12px 20px;cursor:pointer;transition:transform var(--dur) var(--ease)}
 .btn:hover{transform:translateY(-1px)}
 .btn-o{background:var(--orange);color:#fff}
+.btn-g{background:none;border:1px solid var(--border);color:var(--gray);font-size:13px;padding:8px 14px}
 .result{margin-top:18px;background:rgba(84,162,69,.08);border:1px solid var(--green);border-radius:var(--r);padding:14px 16px;display:none}
 .result.show{display:block}
 .result .u{font-family:'Yantramanav';font-weight:700;font-size:14px;color:var(--green);word-break:break-all}
@@ -36,95 +37,197 @@ h1,h2,h3{font-family:'Yantramanav',Arial,sans-serif}
 .prev{margin-top:18px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .prev-top{color:#fff;font-size:11px;padding:6px 14px;display:flex;justify-content:space-between}
 .prev-nav{background:#fff;display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:3px solid}
-.mark{width:26px;height:26px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Yantramanav';font-weight:900;font-size:13px}
+.mark{width:26px;height:26px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Yantramanav';font-weight:900;font-size:13px;flex-shrink:0}
 .pname{font-family:'Yantramanav';font-weight:900;font-size:16px}
 .ptab{font-size:11px;font-weight:700;color:var(--gray);margin-left:auto}
-.side h3{font-size:13px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-.plist{list-style:none}
-.plist li{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
-.plist .nm{font-weight:700}
-.plist a{color:var(--blue);font-size:12px;word-break:break-all;text-decoration:none}
-.plist .rm{float:right;color:#c0392b;cursor:pointer;font-size:12px;background:none;border:none}
-.empty{color:var(--gray);font-size:13px}
+/* dashboard */
+.dash-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.dash-head h2{margin:0}
+.dash-head .count{background:rgba(1,116,195,.1);color:var(--blue);font-weight:700;font-size:12px;padding:4px 12px;border-radius:99px}
+.dash-head input{margin-left:auto;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:240px;max-width:100%}
+.tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{font-family:'Yantramanav';font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);text-align:left;padding:10px 14px;background:#fafbfe;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:#f8f9fd}
+.co{display:flex;align-items:center;gap:10px;font-weight:700}
+.co img{width:28px;height:28px;object-fit:contain;border-radius:6px;border:1px solid var(--border);background:#fff}
+td .lnk{color:var(--blue);text-decoration:none;font-size:12px}
+.runs{font-family:'Yantramanav';font-weight:900;font-size:15px;color:var(--navy)}
+.runs.zero{color:#c6cbe0;font-weight:700}
+.pill{font-size:11px;color:var(--gray)}
+.pager{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-top:12px;font-size:13px;color:var(--gray)}
+.pager button{border:1px solid var(--border);background:#fff;border-radius:6px;padding:6px 12px;cursor:pointer}
+.pager button:disabled{opacity:.4;cursor:default}
+.setup{background:rgba(240,119,37,.07);border:1px solid var(--orange);border-radius:var(--r);padding:16px 18px}
+.setup h3{color:var(--navy);font-weight:900;font-size:15px;margin-bottom:6px}
+.setup p{font-size:13px;color:#444;margin-bottom:10px}
+.setup pre{background:#1c2440;color:#d7e0ff;border-radius:6px;padding:14px;font-size:11.5px;overflow-x:auto;line-height:1.55;max-height:260px}
+.empty{color:var(--gray);font-size:13px;padding:26px;text-align:center}
 </style>
 </head>
 <body>
-<div class="top"><h1>Partner Demo Factory</h1><span class="badge">INTERNAL — LINK GENERATOR</span></div>
+<div class="top"><h1>Partner Demo Factory</h1><span class="badge">INTERNAL</span></div>
 <div class="wrap">
+
   <div class="card">
     <h2>Create Partner Demo</h2>
-    <p class="sub">Enter the partner's brand. The generated link opens the full Automation Experience simulation rebranded to them — logo, colors, company name, and email sender. Certificate products and issuers (DigiCert / Sectigo) stay untouched.</p>
+    <p class="sub">Enter the partner's brand. The generated link opens the full Automation Experience simulation rebranded to them. Certificate products and issuers (DigiCert / Sectigo) stay untouched.</p>
     <div class="row2">
       <div class="field"><label>Company name</label><input id="c" placeholder="AcmeSSL Solutions"></div>
       <div class="field"><label>Partner domain</label><input id="d" placeholder="acmessl.com"></div>
     </div>
     <div class="row2">
       <div class="field"><label>Email sender (auto from domain)</label><input id="e" placeholder="orders@acmessl.com"></div>
-      <div class="field"><label>Logo URL (optional — https://...)</label><input id="l" placeholder="leave empty for letter mark"></div>
+      <div class="field"><label>Logo URL (optional, must start with https://)</label><input id="l" placeholder="https://acmessl.com/logo.png"></div>
     </div>
     <div class="colors">
       <div class="field"><label>Primary</label><input type="color" id="p" value="#0174C3"></div>
       <div class="field"><label>Accent</label><input type="color" id="a" value="#f07725"></div>
       <div class="field"><label>Dark / header</label><input type="color" id="k" value="#1c2440"></div>
     </div>
-    <button class="btn btn-o" onclick="gen()">⚡ Generate link — live instantly</button>
+    <button class="btn btn-o" onclick="gen()">&#9889; Generate link &mdash; live instantly</button>
     <div class="result" id="res">
       <button class="copy" onclick="cp()">Copy link</button>
       <div class="u" id="url"></div>
-      <small>Permanent as long as this project is deployed. Send it to the partner — no deploy step needed.</small>
+      <small>Permanent as long as this project is deployed. Send it to the partner &mdash; no deploy step needed.</small>
     </div>
     <div class="prev" id="prev" style="display:none">
-      <div class="prev-top" id="pvTop"><span>Partner Demo — Automation Experience Lab</span><span>LIVE SIMULATION</span></div>
+      <div class="prev-top" id="pvTop"><span>Partner Demo &mdash; Automation Experience Lab</span><span>LIVE SIMULATION</span></div>
       <div class="prev-nav" id="pvNav">
         <div class="mark" id="pvMark">A</div>
         <div class="pname" id="pvName">Acme</div>
-        <div class="ptab">1 Order · 2 Email · 3 Generate · 4 Install · 5 Secured</div>
+        <div class="ptab">1 Order &middot; 2 Email &middot; 3 Generate &middot; 4 Install &middot; 5 Secured</div>
       </div>
     </div>
   </div>
-  <div class="card side">
-    <h3>Saved partner demos</h3>
-    <ul class="plist" id="list"></ul>
-    <p class="empty" id="none">None yet — links you generate are saved here (on this browser).</p>
+
+  <div class="card">
+    <div class="dash-head">
+      <h2>Partner Dashboard</h2>
+      <span class="count" id="total">&mdash;</span>
+      <input id="q" placeholder="Search company or domain&hellip;" oninput="page=0;render()">
+      <button class="btn btn-g" onclick="loadAll()">&#8635; Refresh</button>
+    </div>
+    <div id="setupBox" style="display:none" class="setup">
+      <h3>One-time setup needed</h3>
+      <p>The partner registry table doesn't exist yet in Supabase. Open your <b>Supabase dashboard &rarr; SQL Editor</b>, paste this, and click Run. Then hit Refresh above. <button class="copy" style="float:none" onclick="cpSql()">Copy SQL</button></p>
+      <pre id="sqlBlock"></pre>
+    </div>
+    <div class="tblwrap" id="tblwrap" style="display:none">
+      <table>
+        <thead><tr><th>Company</th><th>Domain</th><th>Demo URL</th><th style="text-align:right">Demo runs</th><th>Created</th><th></th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="emptyMsg" style="display:none">No partners yet &mdash; create one above.</div>
+    <div class="pager" id="pager" style="display:none">
+      <span id="pinfo"></span>
+      <button id="pPrev" onclick="page--;render()">&larr; Prev</button>
+      <button id="pNext" onclick="page++;render()">Next &rarr;</button>
+    </div>
   </div>
 </div>
+
 <script>
 // auth gate — same credentials as the Admin login on the main page
 (function(){
   var ok=false; try{ok=sessionStorage.getItem('pdfAuth')==='1';}catch(e){}
   if(!ok){
     var u=prompt('Admin email:')||'', p=u?(prompt('Password:')||''):'';
-    if(u.trim()==='mathimcafee@gmaial.com' && p==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){}}
+    if(u.trim()==='mathimcafee@gmail.com' && p==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){}}
     else{document.body.innerHTML='<div style="font-family:Arial;padding:60px;text-align:center;color:#707E86;">Access denied. <a href="/">Back to demo</a></div>';throw new Error('auth');}
   }
 })();
 var $=function(i){return document.getElementById(i)};
-$('d').addEventListener('input',function(){ if(!$('e').value||$('e').value.indexOf('@')===$('e').value.length-0) $('e').value=this.value?('orders@'+this.value):''; });
+var SB='https://telukonfwodrqmbkwjnz.supabase.co';
+var KEY='sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM';
+var HDR={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'};
+var SQL=[
+'create table if not exists public.partners (',
+'  id text primary key, company text not null, domain text, email text,',
+'  logo text, p text, a text, k text, link text,',
+'  runs int not null default 0, created_at timestamptz default now());',
+'alter table public.partners enable row level security;',
+"create policy p_sel on public.partners for select using (true);",
+"create policy p_ins on public.partners for insert with check (true);",
+"create policy p_upd on public.partners for update using (true);",
+"create policy p_del on public.partners for delete using (true);",
+'create or replace function public.log_run(pid text) returns void',
+'language sql security definer set search_path=public as',
+'$$ update public.partners set runs=runs+1 where id=pid; $$;',
+'grant execute on function public.log_run(text) to anon;',
+'notify pgrst, \'reload schema\';'
+].join('\n');
+$('sqlBlock').textContent=SQL;
+function cpSql(){navigator.clipboard&&navigator.clipboard.writeText(SQL);}
+function slug(c){return c.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
+$('d').addEventListener('input',function(){$('e').value=this.value?('orders@'+this.value):'';});
 function enc(o){var s=btoa(unescape(encodeURIComponent(JSON.stringify(o))));return s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-function cfg(){return {c:$('c').value.trim(),d:$('d').value.trim(),e:$('e').value.trim(),p:$('p').value,a:$('a').value,k:$('k').value,l:(/^https?:\/\//.test($('l').value.trim())?$('l').value.trim():undefined)};}
+function cfg(){var l=$('l').value.trim();return {c:$('c').value.trim(),d:$('d').value.trim(),e:$('e').value.trim(),p:$('p').value,a:$('a').value,k:$('k').value,l:(/^https?:\/\//.test(l)?l:undefined)};}
 function gen(){
   var o=cfg(); if(!o.c){alert('Company name required');return;}
   var link=location.origin+'/?b='+enc(o);
   $('url').textContent=link; $('res').classList.add('show');
-  // preview
   $('prev').style.display='block';
   $('pvTop').style.background=o.k; $('pvNav').style.borderBottomColor=o.p;
   $('pvMark').style.background=o.p; $('pvMark').textContent=o.c.split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
   $('pvName').textContent=o.c; $('pvName').style.color=o.p;
-  save(o,link); render();
+  // upsert into registry
+  fetch(SB+'/rest/v1/partners?on_conflict=id',{method:'POST',
+    headers:Object.assign({'Prefer':'resolution=merge-duplicates'},HDR),
+    body:JSON.stringify({id:slug(o.c),company:o.c,domain:o.d,email:o.e,logo:o.l||null,p:o.p,a:o.a,k:o.k,link:link})
+  }).then(function(r){ if(r.ok){loadAll();} }).catch(function(){});
 }
 function cp(){var t=$('url').textContent;if(navigator.clipboard){navigator.clipboard.writeText(t);}else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}}
-function load(){try{return JSON.parse(localStorage.getItem('partnerDemos')||'[]')}catch(e){return[]}}
-function save(o,link){var L=load().filter(function(x){return x.c!==o.c});L.unshift({c:o.c,d:o.d,link:link});try{localStorage.setItem('partnerDemos',JSON.stringify(L.slice(0,30)))}catch(e){}}
-function del(c){var L=load().filter(function(x){return x.c!==c});try{localStorage.setItem('partnerDemos',JSON.stringify(L))}catch(e){};render();}
-function render(){var L=load(),ul=$('list');ul.innerHTML='';$('none').style.display=L.length?'none':'block';
-  L.forEach(function(x){var li=document.createElement('li');
-    li.innerHTML='<button class="rm">remove</button><div class="nm"></div><a target="_blank"></a>';
-    li.querySelector('.nm').textContent=x.c+(x.d?' · '+x.d:'');
-    var a=li.querySelector('a');a.href=x.link;a.textContent=x.link.replace(location.origin,'');
-    li.querySelector('.rm').onclick=function(){del(x.c)};
-    ul.appendChild(li);});}
-render();
+
+// ---- dashboard ----
+var ALL=[], page=0, PAGE=50;
+function loadAll(){
+  $('setupBox').style.display='none';
+  fetch(SB+'/rest/v1/partners?select=*&order=created_at.desc&limit=2000',{headers:HDR})
+  .then(function(r){
+    if(r.status===404){throw {setup:1};}
+    return r.json().then(function(j){ if(!r.ok){ if(j&&(j.code==='PGRST205'||/relation.*does not exist|Could not find the table/i.test(j.message||''))) throw {setup:1}; throw j;} return j;});
+  })
+  .then(function(rows){ALL=rows;page=0;render();})
+  .catch(function(e){
+    if(e&&e.setup){$('setupBox').style.display='block';$('tblwrap').style.display='none';$('pager').style.display='none';$('emptyMsg').style.display='none';$('total').textContent='setup needed';}
+    else{$('total').textContent='error';console.error(e);}
+  });
+}
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+function render(){
+  var q=$('q').value.trim().toLowerCase();
+  var rows=ALL.filter(function(r){return !q||(r.company||'').toLowerCase().indexOf(q)>-1||(r.domain||'').toLowerCase().indexOf(q)>-1;});
+  $('total').textContent=ALL.length+' partner'+(ALL.length===1?'':'s')+(q?' · '+rows.length+' match':'');
+  var pages=Math.max(1,Math.ceil(rows.length/PAGE)); if(page>=pages)page=pages-1; if(page<0)page=0;
+  var slice=rows.slice(page*PAGE,(page+1)*PAGE), tb=$('tb'); tb.innerHTML='';
+  $('tblwrap').style.display=rows.length?'block':'none';
+  $('emptyMsg').style.display=rows.length?'none':'block';
+  $('pager').style.display=rows.length>PAGE?'flex':'none';
+  $('pinfo').textContent='Page '+(page+1)+' of '+pages;
+  $('pPrev').disabled=page===0; $('pNext').disabled=page>=pages-1;
+  slice.forEach(function(r){
+    var tr=document.createElement('tr');
+    var ini=(r.company||'?').split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
+    var logo=r.logo?'<img src="'+esc(r.logo)+'" alt="" onerror="this.outerHTML=\'<span class=mark style=background:'+esc(r.p||'#0174C3')+'>'+esc(ini)+'</span>\'">'
+                   :'<span class="mark" style="background:'+esc(r.p||'#0174C3')+'">'+esc(ini)+'</span>';
+    var runs=r.runs||0;
+    tr.innerHTML='<td><div class="co">'+logo+'<span>'+esc(r.company)+'</span></div></td>'
+      +'<td>'+esc(r.domain||'—')+'<div class="pill">'+esc(r.email||'')+'</div></td>'
+      +'<td><a class="lnk" target="_blank" href="'+esc(r.link)+'">Open demo &#8599;</a> <button class="copy" style="float:none;padding:3px 9px" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+esc(r.link)+'\')">copy</button></td>'
+      +'<td style="text-align:right"><span class="runs'+(runs?'':' zero')+'">'+runs+'</span></td>'
+      +'<td class="pill">'+(r.created_at?new Date(r.created_at).toLocaleDateString():'')+'</td>'
+      +'<td><button class="copy" style="float:none;background:#c0392b;padding:3px 9px" onclick="delP(\''+esc(r.id)+'\')">delete</button></td>';
+    tb.appendChild(tr);
+  });
+}
+function delP(id){
+  if(!confirm('Remove this partner from the registry? The link itself keeps working.'))return;
+  fetch(SB+'/rest/v1/partners?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:HDR}).then(loadAll);
+}
+loadAll();
 </script>
 </body>
 </html>

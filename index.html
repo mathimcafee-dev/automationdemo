@@ -596,7 +596,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
 function openAdminLogin(){var m=document.getElementById('adminModal');m.style.display='flex';document.getElementById('admErr').style.display='none';setTimeout(function(){document.getElementById('admUser').focus();},50);}
 function doAdminLogin(){
   var u=document.getElementById('admUser').value.trim(), p=document.getElementById('admPass').value;
-  if(u==='mathimcafee@gmaial.com' && p==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){};location.href='/partner';}
+  if(u==='mathimcafee@gmail.com' && p==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){};location.href='/partner';}
   else{document.getElementById('admErr').style.display='block';}
 }
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('adminModal').style.display==='flex')doAdminLogin();});
@@ -1852,6 +1852,16 @@ function msCopy(id){
       mu.addedNodes&&mu.addedNodes.forEach(fix);
     });swapLogo();}finally{busy=false;}
   }).observe(document.body,{childList:true,subtree:true,characterData:true});
+  // count demo run (once per browser session per partner)
+  try{
+    var pid=comp.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    if(pid && !sessionStorage.getItem('pdfRun_'+pid)){
+      sessionStorage.setItem('pdfRun_'+pid,'1');
+      fetch('https://telukonfwodrqmbkwjnz.supabase.co/rest/v1/rpc/log_run',{method:'POST',
+        headers:{'apikey':'sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM','Authorization':'Bearer sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM','Content-Type':'application/json'},
+        body:JSON.stringify({pid:pid})}).catch(function(){});
+    }
+  }catch(e){}
   // keep brand param across pushState navigation
   var _ps=history.pushState.bind(history);
   history.pushState=function(s,t,u){if(u&&u.indexOf('b=')===-1){u+=(u.indexOf('?')>-1?'&':'?')+'b='+m[1];}return _ps(s,t,u);};
