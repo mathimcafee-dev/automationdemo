@@ -804,6 +804,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
       <div><b>From:</b> AutoInstall SSL Orders &lt;orders@autoinstall.app&gt;</div>
       <div><b>To:</b> <span id="m-to"></span></div>
       <div><b>Date:</b> <span id="m-date"></span></div>
+      <div id="m-support" style="display:none"><b>Support:</b> <span id="m-support-txt"></span></div>
     </div>
     <div><div class="mail-inner">
       <div class="mail-brand">AutoInstall SSL <span style="font-weight:400;opacity:.7">&middot; Powered by The SSL Store&trade;</span></div>
@@ -1938,6 +1939,8 @@ function msCopy(id){
     st.textContent=':root{--tss-navy:'+dark+' !important;--tss-navy2:'+shade(dark,.72)+' !important;--tss-orange:'+acc+' !important;--tss-blue:'+prim+' !important;}';
     document.head.appendChild(st);
     document.title='Automation Experience — '+comp+' Partner Demo';
+    window.PARTNER=B;
+    (function(){var sup=document.getElementById('m-support'),txt=document.getElementById('m-support-txt');if(!sup)return;var parts=[];if(mail)parts.push(mail);if(B.phone)parts.push(B.phone);if(parts.length){txt.textContent=parts.join(' · ');sup.style.display='';}})();
     function initials(n){return n.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();}
     var logoSwapped=false;
     function swapLogo(){
