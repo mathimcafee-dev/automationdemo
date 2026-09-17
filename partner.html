@@ -3,151 +3,257 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Partner Demo Factory</title>
-<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#29306c;--orange:#f07725;--blue:#0174C3;--green:#54A245;--gray:#707E86;--border:#e2e4ef;--bg:#f5f6fa;
---r:8px;--ease:cubic-bezier(.22,1,.36,1);--dur:200ms;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Tahoma,sans-serif;background:var(--bg);color:#222;line-height:1.5}
-h1,h2,h3{font-family:'Yantramanav',Arial,sans-serif}
-.top{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
-.top h1{font-weight:900;font-size:20px}
-.badge{background:var(--orange);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 10px;border-radius:99px}
-.wrap{max-width:1160px;margin:26px auto;padding:0 16px;display:flex;flex-direction:column;gap:22px}
-.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:22px}
-.card h2{font-weight:900;font-size:20px;color:var(--navy);margin-bottom:4px}
-.sub{font-size:13px;color:var(--gray);margin-bottom:18px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
-.field input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px}
+:root{
+  --bg:#0d0f1a;--surface:#161829;--surface2:#1e2138;--border:rgba(255,255,255,.08);
+  --navy:#29306c;--orange:#f07725;--blue:#4a9eff;--green:#3ecf8e;--red:#ef4444;
+  --text:#e8eaf6;--muted:#8b91b5;--r:12px;
+}
+body{font-family:Arial,Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+h1,h2,h3,h4{font-family:'Yantramanav',Arial,sans-serif}
+
+/* topbar */
+.top{background:linear-gradient(135deg,#0d0f1a 0%,#161440 100%);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px)}
+.top-logo{display:flex;align-items:center;gap:10px}
+.top-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--orange),#e65c00);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.top h1{font-weight:900;font-size:18px;background:linear-gradient(90deg,#fff,#a8b4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.top-badge{margin-left:8px;background:rgba(240,119,37,.15);color:var(--orange);border:1px solid rgba(240,119,37,.3);font-size:10px;font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:99px}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.top-user{font-size:12px;color:var(--muted)}
+.top-btn{font-size:12px;color:var(--muted);background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;transition:all .2s}
+.top-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* layout */
+.main{max-width:1240px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:420px 1fr;gap:22px;align-items:start}
+@media(max-width:960px){.main{grid-template-columns:1fr}}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.card-head{padding:20px 22px 0}
+.card-body{padding:20px 22px}
+.card h2{font-weight:900;font-size:19px;margin-bottom:3px}
+.card .sub{font-size:12.5px;color:var(--muted);margin-bottom:0}
+
+/* form */
+.field{margin-bottom:13px}
+.field label{display:block;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.field input{width:100%;padding:10px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:13.5px;color:var(--text);transition:border-color .2s}
+.field input:focus{outline:none;border-color:var(--blue)}
+.field input::placeholder{color:#4a5070}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:640px){.row2{grid-template-columns:1fr}}
-.colors{display:flex;gap:14px;flex-wrap:wrap}
-.colors .field{flex:1;min-width:90px}
-.colors input[type=color]{width:100%;height:40px;padding:2px;cursor:pointer}
-.btn{font-family:'Yantramanav';font-weight:700;font-size:15px;border:none;border-radius:6px;padding:12px 20px;cursor:pointer;transition:transform var(--dur) var(--ease)}
-.btn:hover{transform:translateY(-1px)}
-.btn-o{background:var(--orange);color:#fff}
-.btn-g{background:none;border:1px solid var(--border);color:var(--gray);font-size:13px;padding:8px 14px}
-.result{margin-top:18px;background:rgba(84,162,69,.08);border:1px solid var(--green);border-radius:var(--r);padding:14px 16px;display:none}
-.result.show{display:block}
-.result .u{font-family:'Yantramanav';font-weight:700;font-size:14px;color:var(--green);word-break:break-all}
-.result small{color:var(--gray);font-size:12px;display:block;margin-top:6px}
-.copy{float:right;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;margin-left:10px}
-.prev{margin-top:18px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.prev-top{color:#fff;font-size:11px;padding:6px 14px;display:flex;justify-content:space-between}
-.prev-nav{background:#fff;display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:3px solid}
-.mark{width:26px;height:26px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Yantramanav';font-weight:900;font-size:13px;flex-shrink:0}
-.pname{font-family:'Yantramanav';font-weight:900;font-size:16px}
-.ptab{font-size:11px;font-weight:700;color:var(--gray);margin-left:auto}
-/* dashboard */
-.dash-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
-.dash-head h2{margin:0}
-.dash-head .count{background:rgba(1,116,195,.1);color:var(--blue);font-weight:700;font-size:12px;padding:4px 12px;border-radius:99px}
-.dash-head input{margin-left:auto;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:240px;max-width:100%}
-.tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
-th{font-family:'Yantramanav';font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);text-align:left;padding:10px 14px;background:#fafbfe;border-bottom:2px solid var(--border);white-space:nowrap}
-td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
-tr:hover td{background:#f8f9fd}
-.co{display:flex;align-items:center;gap:10px;font-weight:700}
-.co img{width:28px;height:28px;object-fit:contain;border-radius:6px;border:1px solid var(--border);background:#fff}
-td .lnk{color:var(--blue);text-decoration:none;font-size:12px}
-.runs{font-family:'Yantramanav';font-weight:900;font-size:15px;color:var(--navy)}
-.runs.zero{color:#c6cbe0;font-weight:700}
-.pill{font-size:11px;color:var(--gray)}
-.pager{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-top:12px;font-size:13px;color:var(--gray)}
-.pager button{border:1px solid var(--border);background:#fff;border-radius:6px;padding:6px 12px;cursor:pointer}
-.pager button:disabled{opacity:.4;cursor:default}
-.setup{background:rgba(240,119,37,.07);border:1px solid var(--orange);border-radius:var(--r);padding:16px 18px}
-.setup h3{color:var(--navy);font-weight:900;font-size:15px;margin-bottom:6px}
-.setup p{font-size:13px;color:#444;margin-bottom:10px}
-.setup pre{background:#1c2440;color:#d7e0ff;border-radius:6px;padding:14px;font-size:11.5px;overflow-x:auto;line-height:1.55;max-height:260px}
-.empty{color:var(--gray);font-size:13px;padding:26px;text-align:center}
+.color-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.color-swatch{position:relative;height:48px;border-radius:8px;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:border-color .2s}
+.color-swatch:hover{border-color:rgba(255,255,255,.25)}
+.color-swatch input[type=color]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0}
+.color-swatch .clabel{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7);pointer-events:none}
+
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+.btn-gen{width:100%;padding:14px;background:linear-gradient(135deg,var(--orange),#e05500);color:#fff;border:none;border-radius:9px;font-family:'Yantramanav';font-weight:900;font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-gen:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(240,119,37,.35)}
+.btn-gen:active{transform:none}
+
+/* result box */
+.result-box{margin-top:14px;background:linear-gradient(135deg,rgba(62,207,142,.08),rgba(62,207,142,.04));border:1px solid rgba(62,207,142,.25);border-radius:9px;padding:14px 16px;display:none}
+.result-box.show{display:block}
+.result-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:6px}
+.result-slug{font-family:'Yantramanav';font-weight:900;font-size:14px;color:#fff;word-break:break-all;margin-bottom:4px}
+.result-note{font-size:11.5px;color:var(--muted)}
+.result-btns{display:flex;gap:8px;margin-top:10px}
+.btn-copy{padding:7px 14px;background:var(--green);color:#0d1a10;border:none;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s}
+.btn-copy:hover{opacity:.85}
+.btn-open{padding:7px 14px;background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.btn-open:hover{background:rgba(255,255,255,.14)}
+
+/* live preview */
+.preview{margin-top:14px;border-radius:9px;overflow:hidden;border:1px solid var(--border);display:none}
+.preview.show{display:block}
+.pv-top{padding:7px 14px;display:flex;justify-content:space-between;align-items:center;font-size:10px}
+.pv-badge{background:rgba(240,119,37,.25);color:var(--orange);padding:2px 8px;border-radius:99px;font-weight:700;font-size:9px;letter-spacing:.08em}
+.pv-nav{background:#fff;display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:3px solid;min-height:52px}
+.pv-mark{width:28px;height:28px;border-radius:7px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Yantramanav';font-weight:900;font-size:13px;flex-shrink:0;background:#0174C3}
+.pv-logo{height:32px;object-fit:contain;max-width:110px}
+.pv-name{font-family:'Yantramanav';font-weight:900;font-size:16px}
+.pv-tabs{font-size:10.5px;font-weight:700;color:#707E86;margin-left:auto;white-space:nowrap}
+
+/* --- right side: dashboard --- */
+.dash-toprow{display:flex;align-items:center;gap:12px;padding:20px 22px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.dash-toprow h2{font-size:19px;font-weight:900}
+.stat-chip{display:flex;align-items:center;gap:6px;background:rgba(74,158,255,.12);border:1px solid rgba(74,158,255,.2);color:var(--blue);font-size:12px;font-weight:700;padding:5px 13px;border-radius:99px}
+.runs-chip{background:rgba(62,207,142,.1);border-color:rgba(62,207,142,.2);color:var(--green)}
+.search-row{padding:12px 22px;border-bottom:1px solid var(--border);display:flex;gap:10px}
+.search-input{flex:1;padding:9px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text)}
+.search-input:focus{outline:none;border-color:var(--blue)}
+.btn-refresh{padding:9px 16px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-refresh:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* table */
+.tblwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th{font-family:'Yantramanav';font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:10px 18px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:11px 18px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;font-size:13px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.025)}
+.co-cell{display:flex;align-items:center;gap:11px}
+.co-mark{width:32px;height:32px;border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Yantramanav';font-weight:900;font-size:13px;flex-shrink:0}
+.co-img{width:32px;height:32px;border-radius:8px;object-fit:contain;border:1px solid var(--border);background:#fff;padding:2px}
+.co-name{font-weight:700;font-size:13.5px}
+.co-domain{font-size:11.5px;color:var(--muted)}
+.slug-cell a{color:var(--blue);text-decoration:none;font-size:12.5px}
+.slug-cell a:hover{text-decoration:underline}
+.btn-sm{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;border:none;cursor:pointer;transition:all .2s}
+.btn-sm.copy{background:rgba(74,158,255,.15);color:var(--blue);border:1px solid rgba(74,158,255,.2)}
+.btn-sm.copy:hover{background:rgba(74,158,255,.25)}
+.btn-sm.del{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-sm.del:hover{background:rgba(239,68,68,.22)}
+.runs-val{font-family:'Yantramanav';font-weight:900;font-size:17px}
+.runs-val.zero{color:#3a3f5e}
+.runs-val.low{color:var(--blue)}
+.runs-val.high{color:var(--green)}
+.date-cell{font-size:12px;color:var(--muted)}
+
+.pager{display:flex;align-items:center;gap:10px;justify-content:flex-end;padding:12px 18px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.pager button{padding:5px 13px;border:1px solid var(--border);background:rgba(255,255,255,.05);border-radius:7px;color:var(--text);cursor:pointer;font-size:12px}
+.pager button:disabled{opacity:.3;cursor:default}
+.pager button:not(:disabled):hover{background:rgba(255,255,255,.1)}
+
+.empty-state{padding:50px 22px;text-align:center;color:var(--muted)}
+.empty-state .ei{font-size:40px;margin-bottom:10px}
+
+/* setup card */
+.setup-notice{margin:16px 22px;background:rgba(240,119,37,.08);border:1px solid rgba(240,119,37,.25);border-radius:9px;padding:16px}
+.setup-notice h4{color:var(--orange);font-weight:900;font-size:14px;margin-bottom:6px}
+.setup-notice p{font-size:12.5px;color:#bbb;margin-bottom:10px}
+.setup-notice pre{background:#0a0c14;border-radius:7px;padding:13px;font-size:11px;overflow-x:auto;line-height:1.6;color:#a8c0ff;border:1px solid rgba(255,255,255,.07);max-height:220px}
 </style>
 </head>
 <body>
-<div class="top"><h1>Partner Demo Factory</h1><span class="badge">INTERNAL</span></div>
-<div class="wrap">
+<div class="top">
+  <div class="top-logo">
+    <div class="top-icon">🏷️</div>
+    <h1>Partner Demo Factory</h1>
+    <span class="top-badge">INTERNAL</span>
+  </div>
+  <div class="top-right">
+    <span class="top-user" id="topUser"></span>
+    <button class="top-btn" onclick="logout()">Sign out</button>
+    <a href="/" class="top-btn" style="text-decoration:none">← Back to demo</a>
+  </div>
+</div>
 
-  <div class="card">
-    <h2>Create Partner Demo</h2>
-    <p class="sub">Enter the partner's brand. The generated link opens the full Automation Experience simulation rebranded to them. Certificate products and issuers (DigiCert / Sectigo) stay untouched.</p>
-    <div class="row2">
-      <div class="field"><label>Company name</label><input id="c" placeholder="AcmeSSL Solutions"></div>
-      <div class="field"><label>Partner domain</label><input id="d" placeholder="acmessl.com"></div>
-    </div>
-    <div class="row2">
-      <div class="field"><label>Email sender (auto from domain)</label><input id="e" placeholder="orders@acmessl.com"></div>
-      <div class="field"><label>Logo URL (optional, must start with https://)</label><input id="l" placeholder="https://acmessl.com/logo.png"></div>
-    </div>
-    <div class="colors">
-      <div class="field"><label>Primary</label><input type="color" id="p" value="#0174C3"></div>
-      <div class="field"><label>Accent</label><input type="color" id="a" value="#f07725"></div>
-      <div class="field"><label>Dark / header</label><input type="color" id="k" value="#1c2440"></div>
-    </div>
-    <button class="btn btn-o" onclick="gen()">&#9889; Generate link &mdash; live instantly</button>
-    <div class="result" id="res">
-      <button class="copy" onclick="cp()">Copy link</button>
-      <div class="u" id="url"></div>
-      <small>Permanent as long as this project is deployed. Send it to the partner &mdash; no deploy step needed.</small>
-    </div>
-    <div class="prev" id="prev" style="display:none">
-      <div class="prev-top" id="pvTop"><span>Partner Demo &mdash; Automation Experience Lab</span><span>LIVE SIMULATION</span></div>
-      <div class="prev-nav" id="pvNav">
-        <div class="mark" id="pvMark">A</div>
-        <div class="pname" id="pvName">Acme</div>
-        <div class="ptab">1 Order &middot; 2 Email &middot; 3 Generate &middot; 4 Install &middot; 5 Secured</div>
+<div class="main">
+  <!-- LEFT: Create form -->
+  <div>
+    <div class="card">
+      <div class="card-body">
+        <h2>Create Partner Demo</h2>
+        <p class="sub" style="margin-bottom:16px">Fill in the partner's brand. They get a clean short URL — no long strings, no trace of your main domain.</p>
+
+        <div class="row2">
+          <div class="field"><label>Company name</label><input id="c" placeholder="SSLINDONESIA" oninput="autoSlug()"></div>
+          <div class="field"><label>Short slug (auto)</label><input id="slug" placeholder="sslindonesia" oninput="slugEdited=true"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Partner domain</label><input id="d" placeholder="sslindonesia.com" oninput="autoEmail()"></div>
+          <div class="field"><label>Email sender (auto)</label><input id="e" placeholder="orders@sslindonesia.com"></div>
+        </div>
+        <div class="field"><label>Logo URL (optional, https://...)</label><input id="l" placeholder="https://sslindonesia.com/logo.png"></div>
+
+        <div class="divider"></div>
+        <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px">Brand colors</div>
+        <div class="color-row">
+          <div><div class="color-swatch" id="sw-p"><input type="color" id="p" value="#0174C3" oninput="swatchBg('p')"><div class="clabel">Primary</div></div></div>
+          <div><div class="color-swatch" id="sw-a"><input type="color" id="a" value="#f07725" oninput="swatchBg('a')"><div class="clabel">Accent</div></div></div>
+          <div><div class="color-swatch" id="sw-k"><input type="color" id="k" value="#1c2440" oninput="swatchBg('k')"><div class="clabel">Dark / Header</div></div></div>
+        </div>
+        <div class="divider"></div>
+        <button class="btn-gen" onclick="gen()"><span>⚡</span> Generate Partner Demo Link</button>
+
+        <div class="result-box" id="resBox">
+          <div class="result-label">✓ Demo link generated</div>
+          <div class="result-slug" id="resUrl"></div>
+          <div class="result-note">Clean short URL — no internal strings visible. Partners can share directly with their customers.</div>
+          <div class="result-btns">
+            <button class="btn-copy" onclick="cpUrl()">Copy link</button>
+            <a class="btn-open" id="resOpen" target="_blank" href="#">Open demo ↗</a>
+          </div>
+        </div>
+
+        <div class="preview" id="prev">
+          <div class="pv-top" id="pvTop"><span>Partner Demo — Automation Experience Lab</span><span class="pv-badge">LIVE SIMULATION</span></div>
+          <div class="pv-nav" id="pvNav">
+            <div class="pv-mark" id="pvMark">A</div>
+            <div class="pv-name" id="pvName">Partner</div>
+            <div class="pv-tabs">1 Order · 2 Email · 3 Generate · 4 Install · 5 Secured</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="dash-head">
+  <!-- RIGHT: Dashboard -->
+  <div class="card" style="position:sticky;top:80px">
+    <div class="dash-toprow">
       <h2>Partner Dashboard</h2>
-      <span class="count" id="total">&mdash;</span>
-      <input id="q" placeholder="Search company or domain&hellip;" oninput="page=0;render()">
-      <button class="btn btn-g" onclick="loadAll()">&#8635; Refresh</button>
+      <span class="stat-chip" id="totalChip">— partners</span>
+      <span class="stat-chip runs-chip" id="runsChip">— total runs</span>
     </div>
-    <div id="setupBox" style="display:none" class="setup">
-      <h3>One-time setup needed</h3>
-      <p>The partner registry table doesn't exist yet in Supabase. Open your <b>Supabase dashboard &rarr; SQL Editor</b>, paste this, and click Run. Then hit Refresh above. <button class="copy" style="float:none" onclick="cpSql()">Copy SQL</button></p>
+    <div class="search-row">
+      <input class="search-input" id="q" placeholder="🔍  Search company or domain…" oninput="page=0;render()">
+      <button class="btn-refresh" onclick="loadAll()">↻ Refresh</button>
+    </div>
+    <div id="setupBox" class="setup-notice" style="display:none">
+      <h4>⚙ One-time Supabase setup needed</h4>
+      <p>The partners table doesn't exist yet. Open <b>Supabase → SQL Editor</b>, paste the SQL below, click Run, then Refresh.</p>
       <pre id="sqlBlock"></pre>
+      <button class="btn-copy" onclick="cpSql()" style="margin-top:8px">Copy SQL</button>
     </div>
-    <div class="tblwrap" id="tblwrap" style="display:none">
-      <table>
-        <thead><tr><th>Company</th><th>Domain</th><th>Demo URL</th><th style="text-align:right">Demo runs</th><th>Created</th><th></th></tr></thead>
+    <div class="tblwrap" id="tblwrap">
+      <div class="empty-state" id="emptyState">
+        <div class="ei">🏢</div>
+        <div>No partners yet — create your first one.</div>
+      </div>
+      <table id="tbl" style="display:none">
+        <thead><tr><th>Company</th><th>Short URL</th><th style="text-align:right">Runs</th><th>Created</th><th></th></tr></thead>
         <tbody id="tb"></tbody>
       </table>
     </div>
-    <div class="empty" id="emptyMsg" style="display:none">No partners yet &mdash; create one above.</div>
     <div class="pager" id="pager" style="display:none">
       <span id="pinfo"></span>
-      <button id="pPrev" onclick="page--;render()">&larr; Prev</button>
-      <button id="pNext" onclick="page++;render()">Next &rarr;</button>
+      <button id="pPrev" onclick="page--;render()">← Prev</button>
+      <button id="pNext" onclick="page++;render()">Next →</button>
     </div>
   </div>
 </div>
 
 <script>
-// auth gate — same credentials as the Admin login on the main page
+// ── Auth gate ──
 (function(){
-  var ok=false; try{ok=sessionStorage.getItem('pdfAuth')==='1';}catch(e){}
+  var ok=false;try{ok=sessionStorage.getItem('pdfAuth')==='1';}catch(e){}
   if(!ok){
-    var u=prompt('Admin email:')||'', p=u?(prompt('Password:')||''):'';
-    if(u.trim()==='mathimcafee@gmail.com' && p==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){}}
-    else{document.body.innerHTML='<div style="font-family:Arial;padding:60px;text-align:center;color:#707E86;">Access denied. <a href="/">Back to demo</a></div>';throw new Error('auth');}
+    var u=(prompt('Admin email:')||'').trim();
+    var pw=u?prompt('Password:')||'':'';
+    if(u==='mathimcafee@gmail.com'&&pw==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){}}
+    else{document.body.innerHTML='<div style="font-family:Arial;padding:80px;text-align:center;color:#666">Access denied. <a href="/">← Back</a></div>';throw new Error('auth');}
   }
+  try{var u2=sessionStorage.getItem('pdfUser');if(u2)document.getElementById('topUser').textContent=u2;}catch(e){}
 })();
-var $=function(i){return document.getElementById(i)};
+function logout(){try{sessionStorage.removeItem('pdfAuth');}catch(e){}location.href='/';}
+
 var SB='https://telukonfwodrqmbkwjnz.supabase.co';
 var KEY='sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM';
 var HDR={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'};
+var BASE=location.origin;
 var SQL=[
 'create table if not exists public.partners (',
-'  id text primary key, company text not null, domain text, email text,',
-'  logo text, p text, a text, k text, link text,',
-'  runs int not null default 0, created_at timestamptz default now());',
+'  id text primary key,',
+'  company text not null,',
+'  domain text, email text, logo text,',
+'  p text, a text, k text,',
+'  runs int not null default 0,',
+'  created_at timestamptz default now());',
 'alter table public.partners enable row level security;',
 "create policy p_sel on public.partners for select using (true);",
 "create policy p_ins on public.partners for insert with check (true);",
@@ -155,78 +261,100 @@ var SQL=[
 "create policy p_del on public.partners for delete using (true);",
 'create or replace function public.log_run(pid text) returns void',
 'language sql security definer set search_path=public as',
-'$$ update public.partners set runs=runs+1 where id=pid; $$;',
+"$$ update public.partners set runs=runs+1 where id=pid; $$;",
 'grant execute on function public.log_run(text) to anon;',
-'notify pgrst, \'reload schema\';'
+"notify pgrst, 'reload schema';"
 ].join('\n');
-$('sqlBlock').textContent=SQL;
+document.getElementById('sqlBlock').textContent=SQL;
 function cpSql(){navigator.clipboard&&navigator.clipboard.writeText(SQL);}
-function slug(c){return c.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
-$('d').addEventListener('input',function(){$('e').value=this.value?('orders@'+this.value):'';});
-function enc(o){var s=btoa(unescape(encodeURIComponent(JSON.stringify(o))));return s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-function cfg(){var l=$('l').value.trim();return {c:$('c').value.trim(),d:$('d').value.trim(),e:$('e').value.trim(),p:$('p').value,a:$('a').value,k:$('k').value,l:(/^https?:\/\//.test(l)?l:undefined)};}
+
+// ── Color swatches ──
+function swatchBg(id){
+  var v=document.getElementById(id).value;
+  document.getElementById('sw-'+id).style.background=v;
+}
+['p','a','k'].forEach(swatchBg);
+
+// ── Slug auto-gen ──
+var slugEdited=false;
+function toSlug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
+function autoSlug(){if(!slugEdited)document.getElementById('slug').value=toSlug(document.getElementById('c').value);}
+function autoEmail(){var d=document.getElementById('d').value;document.getElementById('e').value=d?('orders@'+d):'';}
+
+// ── Generate ──
 function gen(){
-  var o=cfg(); if(!o.c){alert('Company name required');return;}
-  var link=location.origin+'/?b='+enc(o);
-  $('url').textContent=link; $('res').classList.add('show');
-  $('prev').style.display='block';
-  $('pvTop').style.background=o.k; $('pvNav').style.borderBottomColor=o.p;
-  $('pvMark').style.background=o.p; $('pvMark').textContent=o.c.split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
-  $('pvName').textContent=o.c; $('pvName').style.color=o.p;
-  // upsert into registry
+  var c=document.getElementById('c').value.trim();
+  var sl=toSlug(document.getElementById('slug').value||c);
+  if(!c||!sl){alert('Company name and slug required');return;}
+  var o={id:sl,company:c,domain:document.getElementById('d').value.trim(),
+         email:document.getElementById('e').value.trim(),
+         logo:(function(){var l=document.getElementById('l').value.trim();return /^https?:\/\//.test(l)?l:null;})(),
+         p:document.getElementById('p').value,a:document.getElementById('a').value,k:document.getElementById('k').value};
+  var link=BASE+'/demo/'+sl;
+  document.getElementById('resUrl').textContent=link;
+  document.getElementById('resOpen').href=link;
+  document.getElementById('resBox').classList.add('show');
+  // preview
+  var pv=document.getElementById('prev'); pv.classList.add('show'); pv.style.display='block';
+  document.getElementById('pvTop').style.background=o.k;
+  document.getElementById('pvNav').style.borderBottomColor=o.p;
+  document.getElementById('pvMark').style.background=o.p;
+  document.getElementById('pvMark').textContent=c.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+  document.getElementById('pvName').style.color=o.p;
+  document.getElementById('pvName').textContent=c;
+  if(o.logo){document.getElementById('pvMark').outerHTML='<img class="pv-logo" src="'+o.logo+'" alt="'+c+'" onerror="this.outerHTML=\'<div class=pv-mark style=background:'+o.p+'>\'+\''+c.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase()+'\'+\'</div>\'">';}
+  // upsert to Supabase
   fetch(SB+'/rest/v1/partners?on_conflict=id',{method:'POST',
     headers:Object.assign({'Prefer':'resolution=merge-duplicates'},HDR),
-    body:JSON.stringify({id:slug(o.c),company:o.c,domain:o.d,email:o.e,logo:o.l||null,p:o.p,a:o.a,k:o.k,link:link})
-  }).then(function(r){ if(r.ok){loadAll();} }).catch(function(){});
+    body:JSON.stringify(o)})
+  .then(function(r){if(r.ok)loadAll();})
+  .catch(function(){});
 }
-function cp(){var t=$('url').textContent;if(navigator.clipboard){navigator.clipboard.writeText(t);}else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}}
+function cpUrl(){var t=document.getElementById('resUrl').textContent;navigator.clipboard&&navigator.clipboard.writeText(t);}
 
-// ---- dashboard ----
-var ALL=[], page=0, PAGE=50;
+// ── Dashboard ──
+var ALL=[],page=0,PAGE=50;
 function loadAll(){
-  $('setupBox').style.display='none';
   fetch(SB+'/rest/v1/partners?select=*&order=created_at.desc&limit=2000',{headers:HDR})
   .then(function(r){
-    if(r.status===404){throw {setup:1};}
-    return r.json().then(function(j){ if(!r.ok){ if(j&&(j.code==='PGRST205'||/relation.*does not exist|Could not find the table/i.test(j.message||''))) throw {setup:1}; throw j;} return j;});
+    if(r.status===404){throw{setup:1};}
+    return r.json().then(function(j){if(!r.ok){if(j&&(/does not exist|PGRST205|Could not find/i.test((j.message||'')+(j.code||''))))throw{setup:1};throw j;}return j;});
   })
-  .then(function(rows){ALL=rows;page=0;render();})
-  .catch(function(e){
-    if(e&&e.setup){$('setupBox').style.display='block';$('tblwrap').style.display='none';$('pager').style.display='none';$('emptyMsg').style.display='none';$('total').textContent='setup needed';}
-    else{$('total').textContent='error';console.error(e);}
-  });
+  .then(function(rows){ALL=rows;page=0;document.getElementById('setupBox').style.display='none';render();})
+  .catch(function(e){if(e&&e.setup){document.getElementById('setupBox').style.display='block';}});
 }
-function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
 function render(){
-  var q=$('q').value.trim().toLowerCase();
-  var rows=ALL.filter(function(r){return !q||(r.company||'').toLowerCase().indexOf(q)>-1||(r.domain||'').toLowerCase().indexOf(q)>-1;});
-  $('total').textContent=ALL.length+' partner'+(ALL.length===1?'':'s')+(q?' · '+rows.length+' match':'');
-  var pages=Math.max(1,Math.ceil(rows.length/PAGE)); if(page>=pages)page=pages-1; if(page<0)page=0;
-  var slice=rows.slice(page*PAGE,(page+1)*PAGE), tb=$('tb'); tb.innerHTML='';
-  $('tblwrap').style.display=rows.length?'block':'none';
-  $('emptyMsg').style.display=rows.length?'none':'block';
-  $('pager').style.display=rows.length>PAGE?'flex':'none';
-  $('pinfo').textContent='Page '+(page+1)+' of '+pages;
-  $('pPrev').disabled=page===0; $('pNext').disabled=page>=pages-1;
+  var q=document.getElementById('q').value.trim().toLowerCase();
+  var rows=ALL.filter(function(r){return!q||(r.company||'').toLowerCase().indexOf(q)>-1||(r.domain||'').toLowerCase().indexOf(q)>-1;});
+  var totalRuns=ALL.reduce(function(s,r){return s+(r.runs||0);},0);
+  document.getElementById('totalChip').textContent=ALL.length+' partner'+(ALL.length!==1?'s':'');
+  document.getElementById('runsChip').textContent=totalRuns+' total run'+(totalRuns!==1?'s':'');
+  var pages=Math.max(1,Math.ceil(rows.length/PAGE));if(page>=pages)page=pages-1;if(page<0)page=0;
+  var slice=rows.slice(page*PAGE,(page+1)*PAGE),tb=document.getElementById('tb');tb.innerHTML='';
+  document.getElementById('tbl').style.display=rows.length?'table':'none';
+  document.getElementById('emptyState').style.display=rows.length?'none':'block';
+  document.getElementById('pager').style.display=rows.length>PAGE?'flex':'none';
+  document.getElementById('pinfo').textContent='Page '+(page+1)+' of '+pages;
+  document.getElementById('pPrev').disabled=page===0;document.getElementById('pNext').disabled=page>=pages-1;
   slice.forEach(function(r){
-    var tr=document.createElement('tr');
-    var ini=(r.company||'?').split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
-    var logo=r.logo?'<img src="'+esc(r.logo)+'" alt="" onerror="this.outerHTML=\'<span class=mark style=background:'+esc(r.p||'#0174C3')+'>'+esc(ini)+'</span>\'">'
-                   :'<span class="mark" style="background:'+esc(r.p||'#0174C3')+'">'+esc(ini)+'</span>';
+    var slug=r.id,link=BASE+'/demo/'+slug;
+    var ini=(r.company||'?').split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    var logoEl=r.logo
+      ?'<img class="co-img" src="'+esc(r.logo)+'" alt="" onerror="this.outerHTML=\'<div class=co-mark style=background:'+esc(r.p||'#0174C3')+'>'+esc(ini)+'</div>\'">'
+      :'<div class="co-mark" style="background:'+esc(r.p||'#0174C3')+'">'+esc(ini)+'</div>';
     var runs=r.runs||0;
-    tr.innerHTML='<td><div class="co">'+logo+'<span>'+esc(r.company)+'</span></div></td>'
-      +'<td>'+esc(r.domain||'—')+'<div class="pill">'+esc(r.email||'')+'</div></td>'
-      +'<td><a class="lnk" target="_blank" href="'+esc(r.link)+'">Open demo &#8599;</a> <button class="copy" style="float:none;padding:3px 9px" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+esc(r.link)+'\')">copy</button></td>'
-      +'<td style="text-align:right"><span class="runs'+(runs?'':' zero')+'">'+runs+'</span></td>'
-      +'<td class="pill">'+(r.created_at?new Date(r.created_at).toLocaleDateString():'')+'</td>'
-      +'<td><button class="copy" style="float:none;background:#c0392b;padding:3px 9px" onclick="delP(\''+esc(r.id)+'\')">delete</button></td>';
+    var rClass=runs===0?'zero':runs<10?'low':'high';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><div class="co-cell">'+logoEl+'<div><div class="co-name">'+esc(r.company)+'</div><div class="co-domain">'+esc(r.domain||'')+'</div></div></div></td>'
+      +'<td class="slug-cell"><a href="'+esc(link)+'" target="_blank">/demo/'+esc(slug)+' ↗</a></td>'
+      +'<td style="text-align:right"><span class="runs-val '+rClass+'">'+runs+'</span></td>'
+      +'<td class="date-cell">'+(r.created_at?new Date(r.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'')+'</td>'
+      +'<td><div style="display:flex;gap:6px"><button class="btn-sm copy" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+esc(link)+'\')">copy</button><button class="btn-sm del" onclick="delP(\''+esc(slug)+'\')">delete</button></div></td>';
     tb.appendChild(tr);
   });
 }
-function delP(id){
-  if(!confirm('Remove this partner from the registry? The link itself keeps working.'))return;
-  fetch(SB+'/rest/v1/partners?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:HDR}).then(loadAll);
-}
+function delP(id){if(!confirm('Remove this partner? Their demo link will stop working.'))return;fetch(SB+'/rest/v1/partners?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:HDR}).then(loadAll);}
 loadAll();
 </script>
 </body>

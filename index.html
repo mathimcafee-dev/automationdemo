@@ -1809,62 +1809,91 @@ function msCopy(id){
 </script>
 <script id="partner-brand-loader">
 (function(){
-  function dec(s){try{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return JSON.parse(decodeURIComponent(escape(atob(s))));}catch(e){return null;}}
-  var m=(location.search+location.hash).match(/[?&#]b=([A-Za-z0-9_-]+)/);
-  var B=m?dec(m[1]):null;
-  if(!B||!B.c)return;
-  var comp=B.c, dom=B.d||'', mail=B.e||('orders@'+(dom||'partner-demo.com'));
-  var prim=B.p||'#0174C3', acc=B.a||'#f07725', dark=B.k||'#1c2440';
-  function shade(hex,f){var n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;r=Math.round(r*f);g=Math.round(g*f);b=Math.round(b*f);return '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);}
-  // 1. Colors — repaint via the tss token layer
-  var st=document.createElement('style');
-  st.textContent=':root{--tss-navy:'+dark+' !important;--tss-navy2:'+shade(dark,0.72)+' !important;--tss-orange:'+acc+' !important;--tss-blue:'+prim+' !important;}';
-  document.head.appendChild(st);
-  // 2. Title
-  document.title='Automation Experience \u2014 '+comp+' Partner Demo';
-  // 3. Logo swap (letter mark, or B.l logo URL)
-  function initials(n){return n.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();}
-  if(B.l && !/^https?:\/\//.test(B.l)) B.l=null;
-  function swapLogo(){
-    var box=document.querySelector('.simbar-logo'); if(!box)return;
-    if(box.getAttribute('data-pbl')==='1')return; box.setAttribute('data-pbl','1');
-    if(B.l){box.innerHTML='<img src="'+B.l+'" alt="'+comp+'" style="height:40px;display:block;background:#fff;padding:5px 10px;border-radius:4px;">';}
-    else{box.innerHTML='<div style="display:flex;align-items:center;gap:9px;background:#fff;padding:5px 12px;border-radius:4px;">'
-      +'<div style="width:30px;height:30px;border-radius:6px;background:'+prim+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:Yantramanav,Arial,sans-serif;font-weight:900;font-size:15px;">'+initials(comp)+'</div>'
-      +'<div style="font-family:Yantramanav,Arial,sans-serif;font-weight:900;font-size:19px;color:'+dark+';white-space:nowrap;">'+comp+'</div></div>';}
-  }
-  // 4. Text rebrand — walk text nodes, live via MutationObserver
-  var MAP=[[/The SSL Store\u2122/g,comp],[/The SSL Store\u00AE/g,comp],[/The SSL Store/g,comp],
-           [/AutoInstall SSL Orders/g,comp+' Orders'],[/orders@autoinstall\.app/g,mail]];
-  function fix(node){
-    if(node.nodeType===3){var t=node.nodeValue,o=t;for(var i=0;i<MAP.length;i++)t=t.replace(MAP[i][0],MAP[i][1]);if(t!==o)node.nodeValue=t;return;}
-    if(node.nodeType!==1||node.id==='partner-brand-loader'||node.tagName==='SCRIPT'||node.tagName==='STYLE')return;
-    for(var c=node.firstChild;c;c=c.nextSibling)fix(c);
-  }
-  function run(){swapLogo();fix(document.body);}
-  run();
-  var busy=false;
-  new MutationObserver(function(ms){
-    if(busy)return; busy=true;
-    try{ms.forEach(function(mu){
-      if(mu.target && mu.target.closest && mu.target.closest('.simbar-logo'))return;
-      if(mu.type==='characterData'){fix(mu.target);}
-      mu.addedNodes&&mu.addedNodes.forEach(fix);
-    });swapLogo();}finally{busy=false;}
-  }).observe(document.body,{childList:true,subtree:true,characterData:true});
-  // count demo run (once per browser session per partner)
-  try{
-    var pid=comp.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-    if(pid && !sessionStorage.getItem('pdfRun_'+pid)){
-      sessionStorage.setItem('pdfRun_'+pid,'1');
-      fetch('https://telukonfwodrqmbkwjnz.supabase.co/rest/v1/rpc/log_run',{method:'POST',
-        headers:{'apikey':'sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM','Authorization':'Bearer sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM','Content-Type':'application/json'},
-        body:JSON.stringify({pid:pid})}).catch(function(){});
+  var SB='https://telukonfwodrqmbkwjnz.supabase.co';
+  var KEY='sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM';
+
+  // Detect mode: /demo/<slug> or legacy ?b=<base64>
+  var slugMatch=location.pathname.match(/^\/demo\/([a-z0-9-]+)$/i);
+  var bMatch=(location.search+location.hash).match(/[?&#]b=([A-Za-z0-9_-]+)/);
+
+  function applyBrand(B){
+    if(!B||!B.company)return;
+    var comp=B.company,dom=B.domain||'',mail=B.email||('orders@'+(dom||'partner-demo.com'));
+    var prim=B.p||'#0174C3',acc=B.a||'#f07725',dark=B.k||'#1c2440';
+    function shade(hex,f){var n=parseInt(hex.slice(1),16),r2=(n>>16)&255,g=(n>>8)&255,b=n&255;return '#'+((1<<24)|(Math.round(r2*f)<<16)|(Math.round(g*f)<<8)|Math.round(b*f)).toString(16).slice(1);}
+    var st=document.createElement('style');
+    st.textContent=':root{--tss-navy:'+dark+' !important;--tss-navy2:'+shade(dark,.72)+' !important;--tss-orange:'+acc+' !important;--tss-blue:'+prim+' !important;}';
+    document.head.appendChild(st);
+    document.title='Automation Experience — '+comp+' Partner Demo';
+    function initials(n){return n.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();}
+    var logoSwapped=false;
+    function swapLogo(){
+      if(logoSwapped)return;
+      var box=document.querySelector('.simbar-logo');if(!box)return;
+      logoSwapped=true; box.setAttribute('data-pbl','1');
+      if(B.logo&&/^https?:\/\//.test(B.logo)){
+        box.innerHTML='<img src="'+B.logo+'" alt="'+comp+'" style="height:40px;display:block;background:#fff;padding:5px 10px;border-radius:4px;">';
+      } else {
+        box.innerHTML='<div style="display:flex;align-items:center;gap:9px;background:#fff;padding:5px 12px;border-radius:4px;">'
+          +'<div style="width:30px;height:30px;border-radius:6px;background:'+prim+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:Yantramanav,Arial,sans-serif;font-weight:900;font-size:15px;">'+initials(comp)+'</div>'
+          +'<div style="font-family:Yantramanav,Arial,sans-serif;font-weight:900;font-size:19px;color:'+dark+';white-space:nowrap;">'+comp+'</div></div>';
+      }
     }
-  }catch(e){}
-  // keep brand param across pushState navigation
-  var _ps=history.pushState.bind(history);
-  history.pushState=function(s,t,u){if(u&&u.indexOf('b=')===-1){u+=(u.indexOf('?')>-1?'&':'?')+'b='+m[1];}return _ps(s,t,u);};
+    var MAP=[[/The SSL Store™/g,comp],[/The SSL Store®/g,comp],[/The SSL Store/g,comp],
+             [/AutoInstall SSL Orders/g,comp+' Orders'],[/orders@autoinstall\.app/g,mail]];
+    function fix(node){
+      if(node.nodeType===3){var t=node.nodeValue,o=t;for(var i=0;i<MAP.length;i++)t=t.replace(MAP[i][0],MAP[i][1]);if(t!==o)node.nodeValue=t;return;}
+      if(node.nodeType!==1||node.id==='partner-brand-loader'||node.tagName==='SCRIPT'||node.tagName==='STYLE')return;
+      for(var c=node.firstChild;c;c=c.nextSibling)fix(c);
+    }
+    function run(){swapLogo();fix(document.body);}
+    run();
+    var busy=false;
+    new MutationObserver(function(ms){
+      if(busy)return;busy=true;
+      try{ms.forEach(function(mu){
+        if(mu.target&&mu.target.closest&&mu.target.closest('.simbar-logo'))return;
+        if(mu.type==='characterData'){fix(mu.target);}
+        mu.addedNodes&&mu.addedNodes.forEach(fix);
+      });swapLogo();}finally{busy=false;}
+    }).observe(document.body,{childList:true,subtree:true,characterData:true});
+    // count demo run (once per browser session per partner)
+    try{
+      var pid=B.id||B.company.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+      if(pid&&!sessionStorage.getItem('pdfRun_'+pid)){
+        sessionStorage.setItem('pdfRun_'+pid,'1');
+        fetch(SB+'/rest/v1/rpc/log_run',{method:'POST',
+          headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},
+          body:JSON.stringify({pid:pid})}).catch(function(){});
+      }
+    }catch(e){}
+    // keep /demo/slug path across pushState navigation
+    if(slugMatch){
+      var _ps=history.pushState.bind(history);
+      history.pushState=function(st2,t,u){
+        if(u&&!u.match(/^\/demo\//)){u=(u.indexOf('?')>-1?u+'&':'u+'+'?')+'_p='+slugMatch[1];}
+        return _ps(st2,t,u);
+      };
+    }
+  }
+
+  if(slugMatch){
+    // Slug mode: fetch brand from Supabase
+    var slug=slugMatch[1];
+    fetch(SB+'/rest/v1/partners?id=eq.'+encodeURIComponent(slug)+'&select=*&limit=1',
+      {headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
+    .then(function(r){return r.json();})
+    .then(function(rows){if(rows&&rows.length)applyBrand(rows[0]);})
+    .catch(function(){});
+  } else if(bMatch){
+    // Legacy ?b= mode — decode inline
+    try{
+      var raw=bMatch[1].replace(/-/g,'+').replace(/_/g,'/');
+      while(raw.length%4)raw+='=';
+      var B=JSON.parse(decodeURIComponent(escape(atob(raw))));
+      applyBrand({company:B.c,domain:B.d,email:B.e,logo:B.l,p:B.p,a:B.a,k:B.k});
+    }catch(e){}
+  }
 })();
 </script>
 
