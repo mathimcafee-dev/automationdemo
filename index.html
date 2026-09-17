@@ -603,22 +603,23 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 <section class="simscreen" id="s-setup">
 <style>
 /* ── Setup screen two-column layout ── */
-.setup-outer{display:grid;grid-template-columns:minmax(0,660px) 360px;min-height:calc(100vh - 88px);align-items:start;max-width:1100px;margin:0 auto;}
+.setup-outer{display:grid;grid-template-columns:minmax(0,580px) 1fr;min-height:100vh;align-items:start;max-width:none;}
 @media(max-width:980px){.setup-outer{grid-template-columns:1fr;max-width:660px;}}
-.setup-form-col{padding:60px 32px 80px;border-right:1px solid #e2e4ef;}
-@media(max-width:980px){.setup-form-col{border-right:none;padding:36px 20px 48px;}}
+.setup-form-col{padding:52px 40px 72px 52px;border-right:1px solid #e2e4ef;background:#f8f9fb;}
+@media(max-width:980px){.setup-form-col{border-right:none;padding:36px 20px 48px;background:#f8f9fb;}}
 /* override simwrap inside setup */
 #s-setup .simwrap{max-width:none!important;margin:0!important;padding:0!important;}
 
 /* right column */
 .setup-rhs{position:sticky;top:0;height:100vh;background:linear-gradient(160deg,#0d2340 0%,#122a4a 50%,#0a1e37 100%);overflow:hidden;display:flex;flex-direction:column;padding:0;}
 @media(max-width:980px){.setup-rhs{display:none;}}
+.setup-form-inner{max-width:480px;width:100%;}
 .rhs-glow{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .rhs-glow::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(1,116,195,.28) 0%,transparent 70%);top:-80px;right:-100px;animation:rhsPulse 6s ease-in-out infinite;}
 .rhs-glow::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(240,119,37,.15) 0%,transparent 70%);bottom:-60px;left:-60px;animation:rhsPulse 8s ease-in-out infinite reverse;}
 @keyframes rhsPulse{0%,100%{transform:scale(1);opacity:.8;}50%{transform:scale(1.12);opacity:1;}}
 
-.rhs-inner{position:relative;z-index:2;padding:60px 28px 32px;flex:1;display:flex;flex-direction:column;}
+.rhs-inner{position:relative;z-index:2;padding:52px 36px 32px;flex:1;display:flex;flex-direction:column;}
 .rhs-head{margin-bottom:28px;}
 .rhs-head .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(1,116,195,.2);border:1px solid rgba(1,116,195,.4);color:#6fc3ef;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
 .rhs-head h2{font-family:'Yantramanav',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px;}
@@ -652,6 +653,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 
   <!-- LEFT: form -->
   <div class="setup-form-col">
+    <div class="setup-form-inner">
     <div style="margin-bottom:28px;">
       <div class="tss-step-label" style="margin-bottom:8px;">Partner Demo</div>
       <h1 class="tss-h1">Start a customer journey</h1>
@@ -704,6 +706,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
     <button class="btn-lch" id="b-start" disabled>Place simulated order &rarr;</button>
     <p id="b-start-hint" style="text-align:center;font-size:13px;color:var(--tss-gray);margin-top:10px;font-family:'Yantramanav',Arial,sans-serif;">Select a product above to continue</p>
   </div>
+
+    </div><!-- /setup-form-inner -->
 
   <!-- RIGHT: animated showcase -->
   <div class="setup-rhs">
