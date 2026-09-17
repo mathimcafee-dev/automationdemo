@@ -1812,9 +1812,11 @@ function msCopy(id){
   var SB='https://telukonfwodrqmbkwjnz.supabase.co';
   var KEY='sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM';
 
-  // Detect mode: /demo/<slug> or legacy ?b=<base64>
-  var slugMatch=location.pathname.match(/^\/demo\/([a-z0-9-]+)$/i);
-  var bMatch=(location.search+location.hash).match(/[?&#]b=([A-Za-z0-9_-]+)/);
+  // Detect mode: subdomain (slug.ssldemo.site), /demo/<slug>, or legacy ?b=<base64>
+  var hostname=location.hostname;
+  var subdomainMatch=hostname.match(/^([a-z0-9-]+)\.ssldemo\.site$/i);
+  var slugMatch=!subdomainMatch && location.pathname.match(/^\/demo\/([a-z0-9-]+)$/i);
+  var bMatch=!subdomainMatch && !slugMatch && (location.search+location.hash).match(/[?&#]b=([A-Za-z0-9_-]+)/);
 
   function applyBrand(B){
     if(!B||!B.company)return;
@@ -1877,9 +1879,9 @@ function msCopy(id){
     }
   }
 
-  if(slugMatch){
-    // Slug mode: fetch brand from Supabase
-    var slug=slugMatch[1];
+  if(subdomainMatch||slugMatch){
+    // Slug/subdomain mode: fetch brand from Supabase
+    var slug=subdomainMatch?subdomainMatch[1]:slugMatch[1];
     fetch(SB+'/rest/v1/partners?id=eq.'+encodeURIComponent(slug)+'&select=*&limit=1',
       {headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
     .then(function(r){return r.json();})

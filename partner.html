@@ -245,7 +245,7 @@ function logout(){try{sessionStorage.removeItem('pdfAuth');}catch(e){}location.h
 var SB='https://telukonfwodrqmbkwjnz.supabase.co';
 var KEY='sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM';
 var HDR={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'};
-var BASE=location.origin;
+var BASE='https://ssldemo.site'; // partner links use subdomain per partner
 var SQL=[
 'create table if not exists public.partners (',
 '  id text primary key,',
@@ -290,7 +290,7 @@ function gen(){
          email:document.getElementById('e').value.trim(),
          logo:(function(){var l=document.getElementById('l').value.trim();return /^https?:\/\//.test(l)?l:null;})(),
          p:document.getElementById('p').value,a:document.getElementById('a').value,k:document.getElementById('k').value};
-  var link=BASE+'/demo/'+sl;
+  var link='https://'+sl+'.ssldemo.site';
   document.getElementById('resUrl').textContent=link;
   document.getElementById('resOpen').href=link;
   document.getElementById('resBox').classList.add('show');
@@ -338,7 +338,7 @@ function render(){
   document.getElementById('pinfo').textContent='Page '+(page+1)+' of '+pages;
   document.getElementById('pPrev').disabled=page===0;document.getElementById('pNext').disabled=page>=pages-1;
   slice.forEach(function(r){
-    var slug=r.id,link=BASE+'/demo/'+slug;
+    var slug=r.id,link='https://'+slug+'.ssldemo.site';
     var ini=(r.company||'?').split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
     var logoEl=r.logo
       ?'<img class="co-img" src="'+esc(r.logo)+'" alt="" onerror="this.outerHTML=\'<div class=co-mark style=background:'+esc(r.p||'#0174C3')+'>'+esc(ini)+'</div>\'">'
