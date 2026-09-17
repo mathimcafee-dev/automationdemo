@@ -1782,5 +1782,49 @@ function msCopy(id){
 }
 
 </script>
+<script id="partner-brand-loader">
+(function(){
+  function dec(s){try{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return JSON.parse(decodeURIComponent(escape(atob(s))));}catch(e){return null;}}
+  var m=(location.search+location.hash).match(/[?&#]b=([A-Za-z0-9_-]+)/);
+  var B=m?dec(m[1]):null;
+  if(!B||!B.c)return;
+  var comp=B.c, dom=B.d||'', mail=B.e||('orders@'+(dom||'partner-demo.com'));
+  var prim=B.p||'#0174C3', acc=B.a||'#f07725', dark=B.k||'#1c2440';
+  function shade(hex,f){var n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;r=Math.round(r*f);g=Math.round(g*f);b=Math.round(b*f);return '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);}
+  // 1. Colors — repaint via the tss token layer
+  var st=document.createElement('style');
+  st.textContent=':root{--tss-navy:'+dark+' !important;--tss-navy2:'+shade(dark,0.72)+' !important;--tss-orange:'+acc+' !important;--tss-blue:'+prim+' !important;}';
+  document.head.appendChild(st);
+  // 2. Title
+  document.title='Automation Experience \u2014 '+comp+' Partner Demo';
+  // 3. Logo swap (letter mark, or B.l logo URL)
+  function initials(n){return n.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();}
+  function swapLogo(){
+    var box=document.querySelector('.simbar-logo'); if(!box)return;
+    if(B.l){box.innerHTML='<img src="'+B.l+'" alt="'+comp+'" style="height:40px;display:block;background:#fff;padding:5px 10px;border-radius:4px;">';}
+    else{box.innerHTML='<div style="display:flex;align-items:center;gap:9px;background:#fff;padding:5px 12px;border-radius:4px;">'
+      +'<div style="width:30px;height:30px;border-radius:6px;background:'+prim+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:Yantramanav,Arial,sans-serif;font-weight:900;font-size:15px;">'+initials(comp)+'</div>'
+      +'<div style="font-family:Yantramanav,Arial,sans-serif;font-weight:900;font-size:19px;color:'+dark+';white-space:nowrap;">'+comp+'</div></div>';}
+  }
+  // 4. Text rebrand — walk text nodes, live via MutationObserver
+  var MAP=[[/The SSL Store\u2122/g,comp],[/The SSL Store\u00AE/g,comp],[/The SSL Store/g,comp],
+           [/AutoInstall SSL Orders/g,comp+' Orders'],[/orders@autoinstall\.app/g,mail]];
+  function fix(node){
+    if(node.nodeType===3){var t=node.nodeValue,o=t;for(var i=0;i<MAP.length;i++)t=t.replace(MAP[i][0],MAP[i][1]);if(t!==o)node.nodeValue=t;return;}
+    if(node.nodeType!==1||node.id==='partner-brand-loader'||node.tagName==='SCRIPT'||node.tagName==='STYLE')return;
+    for(var c=node.firstChild;c;c=c.nextSibling)fix(c);
+  }
+  function run(){swapLogo();fix(document.body);}
+  run();
+  new MutationObserver(function(ms){ms.forEach(function(mu){
+    if(mu.type==='characterData'){fix(mu.target);}
+    mu.addedNodes&&mu.addedNodes.forEach(fix);
+  });swapLogo();}).observe(document.body,{childList:true,subtree:true,characterData:true});
+  // keep brand param across pushState navigation
+  var _ps=history.pushState.bind(history);
+  history.pushState=function(s,t,u){if(u&&u.indexOf('b=')===-1){u+=(u.indexOf('?')>-1?'&':'?')+'b='+m[1];}return _ps(s,t,u);};
+})();
+</script>
+
 </body>
 </html>

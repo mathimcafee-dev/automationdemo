@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Partner Demo Factory</title>
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#29306c;--orange:#f07725;--blue:#0174C3;--green:#54A245;--gray:#707E86;--border:#e2e4ef;--bg:#f5f6fa;
+--r:8px;--ease:cubic-bezier(.22,1,.36,1);--dur:200ms;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Tahoma,sans-serif;background:var(--bg);color:#222;line-height:1.5}
+h1,h2,h3{font-family:'Yantramanav',Arial,sans-serif}
+.top{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.top h1{font-weight:900;font-size:20px}
+.badge{background:var(--orange);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 10px;border-radius:99px}
+.wrap{max-width:1060px;margin:26px auto;padding:0 16px;display:grid;grid-template-columns:1fr 330px;gap:22px}
+@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:22px}
+.card h2{font-weight:900;font-size:20px;color:var(--navy);margin-bottom:4px}
+.sub{font-size:13px;color:var(--gray);margin-bottom:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.colors{display:flex;gap:14px;flex-wrap:wrap}
+.colors .field{flex:1;min-width:90px}
+.colors input[type=color]{width:100%;height:40px;padding:2px;cursor:pointer}
+.btn{font-family:'Yantramanav';font-weight:700;font-size:15px;border:none;border-radius:6px;padding:12px 20px;cursor:pointer;transition:transform var(--dur) var(--ease)}
+.btn:hover{transform:translateY(-1px)}
+.btn-o{background:var(--orange);color:#fff}
+.result{margin-top:18px;background:rgba(84,162,69,.08);border:1px solid var(--green);border-radius:var(--r);padding:14px 16px;display:none}
+.result.show{display:block}
+.result .u{font-family:'Yantramanav';font-weight:700;font-size:14px;color:var(--green);word-break:break-all}
+.result small{color:var(--gray);font-size:12px;display:block;margin-top:6px}
+.copy{float:right;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;margin-left:10px}
+.prev{margin-top:18px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.prev-top{color:#fff;font-size:11px;padding:6px 14px;display:flex;justify-content:space-between}
+.prev-nav{background:#fff;display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:3px solid}
+.mark{width:26px;height:26px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Yantramanav';font-weight:900;font-size:13px}
+.pname{font-family:'Yantramanav';font-weight:900;font-size:16px}
+.ptab{font-size:11px;font-weight:700;color:var(--gray);margin-left:auto}
+.side h3{font-size:13px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.plist{list-style:none}
+.plist li{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.plist .nm{font-weight:700}
+.plist a{color:var(--blue);font-size:12px;word-break:break-all;text-decoration:none}
+.plist .rm{float:right;color:#c0392b;cursor:pointer;font-size:12px;background:none;border:none}
+.empty{color:var(--gray);font-size:13px}
+</style>
+</head>
+<body>
+<div class="top"><h1>Partner Demo Factory</h1><span class="badge">INTERNAL — LINK GENERATOR</span></div>
+<div class="wrap">
+  <div class="card">
+    <h2>Create Partner Demo</h2>
+    <p class="sub">Enter the partner's brand. The generated link opens the full Automation Experience simulation rebranded to them — logo, colors, company name, and email sender. Certificate products and issuers (DigiCert / Sectigo) stay untouched.</p>
+    <div class="row2">
+      <div class="field"><label>Company name</label><input id="c" placeholder="AcmeSSL Solutions"></div>
+      <div class="field"><label>Partner domain</label><input id="d" placeholder="acmessl.com"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Email sender (auto from domain)</label><input id="e" placeholder="orders@acmessl.com"></div>
+      <div class="field"><label>Logo URL (optional — https://...)</label><input id="l" placeholder="leave empty for letter mark"></div>
+    </div>
+    <div class="colors">
+      <div class="field"><label>Primary</label><input type="color" id="p" value="#0174C3"></div>
+      <div class="field"><label>Accent</label><input type="color" id="a" value="#f07725"></div>
+      <div class="field"><label>Dark / header</label><input type="color" id="k" value="#1c2440"></div>
+    </div>
+    <button class="btn btn-o" onclick="gen()">⚡ Generate link — live instantly</button>
+    <div class="result" id="res">
+      <button class="copy" onclick="cp()">Copy link</button>
+      <div class="u" id="url"></div>
+      <small>Permanent as long as this project is deployed. Send it to the partner — no deploy step needed.</small>
+    </div>
+    <div class="prev" id="prev" style="display:none">
+      <div class="prev-top" id="pvTop"><span>Partner Demo — Automation Experience Lab</span><span>LIVE SIMULATION</span></div>
+      <div class="prev-nav" id="pvNav">
+        <div class="mark" id="pvMark">A</div>
+        <div class="pname" id="pvName">Acme</div>
+        <div class="ptab">1 Order · 2 Email · 3 Generate · 4 Install · 5 Secured</div>
+      </div>
+    </div>
+  </div>
+  <div class="card side">
+    <h3>Saved partner demos</h3>
+    <ul class="plist" id="list"></ul>
+    <p class="empty" id="none">None yet — links you generate are saved here (on this browser).</p>
+  </div>
+</div>
+<script>
+var $=function(i){return document.getElementById(i)};
+$('d').addEventListener('input',function(){ if(!$('e').value||$('e').value.indexOf('@')===$('e').value.length-0) $('e').value=this.value?('orders@'+this.value):''; });
+function enc(o){var s=btoa(unescape(encodeURIComponent(JSON.stringify(o))));return s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function cfg(){return {c:$('c').value.trim(),d:$('d').value.trim(),e:$('e').value.trim(),p:$('p').value,a:$('a').value,k:$('k').value,l:$('l').value.trim()||undefined};}
+function gen(){
+  var o=cfg(); if(!o.c){alert('Company name required');return;}
+  var link=location.origin+'/?b='+enc(o);
+  $('url').textContent=link; $('res').classList.add('show');
+  // preview
+  $('prev').style.display='block';
+  $('pvTop').style.background=o.k; $('pvNav').style.borderBottomColor=o.p;
+  $('pvMark').style.background=o.p; $('pvMark').textContent=o.c.split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
+  $('pvName').textContent=o.c; $('pvName').style.color=o.p;
+  save(o,link); render();
+}
+function cp(){var t=$('url').textContent;if(navigator.clipboard){navigator.clipboard.writeText(t);}else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}}
+function load(){try{return JSON.parse(localStorage.getItem('partnerDemos')||'[]')}catch(e){return[]}}
+function save(o,link){var L=load().filter(function(x){return x.c!==o.c});L.unshift({c:o.c,d:o.d,link:link});try{localStorage.setItem('partnerDemos',JSON.stringify(L.slice(0,30)))}catch(e){}}
+function del(c){var L=load().filter(function(x){return x.c!==c});try{localStorage.setItem('partnerDemos',JSON.stringify(L))}catch(e){};render();}
+function render(){var L=load(),ul=$('list');ul.innerHTML='';$('none').style.display=L.length?'none':'block';
+  L.forEach(function(x){var li=document.createElement('li');
+    li.innerHTML='<button class="rm">remove</button><div class="nm"></div><a target="_blank"></a>';
+    li.querySelector('.nm').textContent=x.c+(x.d?' · '+x.d:'');
+    var a=li.querySelector('a');a.href=x.link;a.textContent=x.link.replace(location.origin,'');
+    li.querySelector('.rm').onclick=function(){del(x.c)};
+    ul.appendChild(li);});}
+render();
+</script>
+</body>
+</html>
