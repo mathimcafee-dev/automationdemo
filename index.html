@@ -603,31 +603,42 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 <section class="simscreen" id="s-setup">
 <style>
 /* ── Setup screen two-column layout ── */
-.setup-outer{display:grid;grid-template-columns:minmax(0,580px) 1fr;min-height:100vh;align-items:start;max-width:none;}
-@media(max-width:980px){.setup-outer{grid-template-columns:1fr;max-width:660px;}}
-.setup-form-col{padding:52px 40px 72px 52px;border-right:1px solid #e2e4ef;background:#f8f9fb;}
-@media(max-width:980px){.setup-form-col{border-right:none;padding:36px 20px 48px;background:#f8f9fb;}}
-/* override simwrap inside setup */
-#s-setup .simwrap{max-width:none!important;margin:0!important;padding:0!important;}
-
-/* right column */
-.setup-rhs{position:sticky;top:0;height:100vh;background:linear-gradient(160deg,#0d2340 0%,#122a4a 50%,#0a1e37 100%);overflow:hidden;display:flex;flex-direction:column;padding:0;}
-@media(max-width:980px){.setup-rhs{display:none;}}
-.setup-form-inner{max-width:480px;width:100%;}
+.setup-outer{min-height:100vh;background:#0b1626;background-image:radial-gradient(ellipse 60% 50% at 20% 0%,rgba(1,116,195,.22),transparent 60%),radial-gradient(ellipse 50% 40% at 90% 100%,rgba(240,119,37,.14),transparent 60%);display:flex;align-items:center;justify-content:center;padding:48px 32px;}
+.setup-grid{width:100%;max-width:1440px;display:grid;grid-template-columns:1.15fr 1.2fr .85fr;gap:24px;align-items:stretch;}
+@media(max-width:1180px){.setup-grid{grid-template-columns:1fr 1fr;}.setup-admin-col{grid-column:1/-1;}}
+@media(max-width:820px){.setup-grid{grid-template-columns:1fr;}.setup-mid-col{display:none;}}
+.setup-form-col{background:#fff;border-radius:18px;padding:36px 36px 32px;box-shadow:0 30px 80px rgba(0,0,0,.35);display:flex;flex-direction:column;}
+.setup-form-inner{width:100%;}
+.setup-form-col .lch-panel{box-shadow:none;border:1px solid #e6e9f0;}
+.setup-mid-col{position:relative;border-radius:18px;background:linear-gradient(160deg,#102845 0%,#132c4e 55%,#0d2240 100%);border:1px solid rgba(255,255,255,.08);overflow:hidden;display:flex;flex-direction:column;}
+.setup-admin-col{background:#fff;border-radius:18px;padding:40px 36px;box-shadow:0 30px 80px rgba(0,0,0,.35);display:flex;flex-direction:column;justify-content:center;}
+.adm-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#0d2340,#1e4a7a);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px;}
+.adm-title{font-family:'Yantramanav',Arial,sans-serif;font-size:26px;font-weight:900;color:#1a2640;margin-bottom:6px;line-height:1.1;}
+.adm-sub{font-size:13.5px;color:#6b7a8d;line-height:1.5;margin-bottom:28px;}
+.adm-field{margin-bottom:16px;}
+.adm-field label{display:block;font-size:11px;font-weight:700;color:#4a5568;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;font-family:'Yantramanav',Arial,sans-serif;}
+.adm-input{width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:14px;color:#1a2640;outline:none;transition:border-color .15s,box-shadow .15s;font-family:inherit;background:#fafbfc;box-sizing:border-box;}
+.adm-input:focus{border-color:#0174C3;background:#fff;box-shadow:0 0 0 3px rgba(1,116,195,.12);}
+.adm-btn{width:100%;padding:13px;background:linear-gradient(135deg,#0d2340,#1e4a7a);color:#fff;border:none;border-radius:9px;font-family:'Yantramanav',Arial,sans-serif;font-size:15.5px;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:transform .15s,box-shadow .15s;margin-top:6px;}
+.adm-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(13,35,64,.3);}
+.adm-err{color:#c0392b;font-size:12.5px;margin-bottom:12px;display:none;}
+.adm-divider{border:none;border-top:1px solid #e8ecf1;margin:26px 0 18px;}
+.adm-secure{display:flex;align-items:center;gap:8px;font-size:12px;color:#9aabb8;}
+.adm-secure span{font-size:15px;}
 .rhs-glow{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .rhs-glow::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(1,116,195,.28) 0%,transparent 70%);top:-80px;right:-100px;animation:rhsPulse 6s ease-in-out infinite;}
 .rhs-glow::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(240,119,37,.15) 0%,transparent 70%);bottom:-60px;left:-60px;animation:rhsPulse 8s ease-in-out infinite reverse;}
 @keyframes rhsPulse{0%,100%{transform:scale(1);opacity:.8;}50%{transform:scale(1.12);opacity:1;}}
 
-.rhs-inner{position:relative;z-index:2;padding:52px 36px 32px;flex:1;display:flex;flex-direction:column;}
-.rhs-head{margin-bottom:28px;}
+.rhs-inner{position:relative;z-index:2;padding:36px 30px 28px;flex:1;display:flex;flex-direction:column;}
+.rhs-head{margin-bottom:22px;}
 .rhs-head .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(1,116,195,.2);border:1px solid rgba(1,116,195,.4);color:#6fc3ef;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
-.rhs-head h2{font-family:'Yantramanav',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px;}
+.rhs-head h2{font-family:'Yantramanav',Arial,sans-serif;font-size:21px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px;}
 .rhs-head p{font-size:13px;color:#7a9ab5;line-height:1.55;}
 
 /* animated flow cards */
 .flow-stack{display:flex;flex-direction:column;gap:0;flex:1;}
-.flow-card{position:relative;padding:14px 16px 14px 48px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:8px;overflow:hidden;opacity:0;transform:translateX(18px);}
+.flow-card{position:relative;padding:12px 14px 12px 46px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:8px;overflow:hidden;opacity:0;transform:translateX(18px);}
 .flow-card.fc-in{opacity:1;transform:none;transition:opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.34,1.56,.64,1);}
 .flow-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px;background:linear-gradient(180deg,var(--fc-color,#0174C3),transparent);}
 .flow-card .fc-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:12px;}
@@ -650,8 +661,9 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 </style>
 
 <div class="setup-outer">
+<div class="setup-grid">
 
-  <!-- LEFT: form -->
+  <!-- COL 1: order form -->
   <div class="setup-form-col">
     <div class="setup-form-inner">
     <div style="margin-bottom:28px;">
@@ -705,12 +717,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 
     <button class="btn-lch" id="b-start" disabled>Place simulated order &rarr;</button>
     <p id="b-start-hint" style="text-align:center;font-size:13px;color:var(--tss-gray);margin-top:10px;font-family:'Yantramanav',Arial,sans-serif;">Select a product above to continue</p>
+    </div>
   </div>
 
-    </div><!-- /setup-form-inner -->
-
-  <!-- RIGHT: animated showcase -->
-  <div class="setup-rhs">
+  <!-- COL 2: journey showcase -->
+  <div class="setup-mid-col">
     <div class="rhs-glow"></div>
     <div class="rhs-inner">
       <div class="rhs-head">
@@ -728,6 +739,20 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
     </div>
   </div>
 
+  <!-- COL 3: admin login -->
+  <div class="setup-admin-col">
+    <div class="adm-icon">&#128274;</div>
+    <div class="adm-title">Admin login</div>
+    <div class="adm-sub">Sign in to the Partner Factory to create and manage white-label demo portals.</div>
+    <div class="adm-field"><label>Email address</label><input type="email" id="admUser2" class="adm-input" placeholder="you@company.com" autocomplete="username"></div>
+    <div class="adm-field"><label>Password</label><input type="password" id="admPass2" class="adm-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password"></div>
+    <div id="admErr2" class="adm-err">Invalid email or password. Please try again.</div>
+    <button class="adm-btn" onclick="doAdminLogin2()">Sign in to Partner Factory &rarr;</button>
+    <hr class="adm-divider">
+    <div class="adm-secure"><span>&#128737;</span> Partner access only &mdash; credentials required</div>
+  </div>
+
+</div>
 </div>
 <script>
 (function(){
@@ -2130,8 +2155,15 @@ function osPick(then){
 .admin-float a{font-size:11.5px;color:rgba(255,255,255,.7);text-decoration:none;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);padding:4px 12px;border-radius:99px;backdrop-filter:blur(4px);transition:background .15s,color .15s;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;letter-spacing:.04em;}
 .admin-float a:hover{background:rgba(255,255,255,.2);color:#fff;}
 </style>
-<div class="admin-float">
-  <a href="#" onclick="openAdminLogin();return false;">&#128274; Admin</a>
-</div>
+
+
+<script>
+function doAdminLogin2(){
+  var u=document.getElementById('admUser2').value.trim(),p=document.getElementById('admPass2').value,err=document.getElementById('admErr2');
+  if(u==='mathimcafee@gmail.com'&&p==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){}location.href='/partner';}
+  else{err.style.display='block';}
+}
+['admUser2','admPass2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')doAdminLogin2();});});
+</script>
 </body>
 </html>
