@@ -101,7 +101,7 @@ h1,h2,h3{font-family:'Yantramanav',Arial,sans-serif}
 var $=function(i){return document.getElementById(i)};
 $('d').addEventListener('input',function(){ if(!$('e').value||$('e').value.indexOf('@')===$('e').value.length-0) $('e').value=this.value?('orders@'+this.value):''; });
 function enc(o){var s=btoa(unescape(encodeURIComponent(JSON.stringify(o))));return s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-function cfg(){return {c:$('c').value.trim(),d:$('d').value.trim(),e:$('e').value.trim(),p:$('p').value,a:$('a').value,k:$('k').value,l:$('l').value.trim()||undefined};}
+function cfg(){return {c:$('c').value.trim(),d:$('d').value.trim(),e:$('e').value.trim(),p:$('p').value,a:$('a').value,k:$('k').value,l:(/^https?:\/\//.test($('l').value.trim())?$('l').value.trim():undefined)};}
 function gen(){
   var o=cfg(); if(!o.c){alert('Company name required');return;}
   var link=location.origin+'/?b='+enc(o);

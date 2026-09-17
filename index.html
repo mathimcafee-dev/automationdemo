@@ -1824,8 +1824,10 @@ function msCopy(id){
   document.title='Automation Experience \u2014 '+comp+' Partner Demo';
   // 3. Logo swap (letter mark, or B.l logo URL)
   function initials(n){return n.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();}
+  if(B.l && !/^https?:\/\//.test(B.l)) B.l=null;
   function swapLogo(){
     var box=document.querySelector('.simbar-logo'); if(!box)return;
+    if(box.getAttribute('data-pbl')==='1')return; box.setAttribute('data-pbl','1');
     if(B.l){box.innerHTML='<img src="'+B.l+'" alt="'+comp+'" style="height:40px;display:block;background:#fff;padding:5px 10px;border-radius:4px;">';}
     else{box.innerHTML='<div style="display:flex;align-items:center;gap:9px;background:#fff;padding:5px 12px;border-radius:4px;">'
       +'<div style="width:30px;height:30px;border-radius:6px;background:'+prim+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:Yantramanav,Arial,sans-serif;font-weight:900;font-size:15px;">'+initials(comp)+'</div>'
@@ -1841,10 +1843,15 @@ function msCopy(id){
   }
   function run(){swapLogo();fix(document.body);}
   run();
-  new MutationObserver(function(ms){ms.forEach(function(mu){
-    if(mu.type==='characterData'){fix(mu.target);}
-    mu.addedNodes&&mu.addedNodes.forEach(fix);
-  });swapLogo();}).observe(document.body,{childList:true,subtree:true,characterData:true});
+  var busy=false;
+  new MutationObserver(function(ms){
+    if(busy)return; busy=true;
+    try{ms.forEach(function(mu){
+      if(mu.target && mu.target.closest && mu.target.closest('.simbar-logo'))return;
+      if(mu.type==='characterData'){fix(mu.target);}
+      mu.addedNodes&&mu.addedNodes.forEach(fix);
+    });swapLogo();}finally{busy=false;}
+  }).observe(document.body,{childList:true,subtree:true,characterData:true});
   // keep brand param across pushState navigation
   var _ps=history.pushState.bind(history);
   history.pushState=function(s,t,u){if(u&&u.indexOf('b=')===-1){u+=(u.indexOf('?')>-1?'&':'?')+'b='+m[1];}return _ps(s,t,u);};
