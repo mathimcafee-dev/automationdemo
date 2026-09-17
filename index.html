@@ -369,7 +369,7 @@ body{background:var(--tss-bg);font-family:'Yantramanav',Arial,Tahoma,sans-serif;
 .simbar{background:var(--tss-navy);color:#fff;font-family:'Yantramanav',Arial,Tahoma,sans-serif;box-shadow:0 2px 8px rgba(41,48,108,.25);}
 .simbar-in{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;height:60px;}
 .simbar-logo{display:flex;align-items:center;flex-shrink:0;}
-.simbar-logo img{height:34px;display:block;}
+.simbar-logo img{height:40px;display:block;background:#fff;padding:5px 10px;border-radius:4px;}
 .simbar-divider{width:1px;height:28px;background:rgba(255,255,255,.2);margin:0 4px;}
 .simbadge{background:var(--tss-orange);color:#fff;font-family:'Yantramanav',Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:2px;white-space:nowrap;text-transform:uppercase;}
 .simtitle{font-weight:700;font-size:15px;font-family:'Yantramanav',Arial,sans-serif;color:#fff;letter-spacing:.2px;}
@@ -618,14 +618,23 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
   <!-- Step 2: Customer details -->
   <div class="lch-panel">
     <div class="lch-panel-label">Step 2 &mdash; Customer Details</div>
+    <div style="margin-bottom:14px;">
+      <label class="lch-label">Quick-fill customer</label>
+      <select class="lch-card-select" onchange="fillCustomer(this.value)" style="margin-bottom:0;">
+        <option value="">— pick a demo customer —</option>
+        <option value="steve">Steve Jobs &mdash; steve@customer-demo.in</option>
+        <option value="mathi">Mathivanan Kathirvel &mdash; mathivanan@customer-demo.in</option>
+        <option value="sarah">Sarah Connor &mdash; sarah@customer-demo.in</option>
+      </select>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
       <div>
         <label class="lch-label">Customer name</label>
-        <input id="f-name" class="lch-input" value="Mathivanan Kathirvel">
+        <input id="f-name" class="lch-input" id="f-name" value="Steve Jobs">
       </div>
       <div>
         <label class="lch-label">Customer email</label>
-        <input id="f-email" class="lch-input" value="mathivanan@customer-demo.in">
+        <input id="f-email" class="lch-input" id="f-email" value="steve@customer-demo.in">
       </div>
       <div>
         <label class="lch-label">Domain to secure</label>
@@ -666,7 +675,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
         <table class="otable" id="m-table"></table>
         <div class="mail-cta"><button class="btn-sim" id="b-openlink" style="font-size:15px;padding:13px 30px"></button></div>
         <div class="mail-link" id="m-link"></div>
-        <div class="mail-foot">AutoInstall SSL &middot; A The SSL Store&trade; Company</div>
+        <div class="mail-foot"></div>
       </div>
     </div></div>
   </div>
@@ -771,18 +780,33 @@ function today(off=0){const d=new Date(Date.now()+off*864e5);return d.toLocaleDa
 function acmeDir(){ return S.product.type==="caas" ? ACMEDIR_SECTIGO : ACMEDIR_AUTOMATE; }
 
 /* ═════════ sim navigation ═════════ */
-function simGo(id, j){
+function simGo(id, j, noPush){
   document.querySelectorAll(".simscreen").forEach(s=>s.classList.remove("on"));
   $(id).classList.add("on");
   document.querySelectorAll(".simstep").forEach(el=>{
     const k=+el.dataset.j;
     el.classList.toggle("on",k===j); el.classList.toggle("done",k<j);
   });
-  window.scrollTo({top:0});
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(!noPush) history.pushState({id,j}, "", location.pathname);
 }
+window.addEventListener("popstate", function(e){
+  if(e.state && e.state.id){ simGo(e.state.id, e.state.j, true); }
+  else { renderSetup(); simGo("s-setup",0,true); }
+});
 function simRestart(){ renderSetup(); simGo("s-setup",0); }
 
 /* ═════════ screen: setup ═════════ */
+function fillCustomer(key){
+  const map={
+    steve:{name:"Steve Jobs",email:"steve@customer-demo.in"},
+    mathi:{name:"Mathivanan Kathirvel",email:"mathivanan@customer-demo.in"},
+    sarah:{name:"Sarah Connor",email:"sarah@customer-demo.in"},
+  };
+  const c=map[key]; if(!c) return;
+  $("f-name").value=c.name; $("f-email").value=c.email;
+}
+
 function onProductSelect(code){
   S.code = code;
   const btn = $("b-start"), hint = document.querySelector("#s-setup p:last-of-type");
@@ -834,7 +858,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   renderSetup(); simGo("s-setup",0);
   $("b-start").onclick=()=>{
     if(!S.code){ alert("Please select a product."); return; }
-    const name=$("f-name").value.trim()||"Mathivanan Kathirvel", email=$("f-email").value.trim()||"mathivanan@customer-demo.in";
+    const name=$("f-name").value.trim()||"Steve Jobs", email=$("f-email").value.trim()||"steve@customer-demo.in";
     let dom=$("f-domain").value.trim().toLowerCase().replace(/^https?:\/\//,"").replace(/\/.*$/,"").replace(/^www\./,"");
     if(!dom) dom="shop.customer-demo.in";
     S={...S, name, email, domain:dom, simEnv:$("f-env")?$("f-env").value:"linux", ids:makeIds(), product:PRODUCTS[S.code],
