@@ -907,12 +907,10 @@ function renderEmail(){
     ["Amount","$"+p.price.toFixed(2)],["Status","✅ Active — certificate generation pending"]];
   const isAutoP=p.type==="automate";
   $("m-table").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td></tr>`).join("")
-    + (isAutoP?`<tr><td>Certificate Generation Link</td><td><a href="javascript:void(0);" onclick="document.getElementById(\'b-openlink\').click()" style="color:#1e5799;word-break:break-all;font-size:12.5px">${S.loginLink}</a></td></tr>`:"");
+    + (isAutoP?`<tr><td>Certificate Generation Link</td><td><a href="javascript:void(0);" onclick="document.getElementById(\'b-openlink\').click()" style="color:#1e5799;word-break:break-all;font-size:12.5px">Generate your certificate →</a></td></tr>`:"");
   const isAuto=p.type==="automate";
   $("b-openlink").textContent=isAuto?"Generate Your Certificate":"View Your ACME Credentials";
-  $("m-link").innerHTML=isAuto
-    ? "Or paste this link into your browser:<br>"+S.loginLink
-    : "";
+  $("m-link").innerHTML="";
   $("b-openlink").onclick=()=>{ if(isAuto){ portalRoute("enroll"); } else { portalRoute("caas"); } simGo("s-portal",2); };
 }
 
