@@ -612,75 +612,159 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 </div></div>
 
 <!-- SCREEN: SETUP -->
-<section class="simscreen" id="s-setup"><div class="simwrap" style="max-width:660px;margin:0 auto;padding:36px 20px 48px;">
+<section class="simscreen" id="s-setup">
+<style>
+/* ── Setup screen two-column layout ── */
+.setup-outer{display:grid;grid-template-columns:1fr 360px;min-height:calc(100vh - 88px);align-items:start;}
+@media(max-width:980px){.setup-outer{grid-template-columns:1fr;}}
+.setup-form-col{padding:40px 40px 60px;border-right:1px solid #e2e4ef;}
+@media(max-width:980px){.setup-form-col{border-right:none;padding:32px 20px 40px;}}
+/* override simwrap constraints inside setup */
+#s-setup .simwrap{max-width:none!important;margin:0!important;padding:0!important;}
 
-  <!-- TSS-style page header -->
-  <div style="margin-bottom:28px;">
-    <div class="tss-step-label" style="margin-bottom:8px;">Partner Demo</div>
-    <h1 class="tss-h1">Start a customer journey</h1>
-    <p class="tss-sub">Select a product, confirm customer details, and place the simulated order to walk through the full automation flow.</p>
-  </div>
+/* right column */
+.setup-rhs{position:sticky;top:0;height:100vh;background:linear-gradient(160deg,#0d2340 0%,#122a4a 50%,#0a1e37 100%);overflow:hidden;display:flex;flex-direction:column;padding:0;}
+@media(max-width:980px){.setup-rhs{display:none;}}
+.rhs-glow{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.rhs-glow::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(1,116,195,.28) 0%,transparent 70%);top:-80px;right:-100px;animation:rhsPulse 6s ease-in-out infinite;}
+.rhs-glow::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(240,119,37,.15) 0%,transparent 70%);bottom:-60px;left:-60px;animation:rhsPulse 8s ease-in-out infinite reverse;}
+@keyframes rhsPulse{0%,100%{transform:scale(1);opacity:.8;}50%{transform:scale(1.12);opacity:1;}}
 
-  <!-- Step 1: Product -->
-  <div class="lch-panel">
-    <div class="lch-panel-label">Step 1 &mdash; Select Product</div>
-    <select id="f-product" class="lch-card-select" onchange="onProductSelect(this.value)">
-      <option value="">— Choose a product —</option>
-      <optgroup label="Plan + Automate (Agent + ACME)">
-        <option value="rapidssl_automate">RapidSSL Plan + Automate &mdash; $17.79/yr</option>
-        <option value="rapidssl_wc_automate">RapidSSL Wildcard Plan + Automate &mdash; $122.35/yr</option>
-        <option value="geotrust_automate">GeoTrust DV Plan + Automate &mdash; $71.23/yr</option>
-        <option value="geotrust_wc_automate">GeoTrust DV Wildcard Plan + Automate &mdash; $237.46/yr</option>
-      </optgroup>
-      <optgroup label="ACME Certificate-as-a-Service">
-        <option value="sectigo_caas_dv">Sectigo ACME Certificate-as-a-Service (DV) &mdash; $65.00/yr</option>
-        <option value="positivessl_caas_dv">PositiveSSL ACME Certificate-as-a-Service (DV) &mdash; $19.00/yr</option>
-      </optgroup>
-    </select>
-    <div id="prod-detail" class="prod-detail-pill"></div>
-  </div>
+.rhs-inner{position:relative;z-index:2;padding:32px 28px;flex:1;display:flex;flex-direction:column;}
+.rhs-head{margin-bottom:28px;}
+.rhs-head .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(1,116,195,.2);border:1px solid rgba(1,116,195,.4);color:#6fc3ef;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.rhs-head h2{font-family:'Yantramanav',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px;}
+.rhs-head p{font-size:13px;color:#7a9ab5;line-height:1.55;}
 
-  <!-- Step 2: Customer details -->
-  <div class="lch-panel">
-    <div class="lch-panel-label">Step 2 &mdash; Customer Details</div>
-    <div style="margin-bottom:14px;">
-      <label class="lch-label">Quick-fill customer</label>
-      <select class="lch-card-select" onchange="fillCustomer(this.value)" style="margin-bottom:0;">
-        <option value="">— pick a demo customer —</option>
-        <option value="steve">Steve Jobs &mdash; steve@customer-demo.in</option>
-        <option value="mathi">Mathivanan Kathirvel &mdash; mathivanan@customer-demo.in</option>
-        <option value="sarah">Sarah Connor &mdash; sarah@customer-demo.in</option>
-      </select>
+/* animated flow cards */
+.flow-stack{display:flex;flex-direction:column;gap:0;flex:1;}
+.flow-card{position:relative;padding:14px 16px 14px 48px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:8px;overflow:hidden;opacity:0;transform:translateX(18px);animation:cardSlideIn .5s var(--ease-pop,cubic-bezier(.34,1.56,.64,1)) forwards;}
+.flow-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px;background:linear-gradient(180deg,var(--fc-color,#0174C3),transparent);}
+.flow-card .fc-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.flow-card .fc-title{font-family:'Yantramanav',Arial,sans-serif;font-size:13.5px;font-weight:700;color:#e2eaf5;margin-bottom:2px;}
+.flow-card .fc-sub{font-size:11.5px;color:#5d7d9a;line-height:1.4;}
+.flow-card .fc-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:5px;letter-spacing:.04em;}
+
+/* connector dots between cards */
+.flow-conn{display:flex;align-items:center;padding:0 0 0 22px;margin-bottom:8px;}
+.flow-conn .dots{display:flex;flex-direction:column;gap:3px;}
+.flow-conn .dots span{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.18);}
+
+/* live ticker */
+.rhs-ticker{margin-top:auto;border-top:1px solid rgba(255,255,255,.07);padding-top:14px;}
+.ticker-label{font-size:10.5px;color:#3d6180;letter-spacing:.06em;margin-bottom:8px;}
+.ticker-row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.04);font-size:12px;color:#7a9ab5;animation:tickFade 8s ease-in-out infinite;}
+.ticker-row .td{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;flex:none;animation:tdPulse 2s ease-in-out infinite;}
+@keyframes tdPulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes tickFade{0%,15%,85%,100%{opacity:1;}50%{opacity:.7;}}
+</style>
+
+<div class="setup-outer">
+
+  <!-- LEFT: form -->
+  <div class="setup-form-col">
+    <div style="margin-bottom:28px;">
+      <div class="tss-step-label" style="margin-bottom:8px;">Partner Demo</div>
+      <h1 class="tss-h1">Start a customer journey</h1>
+      <p class="tss-sub">Select a product, confirm customer details, and place the simulated order to walk through the full automation flow.</p>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div>
-        <label class="lch-label">Customer name</label>
-        <input id="f-name" class="lch-input" id="f-name" value="Steve Jobs">
-      </div>
-      <div>
-        <label class="lch-label">Customer email</label>
-        <input id="f-email" class="lch-input" id="f-email" value="steve@customer-demo.in">
-      </div>
-      <div>
-        <label class="lch-label">Domain to secure</label>
-        <input id="f-domain" class="lch-input" value="shop.customer-demo.in">
-      </div>
-      <div>
-        <label class="lch-label">Server type</label>
-        <select id="f-env" class="lch-card-select">
-          <option value="linux" selected>Linux (nginx)</option>
-          <option value="windows">Windows IIS</option>
-          <option value="cpanel">cPanel</option>
+
+    <div class="lch-panel">
+      <div class="lch-panel-label">Step 1 &mdash; Select Product</div>
+      <select id="f-product" class="lch-card-select" onchange="onProductSelect(this.value)">
+        <option value="">— Choose a product —</option>
+        <optgroup label="Plan + Automate (Agent + ACME)">
+          <option value="rapidssl_automate">RapidSSL Plan + Automate &mdash; $17.79/yr</option>
+          <option value="rapidssl_wc_automate">RapidSSL Wildcard Plan + Automate &mdash; $122.35/yr</option>
+          <option value="geotrust_automate">GeoTrust DV Plan + Automate &mdash; $71.23/yr</option>
+          <option value="geotrust_wc_automate">GeoTrust DV Wildcard Plan + Automate &mdash; $237.46/yr</option>
+        </optgroup>
+        <optgroup label="ACME Certificate-as-a-Service">
+          <option value="sectigo_caas_dv">Sectigo ACME Certificate-as-a-Service (DV) &mdash; $65.00/yr</option>
+          <option value="positivessl_caas_dv">PositiveSSL ACME Certificate-as-a-Service (DV) &mdash; $19.00/yr</option>
+        </optgroup>
+      </select>
+      <div id="prod-detail" class="prod-detail-pill"></div>
+    </div>
+
+    <div class="lch-panel">
+      <div class="lch-panel-label">Step 2 &mdash; Customer Details</div>
+      <div style="margin-bottom:14px;">
+        <label class="lch-label">Quick-fill customer</label>
+        <select class="lch-card-select" onchange="fillCustomer(this.value)" style="margin-bottom:0;">
+          <option value="">— pick a demo customer —</option>
+          <option value="steve">Steve Jobs &mdash; steve@customer-demo.in</option>
+          <option value="mathi">Mathivanan Kathirvel &mdash; mathivanan@customer-demo.in</option>
+          <option value="sarah">Sarah Connor &mdash; sarah@customer-demo.in</option>
         </select>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div><label class="lch-label">Customer name</label><input id="f-name" class="lch-input" value="Steve Jobs"></div>
+        <div><label class="lch-label">Customer email</label><input id="f-email" class="lch-input" value="steve@customer-demo.in"></div>
+        <div><label class="lch-label">Domain to secure</label><input id="f-domain" class="lch-input" value="shop.customer-demo.in"></div>
+        <div><label class="lch-label">Server type</label>
+          <select id="f-env" class="lch-card-select">
+            <option value="linux" selected>Linux (nginx)</option>
+            <option value="windows">Windows IIS</option>
+            <option value="cpanel">cPanel</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-lch" id="b-start" disabled>Place simulated order &rarr;</button>
+    <p id="b-start-hint" style="text-align:center;font-size:13px;color:var(--tss-gray);margin-top:10px;font-family:'Yantramanav',Arial,sans-serif;">Select a product above to continue</p>
+  </div>
+
+  <!-- RIGHT: animated showcase -->
+  <div class="setup-rhs">
+    <div class="rhs-glow"></div>
+    <div class="rhs-inner">
+      <div class="rhs-head">
+        <div class="badge">&#9679; LIVE SIMULATION</div>
+        <h2>The full automation journey — every step, hands-on.</h2>
+        <p>Your customer walks through the exact experience they'll have — email, portal, terminal, and automatic renewals.</p>
+      </div>
+
+      <div class="flow-stack" id="rhsStack"></div>
+
+      <div class="rhs-ticker">
+        <div class="ticker-label">WHAT HAPPENS AFTER YOU PLACE THE ORDER</div>
+        <div class="ticker-row"><span class="td"></span><span id="tickerTxt">Certificate reissues every 47 days — fully unattended</span></div>
+      </div>
     </div>
   </div>
 
-  <!-- CTA -->
-  <button class="btn-lch" id="b-start" disabled>Place simulated order &rarr;</button>
-  <p id="b-start-hint" style="text-align:center;font-size:13px;color:var(--tss-gray);margin-top:10px;font-family:'Yantramanav',Arial,sans-serif;">Select a product above to continue</p>
-
-</div></section>
+</div>
+<script>
+(function(){
+  var CARDS=[
+    {icon:"✉",color:"#0174C3",title:"Order confirmation email",sub:"Customer receives a real-looking email from your store — their product, domain, and a one-click generation link.",tag:"",tagColor:""},
+    {icon:"🔗",color:"#54A245",title:"Certificate generation portal",sub:"One click opens the AutoInstall SSL setup portal — token, DCV options, and exact install command pre-filled.",tag:"Plan + Automate",tagColor:"rgba(84,162,69,.25)"},
+    {icon:"🔑",color:"#f07725",title:"ACME EAB credentials",sub:"For CaaS products, customers get their Key ID and HMAC key and can pick acme.sh, Certbot, or win-acme.",tag:"CaaS",tagColor:"rgba(240,119,37,.25)"},
+    {icon:"💻",color:"#7c3aed",title:"Interactive terminal",sub:"A real simulated server session — SSH in, password prompt, install command, validation, and certificate issued.",tag:"",tagColor:""},
+    {icon:"♻",color:"#0174C3",title:"Auto-reissue on schedule",sub:"Fast-forward to watch the agent silently reissue the certificate — every 47 days from 2029, zero intervention.",tag:"",tagColor:""}
+  ];
+  var stack=document.getElementById("rhsStack");
+  if(!stack)return;
+  var html="";
+  CARDS.forEach(function(c,i){
+    html+='<div class="flow-card" style="animation-delay:'+(i*110)+'ms;--fc-color:'+c.color+'">'
+     +'<span class="fc-icon">'+c.icon+'</span>'
+     +'<div class="fc-title">'+c.title+'</div>'
+     +'<div class="fc-sub">'+c.sub+'</div>'
+     +(c.tag?'<span class="fc-tag" style="background:'+c.tagColor+';color:#cde">'+c.tag+'</span>':'')
+     +'</div>';
+    if(i<CARDS.length-1)html+='<div class="flow-conn"><div class="dots"><span></span><span></span><span></span></div></div>';
+  });
+  stack.innerHTML=html;
+  // ticker rotation
+  var ticks=["Certificate reissues every 47 days — fully unattended","No manual renewal, no downtime, no missed deadlines","Works on Linux, Windows IIS, macOS, and cPanel","acme.sh · Certbot · win-acme — customer picks their client","Subscription renews annually · cert lifecycle is automatic"];
+  var ti=0,el=document.getElementById("tickerTxt");
+  setInterval(function(){ti=(ti+1)%ticks.length;if(el){el.style.opacity=0;setTimeout(function(){el.textContent=ticks[ti];el.style.opacity=1;},280);}},3500);
+})();
+</script>
+</section>
 
 <!-- SCREEN: EMAIL -->
 <section class="simscreen" id="s-email"><div class="simwrap">
