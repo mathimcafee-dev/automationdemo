@@ -1246,9 +1246,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   $("b-reset-term").onclick=()=>startTerminal(T.renewal);
   $("b-renew").onclick=()=>{ startTerminal(true); simGo("s-term",4); };
   const rdSpan=$("b-renew-days");if(rdSpan)rdSpan.textContent=certDays();
-  // Show "Manage Subscription" button only for CaaS products
-  const manageBtn=$("b-manage-sub");
-  if(manageBtn) manageBtn.style.display = (p.type==="caas") ? "inline-block" : "none";
 });
 function openTerminal(){ startTerminal(false); simGo("s-term",3); }
 function backToPortal(){ simGo("s-portal",2); }
@@ -1462,6 +1459,10 @@ function renderDone(){
     [agent?"Install token used":"ACME account", agent?`<span class="mono" style="font-size:11.5px">${i.token}</span>`:`<span class="mono" style="font-size:11.5px">sslsub-${i.orderId} · ${esc(acmeDir())}</span>`],
     ["Auto-renew","✅ automatic — no human needed again"]];
   $("d-table").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");
+  // Manage Subscription button — CaaS only
+  const manageBtn=$("b-manage-sub");
+  if(manageBtn) manageBtn.style.display = (p.type==="caas") ? "inline-block" : "none";
+  const rdSpan=$("b-renew-days");if(rdSpan)rdSpan.textContent=certDays();
 }
 
 
