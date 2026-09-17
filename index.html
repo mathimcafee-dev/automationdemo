@@ -1579,6 +1579,12 @@ function renderDone(){
           <div style="font-weight:700;color:var(--tss-green);margin-bottom:8px;">&#x2714; Domain added successfully!</div>
           <div id="ms-add-cmd" style="margin-top:8px;background:#fff;border:1px solid var(--tss-border);border-radius:3px;padding:10px 12px;font-family:monospace;font-size:12px;color:#333;word-break:break-all;"></div>
           <div style="margin-top:8px;color:#555;font-size:12.5px;">Run this command on your server to issue the certificate for the new domain.</div>
+          <div style="margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <button onclick="testNewDomainInTerminal()" style="background:var(--tss-navy);color:#fff;border:none;border-radius:3px;padding:9px 18px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;">
+              &#9654; Test in terminal &mdash; watch it run
+            </button>
+            <span style="font-size:12px;color:#888;">Simulates the exact ACME commands for this new domain</span>
+          </div>
         </div>
       </div>
 
@@ -1706,7 +1712,64 @@ function confirmAddDomain(){
 
   // Clear input
   document.getElementById("ms-new-domain").value="";
+  // Store for terminal test
+  MS._lastAdded = {domain: displayName, isWc: isWc, cmd: cmd};
   document.getElementById("ms-add-steps").scrollIntoView({behavior:"smooth"});
+}
+
+function testNewDomainInTerminal(){
+  if(!MS._lastAdded){ return; }
+  const {domain, isWc} = MS._lastAdded;
+  const dir = acmeDir(), ids = S.ids;
+  const L=(x,dl)=>({t:x,d:dl}); const H=(x,dl)=>({h:x,d:dl});
+  const g=x=>({h:`<span class="tg">${esc(x)}</span>`,d:100});
+  const dim=x=>({h:`<span class="td2">${esc(x)}</span>`,d:80});
+  const baseDomain = domain.replace(/[*][.]/,"");
+  const dnsFlag = isWc ? ` --domain *.${baseDomain} --dns dns_cf` : ` --webroot /var/www/html`;
+  const fullCmd = `~/.acme.sh/acme.sh --issue --server ${dir} --domain ${baseDomain}${dnsFlag}`;
+
+  const challengeSteps = isWc ? [
+    L(`[Info] Adding DNS TXT record for _acme-challenge.${baseDomain}`, 500),
+    dim(`[Info]   TXT value: "${rnd(AN,32)}"`),
+    L(`[Info] Waiting for DNS propagation (this can take 30-60s)…`, 1200),
+    g(`[Info] DNS-01 challenge verified ✔`)
+  ] : [
+    L(`[Info] Writing challenge token to /.well-known/acme-challenge/`, 500),
+    L(`[Info] Verifying: ${baseDomain}`, 900),
+    g(`[Info] HTTP-01 challenge verified ✔`)
+  ];
+
+  const out = [
+    L(`[Info] Checking ACME account at ${dir}…`, 600),
+    g(`[Info] Account already registered (EAB kid ${ids.eabKid.slice(0,14)}…)`),
+    L(`[Info] Creating domain key (EC P-256) + CSR  (${baseDomain})`, 700),
+    g(`[Info] Key + CSR created`),
+    ...challengeSteps,
+    L(`[Info] Requesting certificate from Sectigo CA…`, 900),
+    g(`[Info] Certificate issued — issuer: ${S.product.issuer}`),
+    g(`[Info] Cert: ~/.acme.sh/${baseDomain}_ecc/fullchain.cer`),
+    dim(`[Info]   Valid: ${today()} → ${certExpiry()} (${certDays()} days)`),
+    dim(`[Info]   acme.sh cron will auto-reissue every ${certDays()} days`),
+    H(`<span class="tg">&#10003; ${esc(domain)} is now secured.</span>`, 200)
+  ];
+
+  T.renewal = false;
+  T.steps = [{
+    expect: fullCmd,
+    show: fullCmd,
+    what: `Run the acme.sh <b>--issue</b> command for <b>${domain}</b>.<br><span style="font-size:12px;color:#8a94a0;">This is exactly what the customer runs after adding a new domain to their CaaS subscription.</span>`,
+    out
+  }];
+  T.ix=0; T.busy=false; T.buf=""; T.done=false; T.presenter=false;
+  $("b-presenter").innerHTML="&#9654; Presenter auto-run";
+  tOut().innerHTML="";
+  $("t-title").textContent=`${S.termUser||"customer"}@demo-srv — ${domain}`;
+  tPrint(false,
+    `<span class="td">— Simulated server · issuing new domain certificate —</span>`,
+    `<span class="td">password: default@123  ·  or click "Type it for me" below</span>`
+  );
+  railUpdate();
+  simGo("s-term",4);
 }
 
 function msCopy(id){
