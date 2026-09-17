@@ -737,6 +737,7 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
     <table class="kv" id="d-table" style="margin-top:16px"></table>
     <div class="srow">
       <button class="btn-sim" id="b-renew">&#9193; Fast-forward <span id="b-renew-days">60</span> days — watch auto-reissue</button>
+      <button class="btn-quiet2 btn-manage-sub" id="b-manage-sub" style="display:none;background:var(--tss-orange);color:#fff;border:none;padding:9px 18px;border-radius:3px;font-family:'Yantramanav',Arial,sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;" onclick="openManageSub()">&#9881; Manage Subscription &rarr;</button>
       <button class="btn-quiet2" onclick="simRestart()">Run another product</button>
     </div>
   </div></div>
@@ -1245,6 +1246,9 @@ document.addEventListener("DOMContentLoaded",()=>{
   $("b-reset-term").onclick=()=>startTerminal(T.renewal);
   $("b-renew").onclick=()=>{ startTerminal(true); simGo("s-term",4); };
   const rdSpan=$("b-renew-days");if(rdSpan)rdSpan.textContent=certDays();
+  // Show "Manage Subscription" button only for CaaS products
+  const manageBtn=$("b-manage-sub");
+  if(manageBtn) manageBtn.style.display = (p.type==="caas") ? "inline-block" : "none";
 });
 function openTerminal(){ startTerminal(false); simGo("s-term",3); }
 function backToPortal(){ simGo("s-portal",2); }
@@ -1458,6 +1462,255 @@ function renderDone(){
     [agent?"Install token used":"ACME account", agent?`<span class="mono" style="font-size:11.5px">${i.token}</span>`:`<span class="mono" style="font-size:11.5px">sslsub-${i.orderId} · ${esc(acmeDir())}</span>`],
     ["Auto-renew","✅ automatic — no human needed again"]];
   $("d-table").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");
+}
+
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- SCREEN: MANAGE SUBSCRIPTION (CaaS only)                           -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="simscreen" id="s-manage-sub">
+<div style="max-width:820px;margin:0 auto;padding:28px 20px 60px;">
+
+  <!-- Breadcrumb -->
+  <div style="font-size:12.5px;color:var(--tss-gray);margin-bottom:18px;font-family:'Yantramanav',Arial,sans-serif;">
+    <span style="cursor:pointer;color:var(--tss-blue);" onclick="simGo('s-done',4)">&#x2190; Secured</span>
+    &nbsp;&rsaquo;&nbsp; Manage Subscription
+  </div>
+
+  <h1 class="tss-h1" style="margin-bottom:20px;">Manage Subscription</h1>
+
+  <!-- Subscription Detail Card -->
+  <div style="background:#fff;border:1px solid var(--tss-border);border-radius:3px;margin-bottom:20px;overflow:hidden;">
+    <div style="background:var(--tss-orange);color:#fff;padding:10px 18px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;font-size:14px;letter-spacing:.2px;">Subscription Detail</div>
+    <div style="padding:18px 20px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;font-size:13.5px;font-family:'Yantramanav',Arial,sans-serif;">
+        <div><span style="color:var(--tss-gray);">Domain:</span> <strong id="ms-domain"></strong></div>
+        <div><span style="color:var(--tss-gray);">Plan:</span> <strong id="ms-plan"></strong></div>
+        <div><span style="color:var(--tss-gray);">Subscription ID:</span> <strong id="ms-subid"></strong></div>
+        <div><span style="color:var(--tss-gray);">Next Payment:</span> <strong id="ms-next-pay"></strong> <span id="ms-billing-link" style="color:var(--tss-blue);font-size:12px;cursor:pointer;margin-left:6px;">Billing History</span></div>
+        <div><span style="color:var(--tss-gray);">Subscription Status:</span> <span style="color:var(--tss-green);">&#9679;</span> <strong>Active</strong></div>
+        <div><span style="color:var(--tss-gray);">Payment Method:</span> <strong>STORE-CREDIT</strong></div>
+        <div style="grid-column:1/-1;padding-top:6px;border-top:1px solid var(--tss-border);">
+          <span style="color:var(--tss-gray);">Domain Coverage:</span>
+          <strong id="ms-coverage"></strong>
+          <button onclick="showAddDomain()" id="ms-manage-btn" style="background:var(--tss-green);color:#fff;border:none;border-radius:3px;padding:3px 12px;font-size:12px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;cursor:pointer;margin-left:10px;">Manage</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACME Credentials (EAB) -->
+  <div style="background:#fff;border:1px solid var(--tss-border);border-radius:3px;margin-bottom:20px;overflow:hidden;">
+    <div style="background:var(--tss-orange);color:#fff;padding:10px 18px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;font-size:14px;">ACME Credentials (EAB)</div>
+    <div style="padding:18px 20px;">
+      <p style="font-size:13px;color:#555;margin:0 0 14px;font-family:'Yantramanav',Arial,sans-serif;">This SSL certificate is managed using the industry-standard ACME protocol. Use these EAB credentials to issue and manage your SSL certificates using any ACME-compatible client.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;font-family:'Yantramanav',Arial,sans-serif;">
+        <tr style="border-top:1px solid var(--tss-border);">
+          <td style="padding:10px 0;color:var(--tss-gray);width:180px;font-weight:600;">ACME Server URL</td>
+          <td style="padding:10px 0;font-family:monospace;color:var(--tss-blue);font-size:12.5px;" id="ms-acme-dir"></td>
+          <td style="width:30px;text-align:right;"><span style="cursor:pointer;font-size:16px;" onclick="msCopy('ms-acme-dir')">&#128203;</span></td>
+        </tr>
+        <tr style="border-top:1px solid var(--tss-border);">
+          <td style="padding:10px 0;color:var(--tss-gray);font-weight:600;">Key ID / KID</td>
+          <td style="padding:10px 0;font-family:monospace;color:var(--tss-blue);font-size:12px;word-break:break-all;" id="ms-kid"></td>
+          <td style="width:30px;text-align:right;"><span style="cursor:pointer;font-size:16px;" onclick="msCopy('ms-kid')">&#128203;</span></td>
+        </tr>
+        <tr style="border-top:1px solid var(--tss-border);">
+          <td style="padding:10px 0;color:var(--tss-gray);font-weight:600;">HMAC Key</td>
+          <td style="padding:10px 0;font-family:monospace;color:var(--tss-blue);font-size:12px;word-break:break-all;" id="ms-hmac"></td>
+          <td style="width:30px;text-align:right;"><span style="cursor:pointer;font-size:16px;" onclick="msCopy('ms-hmac')">&#128203;</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Domains table -->
+  <div style="background:#fff;border:1px solid var(--tss-border);border-radius:3px;margin-bottom:20px;overflow:hidden;">
+    <div style="background:var(--tss-orange);color:#fff;padding:10px 18px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;font-size:14px;">Domains</div>
+    <div style="padding:18px 20px;">
+      <p style="font-size:13px;color:#555;margin:0 0 14px;font-family:'Yantramanav',Arial,sans-serif;">This displays the domains on your subscription, and the status of the certificate associated with each domain. Use the ACME credentials and your ACME client to issue certificates for each domain.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;font-family:'Yantramanav',Arial,sans-serif;">
+        <thead>
+          <tr style="background:var(--tss-navy);color:#fff;">
+            <th style="padding:9px 12px;text-align:left;font-weight:600;">Domain</th>
+            <th style="padding:9px 12px;text-align:left;font-weight:600;">Type</th>
+            <th style="padding:9px 12px;text-align:left;font-weight:600;">Status</th>
+            <th style="padding:9px 12px;text-align:left;font-weight:600;">Certificate Expiration</th>
+            <th style="padding:9px 12px;text-align:left;font-weight:600;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ms-domain-rows"></tbody>
+      </table>
+      <div style="margin-top:14px;">
+        <span onclick="showAddDomain()" style="color:var(--tss-orange);font-weight:700;font-size:13.5px;cursor:pointer;font-family:'Yantramanav',Arial,sans-serif;">&#43; Add Domain</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Domain Panel (hidden by default) -->
+  <div id="ms-add-domain-panel" style="display:none;background:#fff;border:2px solid var(--tss-orange);border-radius:3px;margin-bottom:20px;overflow:hidden;">
+    <div style="background:var(--tss-orange);color:#fff;padding:10px 18px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;font-size:14px;">Add Domain to Subscription</div>
+    <div style="padding:20px 22px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+        <div>
+          <label class="lch-label">Domain name</label>
+          <input id="ms-new-domain" class="lch-input" placeholder="e.g. api.customer-demo.in" style="font-family:monospace;">
+        </div>
+        <div>
+          <label class="lch-label">Domain type</label>
+          <select id="ms-new-type" class="lch-card-select" onchange="calcProrata()">
+            <option value="standard">Standard (single domain) — included price</option>
+            <option value="wildcard">Wildcard (*.domain) — +$50/yr pro-rata</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Pro-rata cost preview -->
+      <div id="ms-prorata-box" style="background:#fdf6ee;border:1px solid #f9d8b0;border-radius:3px;padding:14px 16px;margin-bottom:16px;font-size:13px;font-family:'Yantramanav',Arial,sans-serif;">
+        <div style="font-weight:700;color:var(--tss-orange);margin-bottom:6px;">Pro-rata Cost Estimate</div>
+        <div id="ms-prorata-detail"></div>
+      </div>
+
+      <div id="ms-add-steps" style="display:none;margin-bottom:16px;">
+        <div style="background:#f0f9f0;border:1px solid #b8ddb8;border-radius:3px;padding:14px 16px;font-size:13px;font-family:'Yantramanav',Arial,sans-serif;">
+          <div style="font-weight:700;color:var(--tss-green);margin-bottom:8px;">&#x2714; Domain added successfully!</div>
+          <div id="ms-add-cmd" style="margin-top:8px;background:#fff;border:1px solid var(--tss-border);border-radius:3px;padding:10px 12px;font-family:monospace;font-size:12px;color:#333;word-break:break-all;"></div>
+          <div style="margin-top:8px;color:#555;font-size:12.5px;">Run this command on your server to issue the certificate for the new domain.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button onclick="confirmAddDomain()" style="background:var(--tss-orange);color:#fff;border:none;border-radius:3px;padding:10px 22px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;font-size:14px;cursor:pointer;">Confirm &amp; Add Domain</button>
+        <button onclick="hideAddDomain()" style="background:none;border:1px solid var(--tss-border);border-radius:3px;padding:10px 18px;font-family:'Yantramanav',Arial,sans-serif;font-size:13.5px;cursor:pointer;color:var(--tss-gray);">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+
+/* ══ Manage Subscription (CaaS only) ══ */
+var MS = { domains: [], nextPay: "" };
+
+function openManageSub(){
+  const p=S.product, i=S.ids;
+  // Populate fields
+  document.getElementById("ms-domain").textContent = S.domain;
+  document.getElementById("ms-plan").textContent = p.name;
+  document.getElementById("ms-subid").textContent = i.orderId;
+  // Next payment: today + 12 months, pro-rata price
+  const np = new Date(); np.setFullYear(np.getFullYear()+1);
+  const npStr = np.toLocaleDateString("en-US",{month:"numeric",day:"numeric",year:"numeric"});
+  document.getElementById("ms-next-pay").textContent = "$"+p.price.toFixed(2)+" on "+npStr;
+
+  // Domain coverage
+  MS.domains = [
+    {name: S.domain, type:"Standard", status:"Issued", expiry: certExpiry()},
+  ];
+  if(p.wc) MS.domains.push({name:"*."+S.domain, type:"Wildcard", status:"Issued", expiry: certExpiry()});
+  renderMSDomains();
+  document.getElementById("ms-coverage").textContent =
+    MS.domains.filter(d=>d.type==="Standard").length+" Standard, "+
+    MS.domains.filter(d=>d.type==="Wildcard").length+" Wildcard";
+
+  // ACME credentials
+  document.getElementById("ms-acme-dir").textContent = acmeDir();
+  document.getElementById("ms-kid").textContent = i.eabKid;
+  document.getElementById("ms-hmac").textContent = i.eabHmac;
+
+  // Reset add-domain panel
+  hideAddDomain();
+  document.getElementById("ms-add-steps").style.display="none";
+  calcProrata();
+
+  simGo("s-manage-sub", 4);
+}
+
+function renderMSDomains(){
+  const tbody = document.getElementById("ms-domain-rows");
+  tbody.innerHTML = MS.domains.map(d=>`
+    <tr style="border-top:1px solid var(--tss-border);">
+      <td style="padding:9px 12px;font-family:monospace;">${d.name}</td>
+      <td style="padding:9px 12px;">${d.type}</td>
+      <td style="padding:9px 12px;color:${d.status==="Issued"?"var(--tss-green)":"var(--tss-gray)"};">${d.status}</td>
+      <td style="padding:9px 12px;font-size:12.5px;">${d.expiry||"N/A"}</td>
+      <td style="padding:9px 12px;"><span style="color:var(--tss-blue);font-size:12px;cursor:pointer;">View cert</span></td>
+    </tr>`).join("");
+  // Update coverage count
+  const el=document.getElementById("ms-coverage");
+  if(el) el.textContent = MS.domains.filter(d=>d.type==="Standard").length+" Standard, "+
+    MS.domains.filter(d=>d.type==="Wildcard").length+" Wildcard";
+}
+
+function calcProrata(){
+  const type = document.getElementById("ms-new-type").value;
+  const isWc = type==="wildcard";
+  // Pro-rata: based on days remaining in subscription
+  const now=new Date(), subEnd=new Date(now.getFullYear()+1, now.getMonth(), now.getDate());
+  const daysTotal=365, daysLeft=Math.round((subEnd-now)/(1000*60*60*24));
+  const annualCost = isWc ? 50.00 : 0.00;
+  const prorata = isWc ? ((annualCost / daysTotal) * daysLeft).toFixed(2) : "0.00";
+  const box = document.getElementById("ms-prorata-detail");
+  if(isWc){
+    box.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="color:#555;">Wildcard add-on (annual):</div><div><strong>$${annualCost.toFixed(2)}/yr</strong></div>
+      <div style="color:#555;">Days remaining in subscription:</div><div><strong>${daysLeft} of ${daysTotal} days</strong></div>
+      <div style="color:#555;border-top:1px solid #f9d8b0;padding-top:6px;">Pro-rata charge today:</div>
+      <div style="border-top:1px solid #f9d8b0;padding-top:6px;"><strong style="color:var(--tss-orange);font-size:15px;">$${prorata}</strong></div>
+    </div>`;
+  } else {
+    box.innerHTML = `<div style="color:#555;">Standard domains are included in your subscription — <strong style="color:var(--tss-green);">no additional charge</strong> for this domain type.</div>`;
+  }
+}
+
+function showAddDomain(){
+  const el=document.getElementById("ms-add-domain-panel");
+  el.style.display="block";
+  el.scrollIntoView({behavior:"smooth",block:"start"});
+  calcProrata();
+}
+function hideAddDomain(){
+  document.getElementById("ms-add-domain-panel").style.display="none";
+  const inp=document.getElementById("ms-new-domain"); if(inp) inp.value="";
+  const steps=document.getElementById("ms-add-steps"); if(steps) steps.style.display="none";
+}
+
+function confirmAddDomain(){
+  const rawDomain = (document.getElementById("ms-new-domain").value||"").trim();
+  const type = document.getElementById("ms-new-type").value;
+  const isWc = type==="wildcard";
+  if(!rawDomain){ alert("Please enter a domain name."); return; }
+
+  const domainName = isWc
+    ? (rawDomain.startsWith("*.") ? rawDomain : "*."+rawDomain)
+    : rawDomain.replace(/^\*\./,"");
+  const displayName = isWc ? domainName : rawDomain;
+
+  // Add to table
+  MS.domains.push({name:displayName, type:isWc?"Wildcard":"Standard", status:"Not Issued", expiry:"N/A"});
+  renderMSDomains();
+
+  // Show issuance command
+  const issueDomain = isWc ? rawDomain.replace(/^\*\./,"") : rawDomain;
+  const dir = acmeDir(), kid = S.ids.eabKid, hmac = S.ids.eabHmac;
+  const wcFlag = isWc ? " --domain *."+issueDomain+" --dns dns_cf" : " --webroot /var/www/html";
+  const cmd = `~/.acme.sh/acme.sh --issue --server ${dir} --domain ${issueDomain}${wcFlag}`;
+  document.getElementById("ms-add-cmd").textContent = cmd;
+  document.getElementById("ms-add-steps").style.display="block";
+
+  // Clear input
+  document.getElementById("ms-new-domain").value="";
+  document.getElementById("ms-add-steps").scrollIntoView({behavior:"smooth"});
+}
+
+function msCopy(id){
+  const el=document.getElementById(id); if(!el) return;
+  const text=el.textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(text).catch(()=>{});}
+  else{const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t);}
+  const orig=el.style.color; el.style.color="var(--tss-green)";
+  setTimeout(()=>el.style.color=orig,900);
 }
 
 </script>
