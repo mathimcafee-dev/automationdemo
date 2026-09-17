@@ -1897,5 +1897,144 @@ function msCopy(id){
 })();
 </script>
 
+
+<style>
+/* ═════════ OS-based terminal (Windows / macOS / Linux) ═════════ */
+:root{--os-ease-pop:cubic-bezier(.34,1.56,.64,1);--os-ease-out:cubic-bezier(.22,1,.36,1);--os-dur-open:520ms;--os-dur-fast:160ms;}
+/* Windows PowerShell chrome */
+body.termos-win .term{background:#012456;}
+body.termos-win .term-bar{background:#0e2a4e;}
+body.termos-win .term-bar .tdot{border-radius:2px;width:10px;height:10px;}
+body.termos-win .term-title{color:#cfe3ff;}
+body.termos-win .term-out{color:#eef3fb;}
+body.termos-win .term-in{color:#eef3fb;}
+body.termos-win .term-in .pr{color:#7ec3ff;}
+body.termos-win .caret{background:#eef3fb;}
+/* macOS Terminal.app chrome */
+body.termos-mac .term{background:#1e1e1e;}
+body.termos-mac .term-bar{background:#3a3a3c;border-bottom:1px solid #2b2b2d;}
+body.termos-mac .term-title{color:#b8b8bc;}
+body.termos-mac .term-in .pr{color:#58fb68;}
+/* Linux = existing default chrome */
+/* open animations */
+.term.t-open-win{animation:osOpenWin var(--os-dur-open) var(--os-ease-out) both;}
+@keyframes osOpenWin{from{opacity:0;transform:translateY(34px) scale(.985);}to{opacity:1;transform:none;}}
+.term.t-open-mac{animation:osOpenMac var(--os-dur-open) var(--os-ease-pop) both;}
+@keyframes osOpenMac{from{opacity:0;transform:scale(.9);}60%{opacity:1;}to{opacity:1;transform:scale(1);}}
+.term.t-open-linux{animation:osOpenLinux var(--os-dur-open) var(--os-ease-out) both;}
+@keyframes osOpenLinux{0%{opacity:0;filter:brightness(2.2);}45%{opacity:1;filter:brightness(1.35);}100%{opacity:1;filter:brightness(1);}}
+@media(prefers-reduced-motion:reduce){.term.t-open-win,.term.t-open-mac,.term.t-open-linux{animation:none;}}
+/* picker overlay */
+#os-pick{position:fixed;inset:0;background:rgba(13,20,38,.62);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:9000;padding:18px;}
+#os-pick.on{display:flex;animation:osFade var(--os-dur-fast) linear both;}
+@keyframes osFade{from{opacity:0}to{opacity:1}}
+.osp-card{background:#fff;border-radius:16px;max-width:640px;width:100%;padding:26px 26px 22px;box-shadow:0 24px 70px rgba(10,16,40,.35);animation:osOpenMac 380ms var(--os-ease-pop) both;}
+.osp-card h3{font-family:'Yantramanav',Arial,sans-serif;font-weight:900;font-size:21px;color:#29306c;margin:0 0 3px;}
+.osp-card .sub{font-size:13.5px;color:#707E86;margin:0 0 16px;}
+.osp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+@media(max-width:560px){.osp-grid{grid-template-columns:1fr;}}
+.osp-tile{border:1.5px solid #e2e4ef;border-radius:12px;background:#fff;padding:13px 10px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;transition:border-color var(--os-dur-fast),background var(--os-dur-fast),transform var(--os-dur-fast) var(--os-ease-out);font-family:Arial,sans-serif;text-align:center;}
+.osp-tile:hover{border-color:#0174C3;transform:translateY(-2px);}
+.osp-tile.sel{border-color:#f07725;background:#fff7f0;}
+.osp-tile.sel::after{content:"\2713";position:absolute;top:7px;right:10px;color:#f07725;font-weight:700;font-size:12px;}
+.osp-ic{font-size:27px;line-height:1;}
+.osp-nm{font-size:13px;font-weight:700;color:#1c2030;}
+.osp-ver{font-size:11px;color:#707E86;}
+.osp-pv{width:100%;height:34px;border-radius:6px;overflow:hidden;margin-top:2px;font-family:'Roboto Mono',monospace;font-size:7.5px;text-align:left;}
+.osp-pv .b{height:11px;display:flex;align-items:center;gap:3px;padding:0 5px;}
+.osp-pv .d{width:5px;height:5px;border-radius:50%;}
+.osp-pv .sq{width:5px;height:5px;border-radius:1px;}
+.osp-pv .p{padding:2px 5px;}
+.osp-open{margin-top:16px;width:100%;background:#f07725;color:#fff;border:0;border-radius:10px;padding:13px;font-family:'Yantramanav',Arial,sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:background var(--os-dur-fast),transform var(--os-dur-fast) var(--os-ease-out);}
+.osp-open:hover{background:#dd6613;}
+.osp-open:active{transform:scale(.985);}
+.osp-note{margin-top:9px;font-size:11.5px;color:#707E86;text-align:center;}
+</style>
+<script>
+/* ═════════ OS terminal picker — chrome + open animation per OS ═════════ */
+var TOS={os:null};
+function osApply(os){
+  TOS.os=os;
+  document.body.classList.remove("termos-win","termos-mac","termos-linux");
+  document.body.classList.add("termos-"+os);
+  /* title flavor */
+  var tt=document.getElementById("t-title");
+  if(tt){ var base=tt.textContent.replace(/^Windows PowerShell — |^zsh — |^bash — /,"");
+    tt.textContent=(os==="win"?"Windows PowerShell — ":os==="mac"?"zsh — ":"bash — ")+base; }
+}
+function osAnimate(){
+  var t=document.querySelector("#s-term .term"); if(!t)return;
+  t.classList.remove("t-open-win","t-open-mac","t-open-linux");
+  void t.offsetWidth;
+  t.classList.add("t-open-"+(TOS.os||"linux"));
+}
+function osGuess(){
+  try{
+    if(window._caasClient==="winacme")return "win";
+    if(S&&S.fin&&S.fin.env==="autoInstallWindows")return "win";
+    if(S&&S.simEnv==="windows")return "win";
+    if(/Mac/i.test(navigator.platform))return "mac";
+    if(/Win/i.test(navigator.platform))return "win";
+  }catch(e){}
+  return "linux";
+}
+function osPickerHTML(){
+  return '<div class="osp-card">'
+   +'<h3>Open the demo terminal</h3>'
+   +'<div class="sub">What operating system are you using? The terminal opens with that OS\u2019s look and feel.</div>'
+   +'<div class="osp-grid">'
+   +'<button type="button" class="osp-tile" data-os="win"><span class="osp-ic">\uD83E\uDE9F</span><span class="osp-nm">Windows</span><span class="osp-ver">Server / Desktop \u00b7 PowerShell</span>'
+     +'<span class="osp-pv" style="background:#012456"><span class="b" style="background:#0e2a4e"><i class="sq" style="background:#e81123"></i><i class="sq" style="background:#e8a723"></i><i class="sq" style="background:#16c60c"></i></span><span class="p" style="color:#7ec3ff;display:block">PS C:\\&gt; _</span></span></button>'
+   +'<button type="button" class="osp-tile" data-os="mac"><span class="osp-ic">\uD83C\uDF4E</span><span class="osp-nm">macOS</span><span class="osp-ver">Terminal \u00b7 zsh</span>'
+     +'<span class="osp-pv" style="background:#1e1e1e"><span class="b" style="background:#3a3a3c"><i class="d" style="background:#ff5f57"></i><i class="d" style="background:#febc2e"></i><i class="d" style="background:#28c840"></i></span><span class="p" style="color:#58fb68;display:block">~ % _</span></span></button>'
+   +'<button type="button" class="osp-tile" data-os="linux"><span class="osp-ic">\uD83D\uDC27</span><span class="osp-nm">Linux</span><span class="osp-ver">Ubuntu / Debian \u00b7 bash</span>'
+     +'<span class="osp-pv" style="background:#101418"><span class="b" style="background:#1c232b"><i class="d" style="background:#e0655f"></i><i class="d" style="background:#e0b23e"></i><i class="d" style="background:#59b95e"></i></span><span class="p" style="color:#5fd38a;display:block">demo@srv:~$ _</span></span></button>'
+   +'</div>'
+   +'<button type="button" class="osp-open" id="osp-open">Open terminal</button>'
+   +'<div class="osp-note">This only changes the terminal\u2019s look \u2014 the install commands stay exactly what the portal generated.</div>'
+   +'</div>';
+}
+function osPick(then){
+  var ov=document.getElementById("os-pick");
+  if(!ov){ ov=document.createElement("div"); ov.id="os-pick"; document.body.appendChild(ov); }
+  ov.innerHTML=osPickerHTML();
+  var sel=TOS.os||osGuess();
+  var labels={win:"Open Windows PowerShell",mac:"Open macOS terminal",linux:"Open Linux terminal"};
+  function mark(){
+    ov.querySelectorAll(".osp-tile").forEach(function(t){t.classList.toggle("sel",t.dataset.os===sel);});
+    document.getElementById("osp-open").textContent=labels[sel];
+  }
+  ov.querySelectorAll(".osp-tile").forEach(function(t){ t.onclick=function(){ sel=t.dataset.os; mark(); }; });
+  document.getElementById("osp-open").onclick=function(){
+    ov.classList.remove("on");
+    osApply(sel);
+    then&&then();
+    setTimeout(osAnimate,30);
+  };
+  mark(); ov.classList.add("on");
+}
+/* wrap the terminal entry points */
+(function(){
+  if(typeof openTerminal==="function"){
+    var _ot=openTerminal;
+    window.openTerminal=function(){ osPick(function(){ _ot(); }); };
+  }
+  if(typeof testNewDomainInTerminal==="function"){
+    var _tn=testNewDomainInTerminal;
+    window.testNewDomainInTerminal=function(){
+      if(TOS.os){ _tn(); osApply(TOS.os); setTimeout(osAnimate,30); }
+      else osPick(function(){ _tn(); osApply(TOS.os); });
+    };
+  }
+  /* fast-forward / reset reuse the chosen OS; re-flavor title after they rewrite it */
+  function osLocalPrompt(){ return TOS.os==="win"?"PS C:\\Users\\demo> ":TOS.os==="mac"?"demo@macbook ~ % ":"demo@laptop:~$ "; }
+  function osFlavorSteps(){ try{if(!TOS.os||!T||!T.steps)return;}catch(e){return;}
+    T.steps.forEach(function(st){ if(st&&st.prompt==="demo@laptop:~$ ") st.prompt=osLocalPrompt(); });
+    if(typeof setPrompt==="function") setPrompt(); }
+  var _st=startTerminal;
+  window.startTerminal=function(renewal){ _st(renewal); if(TOS.os){osApply(TOS.os); osFlavorSteps();} };
+})();
+</script>
+
 </body>
 </html>
