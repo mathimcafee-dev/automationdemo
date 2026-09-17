@@ -89,6 +89,15 @@ h1,h2,h3{font-family:'Yantramanav',Arial,sans-serif}
   </div>
 </div>
 <script>
+// auth gate — same credentials as the Admin login on the main page
+(function(){
+  var ok=false; try{ok=sessionStorage.getItem('pdfAuth')==='1';}catch(e){}
+  if(!ok){
+    var u=prompt('Admin email:')||'', p=u?(prompt('Password:')||''):'';
+    if(u.trim()==='mathimcafee@gmaial.com' && p==='hackathan@2025'){try{sessionStorage.setItem('pdfAuth','1');}catch(e){}}
+    else{document.body.innerHTML='<div style="font-family:Arial;padding:60px;text-align:center;color:#707E86;">Access denied. <a href="/">Back to demo</a></div>';throw new Error('auth');}
+  }
+})();
 var $=function(i){return document.getElementById(i)};
 $('d').addEventListener('input',function(){ if(!$('e').value||$('e').value.indexOf('@')===$('e').value.length-0) $('e').value=this.value?('orders@'+this.value):''; });
 function enc(o){var s=btoa(unescape(encodeURIComponent(JSON.stringify(o))));return s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
