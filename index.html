@@ -638,7 +638,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 
 /* animated flow cards */
 .flow-stack{display:flex;flex-direction:column;gap:0;flex:1;}
-.flow-card{position:relative;padding:14px 16px 14px 48px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:8px;overflow:hidden;opacity:0;transform:translateX(18px);animation:cardSlideIn .5s var(--ease-pop,cubic-bezier(.34,1.56,.64,1)) forwards;}
+.flow-card{position:relative;padding:14px 16px 14px 48px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:8px;overflow:hidden;opacity:0;transform:translateX(18px);}
+.flow-card.fc-in{opacity:1;transform:none;transition:opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.34,1.56,.64,1);}
 .flow-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px;background:linear-gradient(180deg,var(--fc-color,#0174C3),transparent);}
 .flow-card .fc-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:12px;}
 .flow-card .fc-title{font-family:'Yantramanav',Arial,sans-serif;font-size:13.5px;font-weight:700;color:#e2eaf5;margin-bottom:2px;}
@@ -738,30 +739,41 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.get
 </div>
 <script>
 (function(){
-  var CARDS=[
-    {icon:"✉",color:"#0174C3",title:"Order confirmation email",sub:"Customer receives a real-looking email from your store — their product, domain, and a one-click generation link.",tag:"",tagColor:""},
-    {icon:"🔗",color:"#54A245",title:"Certificate generation portal",sub:"One click opens the AutoInstall SSL setup portal — token, DCV options, and exact install command pre-filled.",tag:"Plan + Automate",tagColor:"rgba(84,162,69,.25)"},
-    {icon:"🔑",color:"#f07725",title:"ACME EAB credentials",sub:"For CaaS products, customers get their Key ID and HMAC key and can pick acme.sh, Certbot, or win-acme.",tag:"CaaS",tagColor:"rgba(240,119,37,.25)"},
-    {icon:"💻",color:"#7c3aed",title:"Interactive terminal",sub:"A real simulated server session — SSH in, password prompt, install command, validation, and certificate issued.",tag:"",tagColor:""},
-    {icon:"♻",color:"#0174C3",title:"Auto-reissue on schedule",sub:"Fast-forward to watch the agent silently reissue the certificate — every 47 days from 2029, zero intervention.",tag:"",tagColor:""}
-  ];
-  var stack=document.getElementById("rhsStack");
-  if(!stack)return;
-  var html="";
-  CARDS.forEach(function(c,i){
-    html+='<div class="flow-card" style="animation-delay:'+(i*110)+'ms;--fc-color:'+c.color+'">'
-     +'<span class="fc-icon">'+c.icon+'</span>'
-     +'<div class="fc-title">'+c.title+'</div>'
-     +'<div class="fc-sub">'+c.sub+'</div>'
-     +(c.tag?'<span class="fc-tag" style="background:'+c.tagColor+';color:#cde">'+c.tag+'</span>':'')
-     +'</div>';
-    if(i<CARDS.length-1)html+='<div class="flow-conn"><div class="dots"><span></span><span></span><span></span></div></div>';
-  });
-  stack.innerHTML=html;
-  // ticker rotation
-  var ticks=["Certificate reissues every 47 days — fully unattended","No manual renewal, no downtime, no missed deadlines","Works on Linux, Windows IIS, macOS, and cPanel","acme.sh · Certbot · win-acme — customer picks their client","Subscription renews annually · cert lifecycle is automatic"];
-  var ti=0,el=document.getElementById("tickerTxt");
-  setInterval(function(){ti=(ti+1)%ticks.length;if(el){el.style.opacity=0;setTimeout(function(){el.textContent=ticks[ti];el.style.opacity=1;},280);}},3500);
+  function initRhs(){
+    var CARDS=[
+      {icon:"✉",color:"#0174C3",title:"Order confirmation email",sub:"Customer receives a branded email from your store with their product, domain, and a one-click generation link."},
+      {icon:"🔗",color:"#54A245",title:"Certificate generation portal",sub:"One click opens the AutoInstall SSL setup portal — token, DCV method, and the exact server install command pre-filled.",tag:"Plan + Automate",tagColor:"rgba(84,162,69,.22)"},
+      {icon:"🔑",color:"#f07725",title:"ACME EAB credentials",sub:"CaaS customers get their CA URL, Key ID and HMAC key and choose acme.sh, Certbot, or win-acme.",tag:"CaaS",tagColor:"rgba(240,119,37,.22)"},
+      {icon:"💻",color:"#7c3aed",title:"Interactive terminal",sub:"A hands-on simulated server — SSH in, run the install command, watch DCV and certificate issuance live."},
+      {icon:"♻",color:"#0174C3",title:"Auto-reissue on schedule",sub:"Fast-forward to watch the certificate silently reissue — every 47 days from 2029 — with zero manual steps."}
+    ];
+    var stack=document.getElementById("rhsStack");
+    if(!stack)return;
+    var html="";
+    CARDS.forEach(function(c,i){
+      html+='<div class="flow-card" id="fc'+i+'" style="--fc-color:'+c.color+'">'
+       +'<span class="fc-icon">'+c.icon+'</span>'
+       +'<div class="fc-title">'+c.title+'</div>'
+       +'<div class="fc-sub">'+c.sub+'</div>'
+       +(c.tag?'<span class="fc-tag" style="background:'+c.tagColor+';color:#b8d4e8;border:1px solid rgba(255,255,255,.12)">'+c.tag+'</span>':'')
+       +'</div>';
+      if(i<CARDS.length-1)html+='<div class="flow-conn"><div class="dots"><span></span><span></span><span></span></div></div>';
+    });
+    stack.innerHTML=html;
+    // stagger in with JS so it works regardless of CSS animation support
+    CARDS.forEach(function(_,i){
+      setTimeout(function(){
+        var el=document.getElementById("fc"+i);
+        if(el)el.classList.add("fc-in");
+      },120+i*130);
+    });
+    // ticker rotation
+    var ticks=["Certificate reissues every 47 days — fully unattended","No manual renewal, no downtime, no missed deadlines","Works on Linux, Windows IIS, macOS, and cPanel","acme.sh · Certbot · win-acme — customer picks their client","Subscription renews annually · cert lifecycle is automatic"];
+    var ti=0,el=document.getElementById("tickerTxt");
+    if(el){el.style.transition="opacity .28s";
+      setInterval(function(){ti=(ti+1)%ticks.length;el.style.opacity="0";setTimeout(function(){el.textContent=ticks[ti];el.style.opacity="1";},300);},3800);}
+  }
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initRhs);}else{initRhs();}
 })();
 </script>
 </section>
