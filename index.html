@@ -543,30 +543,66 @@ html, body{ color:#4B4B4B !important; background:#eef1f5 !important; }
 </div></div>
 
 <!-- SCREEN: SETUP -->
-<section class="simscreen" id="s-setup"><div class="simwrap">
-  <div class="lch-head">
-    <h2>Start a customer journey</h2>
-    <p>Pick the product your customer ordered. The confirmation email, the AutoInstall SSL&reg; generation portal and the hands-on server terminal that follow are a faithful replica of the real flow &mdash; captured from the live sandbox &mdash; with nothing touching a real server or CA.</p>
+<section class="simscreen" id="s-setup"><div class="simwrap" style="max-width:640px;margin:0 auto;padding:28px 16px 40px">
+
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:32px;">
+    <div style="display:inline-block;background:#e7effa;color:#14395e;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 14px;border-radius:20px;margin-bottom:12px;">DEMO LAUNCHER</div>
+    <h2 style="margin:0 0 8px;font-size:22px;color:#14395e;">Start a customer journey</h2>
+    <p style="margin:0;color:#5b6672;font-size:13.5px;max-width:480px;margin:0 auto;">Select the product, confirm customer details, and place the simulated order.</p>
   </div>
-  <div class="lch-body">
-    <div class="lch-sec"><span class="n">1</span><h3>Choose the product</h3><span>Plan + Automate &mdash; customer chooses Agent or ACME</span></div>
-    <div class="lch-grid" id="prods-both"></div>
-    <div class="lch-sec"><span class="n">&nbsp;</span><h3 style="color:#5b6672!important;font-weight:400;font-size:13.5px">ACME Certificate-as-a-Service &mdash; ACME only <em style="font-style:normal;color:#8a94a0!important">(interim flow &mdash; will be matched to the real portal next)</em></h3></div>
-    <div class="lch-grid" id="prods-acme" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div>
-    <div class="lch-sec"><span class="n">2</span><h3>Customer &amp; server details</h3></div>
-    <div class="lch-fields">
-      <div class="lch-f"><label>Customer name</label><input id="f-name" value="Mathivanan Kathirvel"></div>
-      <div class="lch-f"><label>Customer email</label><input id="f-email" value="mathivanan@customer-demo.in"></div>
-      <div class="lch-f"><label>Domain to secure</label><input id="f-domain" value="shop.customer-demo.in"></div>
-      <div class="lch-f"><label>Customer's server</label>
-        <select id="f-env"><option value="linux" selected>Linux &mdash; Ubuntu 22.04 &middot; nginx</option><option value="windows">Windows Server 2022 &middot; IIS</option><option value="cpanel">cPanel hosting (SSH access)</option></select>
+
+  <!-- Step 1: Product dropdown -->
+  <div style="background:#fff;border-radius:8px;border:1.5px solid #d9dee5;padding:20px 22px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.8px;color:#8a94a0;margin-bottom:10px;">STEP 1 &mdash; PRODUCT</div>
+    <select id="f-product" style="width:100%;padding:10px 12px;border:1.5px solid #d9dee5;border-radius:6px;font-size:14px;color:#2b3440;background:#fff;appearance:auto;" onchange="onProductSelect(this.value)">
+      <option value="">— Select a product —</option>
+      <optgroup label="Plan + Automate (Agent + ACME)">
+        <option value="rapidssl_automate">RapidSSL Plan + Automate &mdash; $17.79/yr</option>
+        <option value="rapidssl_wc_automate">RapidSSL Wildcard Plan + Automate &mdash; $122.35/yr</option>
+        <option value="geotrust_automate">GeoTrust DV Plan + Automate &mdash; $71.23/yr</option>
+        <option value="geotrust_wc_automate">GeoTrust DV Wildcard Plan + Automate &mdash; $237.46/yr</option>
+      </optgroup>
+      <optgroup label="ACME Certificate-as-a-Service">
+        <option value="sectigo_caas_dv">Sectigo ACME Certificate-as-a-Service (DV) &mdash; $65.00/yr</option>
+        <option value="positivessl_caas_dv">PositiveSSL ACME Certificate-as-a-Service (DV) &mdash; $19.00/yr</option>
+      </optgroup>
+    </select>
+    <!-- Product detail pill shown after selection -->
+    <div id="prod-detail" style="display:none;margin-top:12px;padding:10px 14px;background:#f5f7fa;border-radius:6px;font-size:12.5px;color:#5b6672;"></div>
+  </div>
+
+  <!-- Step 2: Customer details -->
+  <div style="background:#fff;border-radius:8px;border:1.5px solid #d9dee5;padding:20px 22px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.8px;color:#8a94a0;margin-bottom:14px;">STEP 2 &mdash; CUSTOMER DETAILS</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <label style="font-size:12px;color:#5b6672;display:block;margin-bottom:4px;">Customer name</label>
+        <input id="f-name" value="Mathivanan Kathirvel" style="width:100%;padding:9px 11px;border:1.5px solid #d9dee5;border-radius:6px;font-size:13.5px;color:#2b3440;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:12px;color:#5b6672;display:block;margin-bottom:4px;">Customer email</label>
+        <input id="f-email" value="mathivanan@customer-demo.in" style="width:100%;padding:9px 11px;border:1.5px solid #d9dee5;border-radius:6px;font-size:13.5px;color:#2b3440;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:12px;color:#5b6672;display:block;margin-bottom:4px;">Domain to secure</label>
+        <input id="f-domain" value="shop.customer-demo.in" style="width:100%;padding:9px 11px;border:1.5px solid #d9dee5;border-radius:6px;font-size:13.5px;color:#2b3440;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:12px;color:#5b6672;display:block;margin-bottom:4px;">Server type</label>
+        <select id="f-env" style="width:100%;padding:9px 11px;border:1.5px solid #d9dee5;border-radius:6px;font-size:13.5px;color:#2b3440;background:#fff;box-sizing:border-box;">
+          <option value="linux" selected>Linux (nginx)</option>
+          <option value="windows">Windows IIS</option>
+          <option value="cpanel">cPanel</option>
+        </select>
       </div>
     </div>
-    <div class="lch-foot">
-      
-      <button class="btn-lch" id="b-start">Place simulated order &rarr;</button>
-    </div>
   </div>
+
+  <!-- Place order button -->
+  <button class="btn-lch" id="b-start" style="width:100%;padding:14px;font-size:15px;border-radius:8px;opacity:.4;cursor:not-allowed;" disabled>Place simulated order &rarr;</button>
+  <p style="text-align:center;font-size:12px;color:#8a94a0;margin-top:10px;">Select a product above to continue</p>
+
 </div></section>
 
 <!-- SCREEN: EMAIL -->
@@ -704,13 +740,36 @@ function simGo(id, j){
 function simRestart(){ renderSetup(); simGo("s-setup",0); }
 
 /* ═════════ screen: setup ═════════ */
+function onProductSelect(code){
+  S.code = code;
+  const btn = $("b-start"), hint = document.querySelector("#s-setup p:last-of-type");
+  const det = $("prod-detail");
+  if(!code){
+    btn.disabled=true; btn.style.opacity=".4"; btn.style.cursor="not-allowed";
+    if(hint) hint.style.display="";
+    det.style.display="none";
+    return;
+  }
+  btn.disabled=false; btn.style.opacity="1"; btn.style.cursor="pointer";
+  if(hint) hint.style.display="none";
+  const p = PRODUCTS[code];
+  if(p && det){
+    const tag = p.type==="caas"
+      ? '<span style="background:#f3e8ff;color:#7c3aed;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;">ACME Only</span>'
+      : '<span style="background:#e7effa;color:#14395e;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;">Agent + ACME</span>';
+    det.innerHTML = `<strong>${p.name}</strong>${tag}<br><span style="margin-top:4px;display:block;">Issued by ${p.vendor} &middot; $${p.price.toFixed(2)}/yr &middot; ${p.wc?"Wildcard":"Standard DV"}</span>`;
+    det.style.display="block";
+  }
+}
+
 function renderSetup(){
   const both=$("prods-both"), acme=$("prods-acme");
-  both.innerHTML=""; acme.innerHTML="";
+  /* Setup is now a static dropdown — reset dropdown state */
+  const dp=$("f-product"); if(dp) dp.value="";
+  onProductSelect("");
+  if(0){ /* legacy card rendering kept for reference */
   const brandHTML=p=>{
     if(p.brand==="geotrust") return `<img src="${IMG.geotrust}" alt="GeoTrust">`;
-    if(p.brand==="sectigo") return `<img src="${IMG.sectigo}" alt="Sectigo">`;
-    if(p.brand==="positivessl") return `<span class="tx" style="font-weight:700;color:#e07c00;font-size:15px;">PositiveSSL</span>`;
     return `<img src="${IMG.rapidssl}" alt="RapidSSL">`;
   };
   for(const [code,p] of Object.entries(PRODUCTS)){
@@ -725,14 +784,16 @@ function renderSetup(){
     el.onclick=()=>{document.querySelectorAll(".lch-card").forEach(x=>x.classList.remove("sel")); el.classList.add("sel"); S.code=code;};
     (p.type==="automate"?both:acme).appendChild(el);
   }
-  /* no auto-select — user picks a product manually */
+    } /* end if(0) legacy */
+/* no auto-select — user picks a product manually */
 }
 document.addEventListener("DOMContentLoaded",()=>{
   renderSetup(); simGo("s-setup",0);
   $("b-start").onclick=()=>{
-    /* Auto-fill demo values — no manual entry needed */
-    const name=$("f-name").value||"Mathivanan Kathirvel", email=$("f-email").value||"mathivanan@customer-demo.in";
-    let dom="shop.customer-demo.in";
+    if(!S.code){ alert("Please select a product."); return; }
+    const name=$("f-name").value.trim()||"Mathivanan Kathirvel", email=$("f-email").value.trim()||"mathivanan@customer-demo.in";
+    let dom=$("f-domain").value.trim().toLowerCase().replace(/^https?:\/\//,"").replace(/\/.*$/,"").replace(/^www\./,"");
+    if(!dom) dom="shop.customer-demo.in";
     S={...S, name, email, domain:dom, simEnv:$("f-env")?$("f-env").value:"linux", ids:makeIds(), product:PRODUCTS[S.code],
        loginLink:"https://sandbox.autoinstallssl.app/login/"+uuid().replace(/-/g,""),
        method:null, cfg:{env:null, agentTypeName:null}, fin:{env:null, validation:"file", provider:"", www:"both", cpMode:"file"}};
@@ -1096,7 +1157,19 @@ document.addEventListener("paste",e=>{
   e.preventDefault(); T.buf+=tx.replace(/\n/g,""); tBuf().textContent=pwMask();
 });
 document.addEventListener("DOMContentLoaded",()=>{
-  $("b-copy").onclick=()=>{const st=T.steps[T.ix]; if(st) navigator.clipboard?.writeText(st.show??st.expect);};
+  $("b-copy").onclick=()=>{
+    const st=T.steps[T.ix]; if(!st) return;
+    const text=st.show??st.expect;
+    if(navigator.clipboard?.writeText){
+      navigator.clipboard.writeText(text).catch(()=>fallbackCopy(text));
+    } else { fallbackCopy(text); }
+    const btn=$("b-copy"); btn.textContent="Copied!"; setTimeout(()=>btn.textContent="Copy",1500);
+  };
+  function fallbackCopy(text){
+    const ta=document.createElement("textarea");
+    ta.value=text; ta.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0";
+    document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+  }
   $("b-autotype").onclick=async()=>{ const st=T.steps[T.ix]; if(!st||T.busy) return;
     for(let k=1;k<=st.expect.length;k++){ T.buf=st.expect.slice(0,k); tBuf().textContent=pwMask(); await sleep(st.expect.length>70?4:14);} await sleep(120); submitLine(); };
   $("b-presenter").onclick=()=>{ T.presenter=!T.presenter;
