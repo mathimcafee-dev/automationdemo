@@ -272,6 +272,49 @@ body{background:#EEF2F7}
 @media (max-width:1280px){.wrapd .g2{grid-template-columns:1fr 1fr;height:auto}.wrapd .g2>.cd{min-height:230px}.wrapd .g4{grid-template-columns:1fr 1fr;height:auto}.wrapd .g4>.cd{min-height:230px}}
 @media (max-width:1000px){.wrapd .g1{grid-template-columns:1fr;height:auto}.wrapd .g1 .kp{grid-template-rows:auto}.wrapd .g3{grid-template-columns:1fr}.wrapd .g5{grid-template-columns:1fr}.dash .sl{position:static}}
 @media (max-width:700px){.wrapd{padding:12px}.wrapd .g2,.wrapd .g4{grid-template-columns:1fr}.wrapd .kp{grid-template-columns:1fr 1fr}.dash .tb{padding:0 12px}.dash .bn small,.dash .us{display:none}.dash .sl{padding:10px 12px}.dash .sch{width:100%}.dash .dbd .sg{grid-template-columns:1fr}.dash .dbd .sform{grid-template-columns:1fr}.wrapd.rp .kp{grid-template-columns:1fr 1fr;grid-template-rows:auto}.dash .tb .sync{display:none}.dash .tb{gap:10px}.dash .seg{max-width:100%;overflow-x:auto}.dash .slr{gap:10px}}
+.wrapd{max-width:1920px}
+.wrapd .g1{grid-template-columns:minmax(260px,300px) 1fr;height:auto}
+.wrapd .gcard{padding-bottom:12px}.wrapd .gcard .gw{margin-top:0}
+.wrapd .garc{transition:stroke-dasharray 900ms var(--ease)}
+.wrapd .gndl{transition:transform 900ms var(--ease);transform-box:view-box}
+.wrapd .gcomp{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+.wrapd .gcomp div{display:grid;grid-template-columns:66px 1fr 40px;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.wrapd .gcomp i,.wrapd .citems i{display:block;height:6px;border-radius:3px;background:#EDF1F6;overflow:hidden}
+.wrapd .gcomp em,.wrapd .citems em{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#5CA1DE,#0167AE);transition:width 800ms var(--ease)}
+.wrapd .gcomp b{font-size:11.5px;color:var(--navy);text-align:right}.wrapd .gcomp b small{color:#8A97AD;font-weight:500}
+.wrapd .kp2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.wrapd .kt2{background:#fff;border:1px solid #E1E7EF;border-radius:10px;padding:12px 16px 11px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;cursor:pointer;min-height:132px;box-shadow:0 1px 2px rgba(11,36,71,.04);transition:border-color var(--fast) var(--ease),box-shadow var(--fast) var(--ease),transform var(--fast) var(--ease)}
+.wrapd .kt2::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 2px 2px 0;background:var(--blue)}.wrapd .kt2.neg::before{background:var(--red)}
+.wrapd .kt2:hover{border-color:var(--blue-100);box-shadow:0 6px 18px rgba(11,36,71,.08);transform:translateY(-1px)}
+.wrapd .kt2:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.wrapd .kt2:active{transform:translateY(0)}
+.wrapd .kt2.bump{animation:kbump 600ms var(--ease)}@keyframes kbump{0%{box-shadow:0 0 0 0 rgba(1,116,195,.35)}100%{box-shadow:0 0 0 10px rgba(1,116,195,0)}}
+.wrapd .kl2{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.wrapd .kl2>span{font-size:12px;font-weight:600;color:var(--muted)}
+.wrapd .kgo{font-style:normal;font-size:11px;font-weight:600;color:var(--blue);opacity:0;transform:translateX(-4px);transition:opacity var(--fast) var(--ease),transform var(--fast) var(--ease);white-space:nowrap}
+.wrapd .kt2:hover .kgo,.wrapd .kt2:focus-visible .kgo{opacity:1;transform:none}
+.wrapd .kb{display:flex;align-items:center;gap:16px;flex:1;min-height:0}
+.wrapd .kv2{display:flex;align-items:center;gap:10px;flex:none}.wrapd .kv2 b{font-size:32px;font-weight:700;line-height:1;color:var(--navy);letter-spacing:-.02em;font-variant-numeric:tabular-nums}.wrapd .kv2 b em{font-style:normal;font-size:15px;color:#8A97AD;font-weight:500;margin-left:2px}
+.wrapd .kt2.neg .kv2 b{color:var(--red)}
+.wrapd .kr{transition:stroke-dasharray 900ms var(--ease),opacity 200ms}
+.wrapd .kviz{flex:1;min-width:0;display:flex;align-items:center;justify-content:flex-end}
+.wrapd .spk{width:100%;max-width:220px;height:40px;overflow:visible}
+.wrapd .spk.draw{animation:kdraw 1100ms var(--ease) both}@keyframes kdraw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.wrapd .pict2{flex-wrap:wrap;gap:5px;max-width:220px;justify-content:flex-start}.wrapd .pict2 i{width:12px;height:12px;border-radius:50%;background:#E4EAF2}.wrapd .pict2 i.on{background:var(--green)}
+.wrapd .pict2 i.pop{animation:kpop 420ms var(--ease) both;animation-delay:var(--d)}@keyframes kpop{from{transform:scale(0);opacity:0}to{transform:none;opacity:1}}
+.wrapd .bars{align-items:flex-end;gap:5px;height:48px;max-width:220px}.wrapd .bars>div{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;height:100%;min-width:0}
+.wrapd .bars i{flex:1;width:100%;max-width:18px;display:flex;align-items:flex-end;background:#F1F4F8;border-radius:3px;overflow:hidden}.wrapd .bars em{display:block;width:100%;border-radius:3px 3px 0 0;transition:height 700ms var(--ease)}
+.wrapd .bars small{font-size:9px;color:#8A97AD;line-height:1;height:9px;white-space:nowrap}.wrapd .b14{gap:3px}.wrapd .b14 i{max-width:12px}
+.wrapd .names{flex-wrap:wrap;gap:5px}.wrapd .names span{font-size:11.5px;font-weight:600;background:var(--red-50);color:var(--red);border-radius:12px;padding:3px 9px}.wrapd .names span.ok{background:#E7F6EF;color:var(--green)}
+.wrapd .citems{flex-direction:column;align-items:stretch;gap:5px;max-width:230px}.wrapd .citems div{display:grid;grid-template-columns:72px 1fr 18px;align-items:center;gap:6px;font-size:10.5px;color:var(--muted)}.wrapd .citems b{font-size:11px;color:var(--navy);text-align:right}
+.wrapd .kf{display:flex;justify-content:space-between;align-items:center;gap:8px}.wrapd .kf small{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrapd .kd{font-size:10.5px;font-weight:600;color:#8A97AD;white-space:nowrap}.wrapd .kd.up{color:var(--blue-d)}.wrapd .kd.dn{color:var(--red)}
+.wrapd .hl{animation:hl 1400ms var(--ease)}@keyframes hl{0%,40%{box-shadow:0 0 0 3px var(--blue-100)}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.wrapd .spk.draw,.wrapd .pict2 i.pop,.wrapd .kt2.bump,.wrapd .hl{animation:none}.wrapd .garc,.wrapd .gndl,.wrapd .kr,.wrapd .bars em,.wrapd .gcomp em,.wrapd .citems em{transition:none}}
+@media (min-width:1760px){.wrapd .kp2{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1280px){.wrapd .kp2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:1000px){.wrapd .g1{grid-template-columns:1fr}.wrapd .gcard{align-items:center}.wrapd .gcard .gcomp{width:100%;max-width:420px}}
+@media (max-width:560px){.wrapd .kp2{grid-template-columns:1fr}.wrapd .kgo{opacity:1;transform:none}}
+.dash .dbd .up{grid-template-columns:52px minmax(0,1fr)}.dash .dbd .upa{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;padding-left:66px}.dash .dbd .upi{min-width:0}
 </style>
 </head>
 <body>
@@ -838,18 +881,63 @@ function render(){normalize();const T0=document.querySelector('.dbd');if(T0)DSCR
 ${ggN?`<span class="gh">${ggN} GoGetSSL partner${ggN>1?'s':''} hidden · <button class="lnk" data-a="ggshow">View</button></span>`:''}</div>
 ${chips.length?`<div class="fchips"><span>Filtered to ${ps.length} of ${vis().filter(avail).length} partners:</span>${chips.map(([k,t])=>`<button class="chipf" data-a="funset" data-k="${k}">${esc(t)} <b aria-hidden="true">✕</b><span class="sr" style="position:absolute;left:-9999px">Remove filter</span></button>`).join('')}<button class="lnk" data-a="fclear">Clear all</button></div>`:''}</div>
 <main class="wrapd rp">
-<div class="g1"><div class="cd gcard"><h3>Launch health <small>index out of 100</small></h3><div class="gw">${rgauge(M.health)}</div><p class="gx">50% progress, 30% on time, 20% unblocked</p></div>${rkpis(M)}</div>
+<div class="g1"><div class="cd gcard"><h3>Launch health <small>index out of 100</small></h3>${dgauge(M)}</div>${dkpis(M)}</div>
 <div class="g2"><div class="cd"><h3>Launch funnel <span class="hint">Click a stage to filter</span></h3>${rfunnel(Mf,1)}</div><div class="cd"><h3>Partner status <span class="hint">Click to filter</span></h3>${rdonut2(Ms,1)}</div><div class="cd ins"><h3>Key findings <small>updates live</small></h3><ol>${rinsights(M).map(t=>`<li>${t}</li>`).join('')}</ol></div><div class="cd"><h3>Needs attention <small>${M.risk.length} item${M.risk.length===1?'':'s'}</small></h3>${rrisk(M,1)}</div></div>
-<div class="cd mx"><h3>Partner launch matrix <span class="mxh"><span class="hint">Click a cell to switch it. Click a partner to open details.</span><small>${ps.length} partner${ps.length===1?'':'s'}</small></span></h3>${dheat(M)}</div>
-<div class="g3"><div class="cd"><h3>Launch timeline <small>completed, due and scheduled</small></h3>${ps.length?rtimeline(M):'<p class="nd">No partners match these filters.</p>'}</div><div class="cd"><h3>Meeting calendar <small>this week and the next two</small></h3>${rcal(M)}<h3 style="margin-top:14px">Upcoming meetings <small>${M.mt.length} booked</small></h3>${dupcoming(M)}</div></div>
+<div class="cd mx" id="d-mx"><h3>Partner launch matrix <span class="mxh"><span class="hint">Click a cell to switch it. Click a partner to open details.</span><small>${ps.length} partner${ps.length===1?'':'s'}</small></span></h3>${dheat(M)}</div>
+<div class="g3"><div class="cd"><h3>Launch timeline <small>completed, due and scheduled</small></h3>${ps.length?rtimeline(M):'<p class="nd">No partners match these filters.</p>'}</div><div class="cd" id="d-cal"><h3>Meeting calendar <small>this week and the next two</small></h3>${rcal(M)}<h3 style="margin-top:14px">Upcoming meetings <small>${M.mt.length} booked</small></h3>${dupcoming(M)}</div></div>
 <div class="g4"><div class="cd"><h3>Batch comparison <small>% per stage</small></h3>${rbatch(M)}</div><div class="cd"><h3>Partners by market <span class="hint">Click to filter</span></h3>${Mm.ps.length?rtree(Mm,1):'<p class="nd">No partners.</p>'}</div><div class="cd"><h3>Stage hand-off speed <small>days</small></h3>${rvel(M)}</div><div class="cd"><h3>Tracker activity <small>30 days</small></h3>${ractivity(M)}</div></div>
-<div class="cd"><h3>Partner content launch <small>click a status to switch it between yes and no</small></h3>${dcontent(M)}</div>
+<div class="cd" id="d-cont"><h3>Partner content launch <small>click a status to switch it between yes and no</small></h3>${dcontent(M)}</div>
 ${ggSection(gg)}
 </main>${OPEN&&P(OPEN)&&avail(P(OPEN))?ddrawer(P(OPEN)):''}</div>`;
- document.body.style.overflow=OPEN?'hidden':'';const d=document.querySelector('.dbd');if(d)d.scrollTop=DSCROLL}
+ document.body.style.overflow=OPEN?'hidden':'';const d=document.querySelector('.dbd');if(d)d.scrollTop=DSCROLL;animDash()}
 document.addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.f==='m'){FM=t.value;render()}});
 let FQT=null;document.addEventListener('input',e=>{const t=e.target;if(t.id!=='f-q')return;clearTimeout(FQT);FQT=setTimeout(()=>{FQ=t.value.trim();const pos=t.selectionStart;render();const n=document.getElementById('f-q');if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(x){}}},180)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&OPEN&&document.querySelector('.drw')&&!document.getElementById('xdlg')?.classList.contains('open')){OPEN=null;DRAFT=null;render()}});
+
+const KPREV={};
+function kseries(ps,days){const T=today(),cells=ps.length*5||1;const dts=[];ps.forEach(p=>STAGES.forEach(st=>{const d=p.s[st.k];if(d.done)dts.push(d.date||'0000')}));
+ const fl=ps.filter(live).map(p=>lastDone(p)||'0000');const out=[];for(let k=days-1;k>=0;k--){const d=addTo(T,-k);out.push({d,pct:Math.round(dts.filter(x=>x<=d).length/cells*100),full:fl.filter(x=>x<=d).length})}return out}
+function kspark(vals,w,h,col){const mx=Math.max(1,...vals),mn=0,n=vals.length;const X=i=>(i/(n-1)*w).toFixed(1),Y=v=>(h-2-(v-mn)/(mx-mn||1)*(h-4)).toFixed(1);const line=vals.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+ return`<svg class="spk" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="spg${col.slice(1)}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".22"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs><polygon points="0,${h} ${line} ${w},${h}" fill="url(#spg${col.slice(1)})"/><polyline class="spl" points="${line}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`}
+function kring(p,sz,sw,key){const h=sz/2,R=(sz-sw)/2;return`<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" aria-hidden="true"><circle cx="${h}" cy="${h}" r="${R}" fill="none" stroke="${RC.track}" stroke-width="${sw}"/><circle class="kr" data-k="${key}" data-p="${p}" cx="${h}" cy="${h}" r="${R}" fill="none" stroke="${RC.blue}" stroke-width="${sw}" stroke-linecap="round" pathLength="100" stroke-dasharray="${p>0?p:0} 100" transform="rotate(-90 ${h} ${h})" style="${p>0?'':'opacity:0'}"/></svg>`}
+const kdelta=(v,unit,good)=>v>0?`<span class="kd up">▲ ${v}${unit} this week</span>`:v<0?`<span class="kd dn">▼ ${-v}${unit} this week</span>`:`<span class="kd">No change this week</span>`;
+function dgauge(M){const v=M.health,cx=130,cy=118,R=92,sw=20;const ang=d=>Math.PI*(1-d/100);const pt=(d,r)=>[+(cx+r*Math.cos(ang(d))).toFixed(1),+(cy-r*Math.sin(ang(d))).toFixed(1)];
+ const semi=(r,c,w,extra)=>{const[a,b]=pt(0,r),[x,y]=pt(100,r);return`<path d="M${a} ${b} A${r} ${r} 0 0 1 ${x} ${y}" fill="none" stroke="${c}" stroke-width="${w}" ${extra||''}/>`};
+ const band=(d0,d1,c)=>{const[a,b]=pt(d0,R-sw/2-5),[x,y]=pt(d1,R-sw/2-5);return`<path d="M${a} ${b} A${R-sw/2-5} ${R-sw/2-5} 0 0 1 ${x} ${y}" fill="none" stroke="${c}" stroke-width="3"/>`};
+ let ticks='';for(let d=0;d<=100;d+=10){const[a,b]=pt(d,R+sw/2+3),[x,y]=pt(d,R+sw/2+(d%50?7:11));ticks+=`<line x1="${a}" y1="${b}" x2="${x}" y2="${y}" stroke="#9FB0C8" stroke-width="${d%50?1:1.6}"/>`}
+ const zone=v>=70?['Healthy',RC.green]:v>=40?['Needs attention',RC.amber]:['At risk',RC.red];
+ const n=M.ps.length||1,dueN=M.ps.reduce((a,p)=>a+STAGES.filter((x,i)=>stageDue(p,i)).length,0),comp=[['Progress',Math.round(M.pct*.5),50,`${M.pct}% of stage steps done`],['On time',Math.round((dueN?1-M.od/dueN:1)*30),30,`${M.od} of ${dueN} due stages overdue`],['Unblocked',Math.round((1-M.blk/n)*20),20,`${M.blk} of ${M.ps.length} partners blocked`]];
+ return`<div class="gw"><svg class="dg" width="236" height="136" viewBox="0 0 260 150" role="img" aria-label="Launch health ${v} of 100, ${zone[0]}"><defs><linearGradient id="dgg" x1="0" x2="1"><stop offset="0" stop-color="#5CA1DE"/><stop offset="1" stop-color="#0167AE"/></linearGradient></defs>
+ ${semi(R,RC.track,sw)}${semi(R,'url(#dgg)',sw,`class="garc" data-k="gauge" data-p="${v}" pathLength="100" stroke-dasharray="${v} 100"`)}${band(0,40,'#F3C5CE')}${band(40,70,'#F5DDA8')}${band(70,100,'#B7DEC9')}${ticks}
+ <g class="gndl" data-k="gndl" data-p="${v}" style="transform:rotate(${v*1.8}deg);transform-origin:${cx}px ${cy}px"><line x1="${cx}" y1="${cy}" x2="${cx-R+30}" y2="${cy}" stroke="${RC.navy}" stroke-width="3" stroke-linecap="round"/></g><circle cx="${cx}" cy="${cy}" r="7" fill="${RC.navy}"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="#fff"/>
+ <text x="${cx}" y="${cy+28}" text-anchor="middle" font-size="30" font-weight="700" fill="${RC.navy}"><tspan data-count="${v}" data-k="gnum">${v}</tspan><tspan font-size="13" fill="${RC.mut}" font-weight="500"> /100</tspan></text>
+ <text x="${cx-R-4}" y="${cy+16}" font-size="10" fill="${RC.faint}">0</text><text x="${cx+R-8}" y="${cy+16}" font-size="10" fill="${RC.faint}">100</text></svg>
+ <div class="gz" style="--z:${zone[1]}"><i></i>${zone[0]}</div></div>
+ <div class="gcomp">${comp.map(([t,val,mx,tip])=>`<div title="${esc(tip)}"><span>${t}</span><i><em data-w="${val/mx*100}" style="width:${val/mx*100}%"></em></i><b>${val}<small>/${mx}</small></b></div>`).join('')}</div>`}
+function dkpis(M){const n=M.ps.length,ser=kseries(M.ps,30),wk=ser[ser.length-8]||ser[0],dp=M.pct-wk.pct,df=M.full-wk.full;
+ const od=STAGES.map((s,i)=>M.ps.filter(p=>overdue(p,i)).length),mo=Math.max(1,...od);
+ const ct=CITEMS.map(x=>M.ps.filter(p=>cinit(p)[x.k].done).length);
+ const tile=(k,cls,label,body,act)=>`<div class="kt2 ${cls}" data-a="kpi" data-k="${k}" role="button" tabindex="0" aria-label="${esc(act)}"><div class="kl2"><span>${label}</span><em class="kgo">${esc(act)} ›</em></div>${body}</div>`;
+ const T=today();
+ return`<div class="kp2">
+ ${tile('prog','','Overall progress',`<div class="kb"><div class="kv2">${kring(M.pct,48,6,'r-prog')}<b><span data-count="${M.pct}" data-k="c-prog">${M.pct}</span>%</b></div><div class="kviz">${kspark(ser.map(x=>x.pct),150,40,RC.blue)}</div></div><div class="kf"><small>${M.done} of ${M.cells} stage steps</small>${kdelta(dp,' pts')}</div>`,'Open the launch matrix')}
+ ${tile('full','','Fully launched',`<div class="kb"><div class="kv2"><b><span data-count="${M.full}" data-k="c-full">${M.full}</span><em>/${n}</em></b></div><div class="kviz pict2">${[...Array(Math.min(n,30))].map((_,i)=>`<i class="${i<M.full?'on':''}" style="--d:${i*25}ms"></i>`).join('')}</div></div><div class="kf"><small>All five stages complete</small>${kdelta(df,'')}</div>`,'Show complete partners')}
+ ${tile('od',M.od?'neg':'','Overdue stages',`<div class="kb"><div class="kv2"><b><span data-count="${M.od}" data-k="c-od">${M.od}</span></b></div><div class="kviz bars">${od.map((v,i)=>`<div title="${esc(STAGES[i].t)}: ${v} overdue"><i><em data-w="${v/mo*100}" style="height:${v?Math.max(8,v/mo*100):0}%;background:${RC.red}"></em></i><small>${i+1}</small></div>`).join('')}</div></div><div class="kf"><small>${M.od?'By stage, 1 to 5':'Nothing past its due date'}</small></div>`,'Show overdue partners')}
+ ${tile('blk',M.blk?'neg':'','Blocked partners',`<div class="kb"><div class="kv2"><b><span data-count="${M.blk}" data-k="c-blk">${M.blk}</span></b></div><div class="kviz names">${M.blk?M.ps.filter(p=>p.blocked).slice(0,3).map(p=>`<span title="${esc(p.block)}">${esc(p.name)}</span>`).join(''):'<span class="ok">None blocked</span>'}</div></div><div class="kf"><small>${M.blk?esc(M.ps.find(p=>p.blocked).block||'Blocked'):'Every partner can move forward'}</small></div>`,'Show blocked partners')}
+ ${tile('meet','','Meetings, next 14 days',`<div class="kb"><div class="kv2"><b><span data-count="${M.mt14}" data-k="c-mt">${M.mt14}</span></b></div><div class="kviz bars b14">${M.d14.map((v,i)=>{const d=addTo(T,i);return`<div title="${dlong(d)}: ${v} meeting${v===1?'':'s'}"><i><em style="height:${v?Math.min(100,30+v*35):0}%;background:${RC.blue}"></em></i><small>${i===0?'Today':i===7?mon(d)+' '+dom(d):''}</small></div>`}).join('')}</div></div><div class="kf"><small>${M.mt.length} scheduled in total</small></div>`,'Open the meeting calendar')}
+ ${tile('cont','','Content launched',`<div class="kb"><div class="kv2">${kring(M.cPct,48,6,'r-cont')}<b><span data-count="${M.cPct}" data-k="c-cont">${M.cPct}</span>%</b></div><div class="kviz citems">${CITEMS.map((x,i)=>`<div title="${esc(x.t)}: ${ct[i]} of ${n}"><span>${x.k==='web'?'Web page':x.k==='sheet'?'Sales sheet':'Emails'}</span><i><em data-w="${n?ct[i]/n*100:0}" style="width:${n?ct[i]/n*100:0}%"></em></i><b>${ct[i]}</b></div>`).join('')}</div></div><div class="kf"><small>${M.cDone} of ${n*CITEMS.length} items live or sent</small></div>`,'Open content launch')}
+ </div>`}
+function animDash(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ document.querySelectorAll('[data-count]').forEach((el,idx)=>{const k=el.dataset.k,to=+el.dataset.count,from=KPREV[k]===undefined?0:KPREV[k];KPREV[k]=to;if(rm||from===to){el.textContent=to;return}
+  const t0=performance.now()+idx*40,dur=750;el.textContent=from;const step=now=>{const q=Math.min(1,Math.max(0,(now-t0)/dur)),e=1-Math.pow(1-q,3);el.textContent=Math.round(from+(to-from)*e);if(q<1)requestAnimationFrame(step)};requestAnimationFrame(step);
+  const tile=el.closest('.kt2');if(tile&&KPREV[k+'_seen']){tile.classList.remove('bump');void tile.offsetWidth;tile.classList.add('bump')}KPREV[k+'_seen']=1});
+ const tw=(el,prop,fromV,toV)=>{if(rm||fromV===toV)return;el.style.transition='none';prop(el,fromV);void el.getBoundingClientRect();el.style.transition='';requestAnimationFrame(()=>prop(el,toV))};
+ document.querySelectorAll('.kr,.garc').forEach(el=>{const k=el.dataset.k,to=+el.dataset.p,from=KPREV[k]===undefined?0:KPREV[k];KPREV[k]=to;tw(el,(e,v)=>{e.style.strokeDasharray=`${v} 100`;e.style.opacity=v>0?1:0},from,to)});
+ document.querySelectorAll('.gndl').forEach(el=>{const to=+el.dataset.p,from=KPREV.gndl===undefined?0:KPREV.gndl;KPREV.gndl=to;tw(el,(e,v)=>{e.style.transform=`rotate(${v*1.8}deg)`},from,to)});
+ document.querySelectorAll('.gcomp em,.citems em').forEach((el,i)=>{const k='w'+i+el.closest('div').title.split(':')[0],to=+el.dataset.w||parseFloat(el.style.width)||0,from=KPREV[k]===undefined?0:KPREV[k];KPREV[k]=to;tw(el,(e,v)=>{e.style.width=v+'%'},from,to)});
+ document.querySelectorAll('.bars em').forEach((el,i)=>{const k='h'+i+(el.closest('.kt2')?.dataset.k||''),to=parseFloat(el.style.height)||0,from=KPREV[k]===undefined?0:KPREV[k];KPREV[k]=to;tw(el,(e,v)=>{e.style.height=v+'%'},from,to)});
+ if(!KPREV.pict){document.querySelectorAll('.spk').forEach(x=>x.classList.add('draw'));KPREV.pict=1;document.querySelectorAll('.pict2 i').forEach(i=>i.classList.add('pop'))}}
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('[role="button"][data-a]')&&e.target.tagName!=='BUTTON'){e.preventDefault();e.target.click()}});
 
 function xemail(){const M=rmetrics();const td='style="padding:10px 12px;border:1px solid #DDE3EC;font:12px Arial,sans-serif;vertical-align:top"';
  const kpis=[['Overall progress',M.pct+'%'],['Fully launched',M.full+' / '+M.ps.length],['Overdue stages',M.od],['Blocked',M.blk],['Meetings (14 days)',M.mt14],['Content launched',M.cPct+'%']];
@@ -867,7 +955,10 @@ document.addEventListener('click',e=>{if(e.target.closest('.sfsel'))return;const
   if(a==='ff'){const v=+t.dataset.v;FF=FF===v?0:v;render();return}
   if(a==='fm'){FM=FM===t.dataset.v?'':t.dataset.v;render();return}
   if(a==='funset'){const k=t.dataset.k;if(k==='fm')FM='';if(k==='fs')FS='';if(k==='ff')FF=0;if(k==='fq')FQ='';render();return}
-  if(a==='fclear'){FM='';FS='';FF=0;FQ='';render();return}}
+  if(a==='fclear'){FM='';FS='';FF=0;FQ='';render();return}
+  if(a==='kpi'){const k=t.dataset.k,go=id=>{const el=document.getElementById(id);if(!el)return;const y=el.getBoundingClientRect().top+window.scrollY-(document.querySelector('.sl')?.offsetHeight||0)-70;window.scrollTo({top:y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});el.classList.remove('hl');void el.offsetWidth;el.classList.add('hl')};
+   if(k==='full'||k==='od'||k==='blk'){const v={full:'Complete',od:'Overdue',blk:'Blocked'}[k];FS=FS===v?'':v;render();go('d-mx');return}
+   go({prog:'d-mx',meet:'d-cal',cont:'d-cont'}[k]);return}}
  if(t.dataset.a==='ggtoggle'){GGOPEN=!GGOPEN;const y=window.scrollY;render();window.scrollTo(0,y);return}
  if(t.dataset.a==='ggshow'){GGOPEN=true;render();document.getElementById('ggsec')?.scrollIntoView({behavior:'smooth',block:'start'});return}
  if(t.dataset.a==='sftss'){setSF(t.dataset.p,'tss');return}
