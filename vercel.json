@@ -1,11 +1,42 @@
 {
   "version": 2,
   "rewrites": [
-    {"source": "/partner", "destination": "/partner.html"},
-    {"source": "/demo/:slug", "destination": "/index.html"},
-    {"source": "/(.*)", "destination": "/index.html"}
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "valimail.ssldemo.site"
+        }
+      ],
+      "destination": "/valimail/index.html"
+    },
+    {
+      "source": "/valimail",
+      "destination": "/valimail/index.html"
+    },
+    {
+      "source": "/partner",
+      "destination": "/partner.html"
+    },
+    {
+      "source": "/demo/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ],
-  "headers": [{"source": "/(.*)", "headers": [
-    {"key": "Cache-Control", "value": "public, max-age=0, must-revalidate"}
-  ]}]
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
 }
