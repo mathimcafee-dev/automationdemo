@@ -1,0 +1,30 @@
+Blue Bits - DigiCert Valimail DMARC Essentials attach copy
+================================================================
+Ready-to-use lines for every place customers already buy from you.
+
+CHECKOUT UPSELL (DOMAIN, EMAIL OR SSL ORDER)
+Protect the email on this domain. Add DigiCert Valimail DMARC Essentials: automated SPF, DKIM and DMARC that stops spoofing and meets Gmail, Yahoo and Microsoft sender rules.
+
+RENEWAL REMINDER INSERT
+While you renew, add DigiCert Valimail DMARC Essentials from Blue Bits. It stops scammers sending email as your domain and helps your emails reach the inbox. Reply to this email or contact our sales team to add it.
+
+INVOICE OR ORDER-CONFIRMATION FOOTER
+New from Blue Bits: DigiCert Valimail DMARC Essentials. Stop fake emails sent in your company's name. Ask our team to add it to your services.
+
+EMAIL HOSTING WELCOME EMAIL
+Your new mailboxes are ready. To keep them out of spam and stop impostors using your domain, add DigiCert Valimail DMARC Essentials. It sets up SPF, DKIM and DMARC automatically.
+
+SUPPORT REPLY (SPAM OR SCAM COMPLAINT)
+Thanks for reporting this. Emails that fail SPF, DKIM or DMARC checks are often sent to spam, and domains without DMARC enforcement can be spoofed. DigiCert Valimail DMARC Essentials from Blue Bits fixes both automatically. We can add it to your account today.
+
+CHAT MESSAGE (ZALO, LINE, MESSENGER)
+Hi! Blue Bits now offers DigiCert Valimail DMARC Essentials. It stops scammers sending email as your business and helps your emails reach Gmail and Outlook inboxes. Would you like details?
+
+SALES CALL OPENER
+Do you send invoices or payment details by email? Since 2024, Gmail, Yahoo and then Microsoft have required SPF, DKIM and DMARC, and domains without DMARC can be spoofed. DMARC Essentials automates all of it, so it takes minutes to add to your existing services.
+
+STAFF EMAIL SIGNATURE LINE
+Protect your domain from email spoofing with DigiCert Valimail DMARC Essentials, now available from Blue Bits.
+
+AUTOMATION PROJECT ADD-ON
+Since we are already updating your DNS for certificate automation, we can add DMARC Essentials in the same step and protect your email as well as your website.

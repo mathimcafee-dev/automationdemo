@@ -104,6 +104,14 @@ textarea.in{padding:10px 12px;min-height:84px;resize:vertical}
 .gcard h1{margin:0;font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-.03em}.gcard p{margin:0;color:var(--muted)}.gcard .seg{display:flex;gap:5px}.gcard .seg i{width:14px;height:14px;border-radius:4px}
 .gerr{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 12px;font-weight:600;font-size:14px}
 .gcard .in:focus{border-color:var(--c-bb);box-shadow:0 0 0 3px var(--t-bb)}
+.kfiles{display:flex;flex-direction:column;gap:8px}
+.kf{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:14px;padding:6px 8px 6px 6px;transition:border-color var(--fast) var(--ease)}
+.kf:hover{border-color:var(--c)}
+.kmain{flex:1;display:flex;align-items:center;gap:12px;min-height:48px;padding:4px 6px;border-radius:10px;color:var(--ink);text-decoration:none;font-weight:400}
+.kmain:hover{background:var(--t)}.kmain b{display:block;font-size:14.5px}.kmain small{display:block;font-size:12.5px;color:var(--muted)}
+.kic{width:40px;height:40px;border-radius:10px;background:var(--t);color:var(--c);display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.03em;flex-shrink:0}
+.kx{flex-shrink:0;font-size:13px;font-weight:600;color:var(--c);text-decoration:none;min-height:36px;display:inline-flex;align-items:center;padding:0 10px;border-radius:8px}.kx:hover{background:var(--t)}
+.kbar{display:flex;gap:10px;flex-wrap:wrap}.kbar .btn{text-decoration:none;color:var(--ink);font-size:14px}
 @media (max-width:1150px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.ws,.lower{grid-template-columns:1fr}}
 @media (max-width:620px){.wrap{padding:16px 12px 48px}.cards{grid-template-columns:1fr}.panel{padding:18px 16px}.g2{grid-template-columns:1fr}header h1 .seg{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -120,7 +128,13 @@ const STAGES=[
  {t:'Kit shared',d:'Hand over the final kit and walk them through it.',items:['Final kit shared with the partner','Walkthrough of every kit file done']},
  {t:'Onboarding',d:'Set the partner up to sell and serve customers.',items:['Onboarding session held','Partner account and portal access created','Sales and support teams trained']},
  {t:'Onboarded',d:'The partner is live and manages its own customers.',items:['Partner confirmed onboarded and live']}];
-const KIT=['Partner playbook','One-page sales sheet','Website product page','Email campaign','Attach copy'];
+const KIT=[
+ {t:'Partner playbook',d:'Strategy, attach points, features, 90-day plan',f:'partner-playbook.pdf',k:'PDF'},
+ {t:'One-page sales sheet',d:'Two-page Letter PDF for customers',f:'sales-sheet.pdf',k:'PDF'},
+ {t:'Website product page',d:'Ready-to-publish page in their branding',f:'product-page.html',k:'Web page',x:[['Preview image','product-page-preview.png']]},
+ {t:'Email campaign',d:'Four emails with subjects and copy',f:'email-campaign.pdf',k:'PDF',x:[['Plain text','email-campaign.txt']]},
+ {t:'Attach copy',d:'Checkout, renewal, invoice and support lines',f:'attach-copy.pdf',k:'PDF',x:[['Plain text','attach-copy.txt']]}];
+const KB='/valimail/kits/';
 function seed(){const blank=()=>STAGES.map(st=>st.items.map(()=>false));const mk=(o)=>{const c=blank();c[1][0]=true;c[1][1]=true;return Object.assign({checks:c,next:'Schedule the intro meeting',due:'2026-10-06',blocked:false,block:'',notes:'',meetings:[]},o)};return{v:5,sel:'bb',log:[],
 partners:[
 mk({id:'bb',name:'Blue Bits',pid:'82997420',legal:'Công ty Cổ phần Chứng Thực Số Toàn Cầu Việt Nam',site:'bluebit.vn',market:'Vietnam · MSP',contact:'bluebit@bluebit.vn'}),
@@ -204,7 +218,9 @@ ${p.blocked?`<div class="f"><label for="bl">What is blocking them?</label><input
 <button class="btn" data-a="meet" style="align-self:flex-start">Log meeting</button>
 <div class="mt">${p.meetings.length?'':'<p class="empty">No meetings logged yet.</p>'}${p.meetings.map(m=>`<div><b>${esc(m.t)}</b><span>${md(m.d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>${m.n?`<p>${esc(m.n)}</p>`:''}</div>`).join('')}</div></div>
 <div class="panel"><h3>Notes</h3><textarea class="in" data-k="notes" aria-label="Notes about ${esc(p.name)}">${esc(p.notes)}</textarea></div>
-<div class="panel"><h3>Kit files</h3><div class="kit">${KIT.map(k=>`<button data-a="file" data-x="${esc(p.name+' '+k)}">${k}</button>`).join('')}</div></div>
+<div class="panel"><h3>Kit files<small>Final version for ${esc(p.name)}</small></h3>
+<div class="kfiles">${KIT.map(k=>`<div class="kf"><a class="kmain" href="${KB+p.id+'/'+k.f}" target="_blank" rel="noopener"><span class="kic" aria-hidden="true">${k.k==='PDF'?'PDF':'WEB'}</span><span><b>${k.t}</b><small>${k.d}</small></span></a>${(k.x||[]).map(([l,f])=>`<a class="kx" href="${KB+p.id+'/'+f}" target="_blank" rel="noopener">${l}</a>`).join('')}</div>`).join('')}</div>
+<div class="kbar"><a class="btn" href="${KB+p.id}/full-kit.zip" download>Download full kit (zip)</a><a class="btn" href="${KB}go-to-market-strategy.pdf" target="_blank" rel="noopener">Go-to-market strategy</a></div></div>
 </div></section>`}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-sel],[data-a]');if(!t)return;
 if(t.dataset.sel){const changed=S.sel!==t.dataset.sel;S.sel=t.dataset.sel;save();render();if(changed&&t.classList.contains('link'))document.querySelector('.ws').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});return}

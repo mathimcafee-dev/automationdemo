@@ -1,0 +1,100 @@
+P.A Vietnam - DigiCert Valimail DMARC Essentials email campaign
+================================================================
+DigiCert Valimail DMARC Essentials is a product sold by P.A Vietnam. Send about one week apart.
+Emails 1-3 sell DMARC Essentials. Email 4 goes ONLY to customers whose domains have reached DMARC enforcement (VMC/CMC upsell).
+Replace [First name], [Company] and [domain] before sending.
+
+EMAIL 1
+Subject: Could someone send email as [Company] today?
+
+Hi [First name],
+
+Attackers impersonate businesses by sending email from their exact domain: fake invoices, payment requests and password resets. Without DMARC at enforcement, nothing stops a fake message from [domain] reaching your customers, staff or suppliers.
+
+P.A Vietnam now offers DigiCert Valimail DMARC Essentials, which automates SPF, DKIM and DMARC and takes your domain to full enforcement.
+
+Your domain needs DMARC Essentials if:
+  - You send invoices, quotes or payment details by email
+  - You use Google Workspace, Microsoft 365 or an email marketing platform
+  - Some of your emails land in spam or never arrive
+  - You own more than one domain, including unused or parked ones
+  - You want your brand logo to appear next to your emails
+
+What you get:
+  - Instant SPF, automated DKIM and automated DMARC, with no DNS expertise needed
+  - Dashboards showing every sender, deliverability and authentication failure rate
+  - Suspicious-mail detection and a downloadable Domain Executive Report
+  - Sender Requirements Failure report for Gmail, Yahoo and Microsoft rules
+  - BIMI eligible, ready for your own VMC or CMC
+  - SOC 2 Type 2 platform with onboarding assistance and a dedicated account manager
+
+Button: Order DMARC Essentials
+
+P.A Vietnam  |  pa@pavietnam.vn  ·  1900 9477  ·  pavietnam.vn
+----------------------------------------------------------------
+
+EMAIL 2
+Subject: The sender rules Gmail, Yahoo and Microsoft now enforce
+
+Hi [First name],
+
+Since 2024 Gmail and Yahoo require SPF, DKIM and DMARC from bulk senders, and Microsoft followed in 2025. Mail that fails is sent to spam or rejected.
+
+DMARC Essentials, available from P.A Vietnam, automates all three records and includes a Sender Requirements Failure report, plus Email Analyzer and Email Delivery reports, so you can see that your domain meets the rules.
+
+What you get with DMARC Essentials:
+  - Instant SPF, automated DKIM and automated DMARC, with no DNS expertise needed
+  - Dashboards showing every sender, deliverability and authentication failure rate
+  - Suspicious-mail detection and a downloadable Domain Executive Report
+  - Sender Requirements Failure report for Gmail, Yahoo and Microsoft rules
+  - BIMI eligible, ready for your own VMC or CMC
+  - SOC 2 Type 2 platform with onboarding assistance and a dedicated account manager
+
+Button: Talk to our sales team
+
+P.A Vietnam  |  pa@pavietnam.vn  ·  1900 9477  ·  pavietnam.vn
+----------------------------------------------------------------
+
+EMAIL 3
+Subject: Everything included in DMARC Essentials
+
+Hi [First name],
+
+Here is the complete feature set of DigiCert Valimail DMARC Essentials, now available from P.A Vietnam. It is built to move your domain to enforcement safely, without blocking your legitimate email, and you can add it to the domain, email and SSL services you already use with us.
+
+Complete feature set:
+  - Automated authentication: Instant SPF with unlimited DNS lookups (no 10-lookup limit); Automated DKIM; Automated DMARC; Subdomain configuration
+  - Visibility into every sender: Account overview: email sources, deliverability, top senders and top sending domains; Authentication failure rate; Domain Executive Report: domain, email and sender insights, SPF lookup and suspicious mail, downloadable as PDF
+  - Spoofing and threat detection: Suspicious mail by source; Top impacted domains; Trends over time
+  - Domain management: DMARC record, policy and enforcement status per domain; Sending status, subdomains and available reports; CSV export
+  - Reports and compliance: Sender Requirements Failure report (Gmail, Yahoo and Microsoft rules); Email Analyzer and Email Delivery reports; Domains, Enforcement Status and Event Log reports
+  - BIMI and logo ready: BIMI eligible; BIMI Amplify with your own VMC or CMC (bring your own certificate); BIMI Simulator, Audience Insights and Inspiration
+  - Security, access and support: SOC 2 Type 2 certified, user-level MFA and SAML/SSO; Unlimited users, role-based access control and API keys; 180 days of data history, Teams, Portfolios, alerts and notification center; Onboarding assistance, dedicated account manager, technical account manager and knowledge base
+
+Key benefits:
+  - Stop domain spoofing: Block phishing and fake invoices sent in your name.
+  - Meet sender requirements: Pass the SPF, DKIM and DMARC checks Gmail, Yahoo and Microsoft require.
+  - Improve deliverability: Help your legitimate email reach the inbox instead of spam.
+  - Reach enforcement safely: Automation and clear reports move you to p=reject without blocking real mail.
+  - No DNS expertise needed: Instant SPF, automated DKIM and automated DMARC do the heavy lifting.
+  - Logo-ready inbox: Enforcement plus BIMI support prepares you for a VMC or CMC.
+
+Button: Order DMARC Essentials
+
+P.A Vietnam  |  pa@pavietnam.vn  ·  1900 9477  ·  pavietnam.vn
+----------------------------------------------------------------
+
+EMAIL 4 (enforced domains only)
+Subject: Your domain is protected. Now show your logo.
+
+Hi [First name],
+
+[domain] is now at DMARC enforcement. DMARC Essentials is BIMI eligible and includes BIMI Amplify, BIMI Simulator and Audience Insights, so you can preview how your logo will appear.
+
+Add a DigiCert VMC (for registered trademarks, with Gmail's verified checkmark) or CMC (for logos without a trademark) from P.A Vietnam, and your logo appears beside your emails in supporting inboxes.
+
+
+Button: Add my VMC or CMC
+
+P.A Vietnam  |  pa@pavietnam.vn  ·  1900 9477  ·  pavietnam.vn
+----------------------------------------------------------------
