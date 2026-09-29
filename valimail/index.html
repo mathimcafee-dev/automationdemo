@@ -56,7 +56,8 @@ tr.prow.open td{border-bottom-color:transparent}
 tr.grp td{background:var(--row);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);padding:8px 14px!important}
 tr.grp td span{font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)}
 .xbq{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.xsub{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:8px 0 2px}
-.dh a{color:inherit}.lg .wm{font-weight:700;color:#005BA4;font-size:12px}.lg .wm span{color:#13294B}
+.dh a{color:inherit}.dh .miss{font-style:normal;color:var(--red);font-weight:600}.dh .lnk{margin-left:auto}
+.pinf{display:grid;grid-template-columns:120px 1.3fr 1fr 1.3fr 1.3fr auto;gap:10px;align-items:end}@media (max-width:1100px){.pinf{grid-template-columns:1fr 1fr}}.lg .wm{font-weight:700;color:#005BA4;font-size:12px}.lg .wm span{color:#13294B}
 .cell{display:inline-flex;align-items:center;gap:6px;min-height:26px;padding:0 9px;border-radius:13px;font-size:12.5px;font-weight:600;white-space:nowrap}
 .cell.done{background:var(--blue);color:#fff}.cell.part{background:#fff;color:var(--blue);border:1px solid var(--blue)}.cell.none{color:var(--off);font-weight:500}
 .cell.cur{box-shadow:0 0 0 3px var(--blue-100)}
@@ -196,17 +197,17 @@ const KB='/valimail/kits/',KV='20260929b',KITS=['bb','pa','irh','bk'];
 function mkP(o){const c=[[false,false,false],[false,true,true,false],[false,false],[false,false,false],[false]];return Object.assign({s:{intro:{done:false,date:''},form:{done:false,date:''},onb:{done:false,date:''},kit:{done:false,date:''},shared:{done:false,date:''}},checks:c,next:'Schedule the intro meeting',due:'2026-10-06',blocked:false,block:'',notes:'',meetings:[],batch:1,pid:'',legal:'',contact:''},o)}
 const BATCHES={1:{t:'Batch 1',d:'Priority partners'},2:{t:'Batch 2',d:'Follow-up partners'}};
 const B2=[
- {id:'hkz',name:'Hoster.KZ',site:'hoster.kz',market:'Host/Domain'},
- {id:'dmn',name:'DomaiNesia',site:'domainesia.com',market:'Host/Domain'},
- {id:'psk',name:'Internet Kompanija',site:'ps.kz',market:'Host/Domain'},
- {id:'shj',name:'Shinjiru Technology',site:'shinjiru.com',market:'Host/Domain'},
- {id:'dww',name:'PT Dewaweb',site:'dewaweb.com',market:'Host/Domain'},
- {id:'dpx',name:'DAPYXIS',site:'dapyxis.com',market:'Host/Domain'},
- {id:'hgf',name:'Host Graf LLC',site:'ssls.uz',market:'Host/Domain'},
- {id:'mde',name:'Modoeye Co.',site:'modoeye.com',market:'Host/Domain'},
- {id:'nth',name:'Nethub Online',site:'nethub.com.hk',market:'Brand Agency / Web Dev'}].map(o=>Object.assign(o,{batch:2,due:'2026-10-13'}));
-function addBatch2(){if(S.b2)return false;S.partners.forEach(p=>{if(!p.batch)p.batch=1});B2.forEach(o=>{if(!S.partners.some(p=>p.id===o.id))S.partners.push(mkP(JSON.parse(JSON.stringify(o))))});S.b2=1;return true}
-function seed(){const mk=mkP;return{v:5,sel:'bb',log:[],b2:1,
+ {id:'hkz',name:'Hoster.KZ',site:'hoster.kz',legal:'Kompaniya Hoster.KZ LLP',market:'Kazakhstan · Hosting and domains'},
+ {id:'dmn',name:'DomaiNesia',site:'domainesia.com',legal:'PT Deneva',market:'Indonesia · Hosting and domains'},
+ {id:'psk',name:'Internet Kompanija',site:'ps.kz',market:'Kazakhstan · Hosting and domains'},
+ {id:'shj',name:'Shinjiru Technology',site:'shinjiru.com',market:'Malaysia · Hosting'},
+ {id:'dww',name:'PT Dewaweb',site:'dewaweb.com',legal:'PT Dewaweb',market:'Indonesia · Hosting and domains'},
+ {id:'dpx',name:'DAPYXIS',site:'dapyxis.com',market:'Hosting and domains'},
+ {id:'hgf',name:'Host Graf LLC',site:'ssls.uz',legal:'Host Graf LLC',market:'Uzbekistan · Hosting and domains'},
+ {id:'mde',name:'Modoeye Co.',site:'modoeye.com',legal:'Modoeye Co.',market:'Hosting and domains'},
+ {id:'nth',name:'Nethub Online',site:'nethub.com.hk',market:'Hong Kong · Brand agency and web development'}].map(o=>Object.assign(o,{batch:2,due:'2026-10-13'}));
+function addBatch2(){if(S.b2&&!S.b2i){S.b2i=1;B2.forEach(o=>{const p=S.partners.find(x=>x.id===o.id);if(p)['legal','market','site'].forEach(k=>{if(o[k]&&(!p[k]||p[k]==='Host/Domain'||p[k]==='Brand Agency / Web Dev'))p[k]=o[k]})});return true}if(S.b2)return false;S.partners.forEach(p=>{if(!p.batch)p.batch=1});B2.forEach(o=>{if(!S.partners.some(p=>p.id===o.id))S.partners.push(mkP(JSON.parse(JSON.stringify(o))))});S.b2=1;S.b2i=1;return true}
+function seed(){const mk=mkP;return{v:5,sel:'bb',log:[],b2:1,b2i:1,
 partners:[
 mk({id:'bb',name:'Blue Bits',pid:'82997420',legal:'Công ty Cổ phần Chứng Thực Số Toàn Cầu Việt Nam',site:'bluebit.vn',market:'Vietnam · MSP',contact:'bluebit@bluebit.vn'}),
 mk({id:'pa',name:'P.A Vietnam',pid:'82981944',legal:'P.A Viet Nam Company Limited',site:'pavietnam.vn',market:'Vietnam · Registrar and hosting',contact:'pa@pavietnam.vn'}),
@@ -276,7 +277,7 @@ ${msg?`<div class="gerr" role="alert">${esc(msg)}</div>`:''}<div class="f"><labe
 function normalize(){if(addBatch2())setTimeout(save,0);S.partners.forEach(p=>{if(!p.batch)p.batch=1;migrate(p);(p.meetings=p.meetings||[]);if(p.meetings.every(m=>m.status!=='planned'||true))refreshDue(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
 function syncPill(){const t={idle:LAST?'Saved '+fmt(LAST.at)+(LAST.by?' by '+esc(LAST.by):''):'Connected',saving:'Saving…',error:'Could not save, retrying',local:'Not connected: saved on this device only'}[SYNC];
  return`<span id="sync" class="sync ${SYNC}">${SYNC==='saving'?'<i class="spin"></i>':SYNC==='idle'?'●':'⚠'} ${t}</span>`}
-let OPEN=null;
+let OPEN=null,INFO=null;
 function cellFor(p,i){const st=STAGES[i],d=p.s[st.k],cur=stageOf(p)===i;
  return d.done?`<span class="cell done" title="${st.t}: ${st.yes}${d.date?' on '+dlong(d.date):''}">✓ ${st.yes}</span>`
  :(()=>{const od=overdue(p,i);return od?`<span class="cell late" title="${st.t} was due ${dlong(stageDue(p,i))}">${st.no} · ${od}d late</span>`:`<span class="cell ${cur?'part cur':'none'}">${st.no}</span>`})()}
@@ -342,7 +343,7 @@ function nextCell(p){const up=planned(p)[0];return up?`<span class="mtag">Meetin
 function draftFor(p,type){const x=mt(type);return{type:x.t,t:x.t==='Other'?'':x.t,d:addDays(3),time:'10:00',fmt:'Video call',who:'',agenda:x.t==='Other'?'':x.d}}
 function detail(p){const s=stageOf(p),up=planned(p),pa=past(p),sg=suggest(p);if(!DRAFT||DRAFT.pid!==p.id)DRAFT=Object.assign(draftFor(p,sg[0].t),{pid:p.id});
 return`<div class="dwrap">
-<div class="dh">${[p.legal&&`<b>${esc(p.legal)}</b>`,p.pid&&'Partner ID '+p.pid,p.site&&`<a href="https://${esc(p.site)}" target="_blank" rel="noopener">${esc(p.site)}</a>`,esc(p.market),esc(p.contact),esc(BATCHES[p.batch||1].t)].filter(Boolean).map(x=>`<span>${x}</span>`).join('')}</div>
+${INFO===p.id?`<div class="pinf"><div class="f"><label for="pi-pid">Partner ID</label><input class="inp" id="pi-pid" data-pi="pid" value="${esc(p.pid)}" inputmode="numeric"></div><div class="f"><label for="pi-legal">Legal name</label><input class="inp" id="pi-legal" data-pi="legal" value="${esc(p.legal)}"></div><div class="f"><label for="pi-site">Website</label><input class="inp" id="pi-site" data-pi="site" value="${esc(p.site)}"></div><div class="f"><label for="pi-market">Market</label><input class="inp" id="pi-market" data-pi="market" value="${esc(p.market)}" placeholder="Country · Business type"></div><div class="f"><label for="pi-contact">Contact</label><input class="inp" id="pi-contact" data-pi="contact" value="${esc(p.contact)}" placeholder="Email or chat handle"></div><div class="f" style="justify-content:flex-end"><button class="btn p" data-a="pinfo">Done</button></div></div>`:`<div class="dh">${[p.legal&&`<b>${esc(p.legal)}</b>`,p.pid&&'Partner ID '+p.pid,p.site&&`<a href="https://${esc(p.site)}" target="_blank" rel="noopener">${esc(p.site)}</a>`,esc(p.market),esc(p.contact),esc(BATCHES[p.batch||1].t),!p.pid&&'<em class="miss">Partner ID missing</em>',!p.contact&&'<em class="miss">Contact missing</em>'].filter(Boolean).map(x=>`<span>${x}</span>`).join('')}<button class="lnk" data-a="pinfo">Edit details</button></div>`}
 <div class="sgrid">${STAGES.map((st,i)=>{const d=p.s[st.k];return`<div class="sg ${d.done?'done':overdue(p,i)?'od':i===s?'cur':''}"><h4>${i+1}. ${st.t}</h4><div class="sgb">
 <div class="seg2" role="group" aria-label="${st.t}"><button data-a="set" data-i="${i}" data-v="1" aria-pressed="${!!d.done}">${st.yes}</button><button data-a="set" data-i="${i}" data-v="0" aria-pressed="${!d.done}">${st.no}</button></div>
 ${d.done?`<div class="f"><label for="sd-${i}">${st.yes} on</label><input class="inp" type="date" id="sd-${i}" data-sd="${i}" value="${d.date||''}"></div>`:`<p class="sdesc">${st.d}${(()=>{const od=overdue(p,i),dd=stageDue(p,i);if(od)return`<br><b class="odt">Overdue by ${od} day${od>1?'s':''} (due ${dlong(dd)})</b>`;if(i>0)return`<br><b>Due ${GAP[i]} days after ${STAGES[i-1].t.toLowerCase()}${dd?' ('+dlong(dd)+')':''}</b>`;return''})()}</p>`}</div></div>`}).join('')}</div>
@@ -600,6 +601,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data
  if(a==='ics'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);const blob=new Blob([icsFor(p,m)],{type:'text/calendar'});const u=URL.createObjectURL(blob);const l=document.createElement('a');l.href=u;l.download=(p.name+' '+m.t).replace(/[^\w]+/g,'-')+'.ics';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return}
  if(a==='block'&&p){p.blocked=!p.blocked;if(!p.blocked){p.block='';log(p,'blocker cleared')}else log(p,'marked as blocked');rerender();if(p.blocked)setTimeout(()=>document.getElementById('bl')?.focus(),30)}
  else if(a==='copy'){xopen()}
+ else if(a==='pinfo'&&p){INFO=INFO===p.id?null:p.id;const y=window.scrollY;render();window.scrollTo(0,y);if(INFO)setTimeout(()=>document.getElementById(p.pid?'pi-contact':'pi-pid')?.focus(),30)}
  else if(a==='bview'){BV=t.dataset.b;try{localStorage.setItem('valimail-batch',BV)}catch(x){}OPEN=null;render()}
  else if(a==='signout'){localStorage.removeItem('valimail-auth');location.reload()}});
 document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='ced-in'){if(e.key==='Enter'){e.preventDefault();document.querySelector('[data-a="csave"]')?.click()}if(e.key==='Escape'){CED=null;render()}return}if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('tr.prow')){e.preventDefault();OPEN=OPEN===e.target.dataset.row?null:e.target.dataset.row;render()}});
@@ -608,6 +610,7 @@ document.addEventListener('change',e=>{const t=e.target,p=P(OPEN);if(!p)return;
  if(t.dataset.sd!==undefined){const st=STAGES[+t.dataset.sd];p.s[st.k].date=t.value;refreshDue(p);log(p,`${st.t} date set to ${t.value?dlong(t.value):'none'}`);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved');return}
  if(t.dataset.dr){DRAFT[t.dataset.dr]=t.value;if(t.dataset.dr==='type'){const x=mt(t.value);if(!DRAFT.t||MTYPES.some(y=>y.t===DRAFT.t))DRAFT.t=x.t==='Other'?'':x.t;if(!DRAFT.agenda||MTYPES.some(y=>y.d===DRAFT.agenda))DRAFT.agenda=x.t==='Other'?'':x.d;const y=window.scrollY;render();window.scrollTo(0,y)}return}
  if(t.dataset.i!==undefined&&t.type==='checkbox'){const i=+t.dataset.i,j=+t.dataset.j,before=stageOf(p);p.checks[i][j]=t.checked;log(p,(t.checked?'done: ':'reopened: ')+STAGES[i].items[j].charAt(0).toLowerCase()+STAGES[i].items[j].slice(1));const after=stageOf(p);const y=window.scrollY;render();window.scrollTo(0,y);document.querySelector(`input[data-i="${i}"][data-j="${j}"]`)?.focus();if(after!==before)toast(after===5?p.name+' is onboarded and live':p.name+' moved to '+STAGES[after].t);return}
+ if(t.dataset.pi){p[t.dataset.pi]=t.value.trim();log(p,'partner details updated');toast('Saved');return}
  if(t.dataset.k){const k=t.dataset.k;p[k]=t.value||(k==='due'?today():'');if(k==='due')p.dueManual=true;log(p,{next:'next action updated',due:'due date changed',block:'blocker updated',notes:'notes updated'}[k]);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved')}});
 
 document.addEventListener('click',e=>{const t=e.target.closest('[data-x]');if(!t||!XO)return;const x=t.dataset.x;
