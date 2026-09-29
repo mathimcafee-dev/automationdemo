@@ -45,7 +45,18 @@ tr.prow{cursor:pointer;transition:background var(--fast)}tr.prow:hover{backgroun
 tr.prow.open td{border-bottom-color:transparent}
 .pn{display:flex;align-items:center;gap:12px}.pn b{display:block;font-size:14.5px}.pn small{color:var(--muted);font-size:12px}
 .lg{display:inline-flex;align-items:center;justify-content:center;width:88px;height:34px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:2px 6px;flex-shrink:0}
-.lg img{max-height:26px;max-width:76px}.lg .wm{font-weight:700;color:#005BA4;font-size:12px}.lg .wm span{color:#13294B}
+.lg img{max-height:26px;max-width:76px}
+.lg.mono{font-weight:700;font-size:13px;letter-spacing:.04em;color:var(--blue-d);background:var(--blue-50);border-color:var(--blue-100)}
+.btabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:18px 0 16px;overflow-x:auto}
+.btabs button{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;transition:color var(--fast) var(--ease),border-color var(--fast) var(--ease)}
+.btabs button:hover{color:var(--ink)}
+.btabs button[aria-selected="true"]{color:var(--blue-d);border-bottom-color:var(--blue)}
+.btabs button span{font-size:12px;min-width:22px;padding:1px 7px;border-radius:10px;background:var(--row);color:var(--muted)}
+.btabs button[aria-selected="true"] span{background:var(--blue-50);color:var(--blue-d)}
+tr.grp td{background:var(--row);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);padding:8px 14px!important}
+tr.grp td span{font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)}
+.xbq{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.xsub{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:8px 0 2px}
+.dh a{color:inherit}.lg .wm{font-weight:700;color:#005BA4;font-size:12px}.lg .wm span{color:#13294B}
 .cell{display:inline-flex;align-items:center;gap:6px;min-height:26px;padding:0 9px;border-radius:13px;font-size:12.5px;font-weight:600;white-space:nowrap}
 .cell.done{background:var(--blue);color:#fff}.cell.part{background:#fff;color:var(--blue);border:1px solid var(--blue)}.cell.none{color:var(--off);font-weight:500}
 .cell.cur{box-shadow:0 0 0 3px var(--blue-100)}
@@ -181,20 +192,33 @@ const KIT=[
  {t:'Website product page',d:'Ready-to-publish page in their branding',f:'product-page.html',k:'Web page',x:[['Preview image','product-page-preview.png']]},
  {t:'Email campaign',d:'Four emails with subjects and copy',f:'email-campaign.pdf',k:'PDF',x:[['Plain text','email-campaign.txt']]},
  {t:'Attach copy',d:'Checkout, renewal, invoice and support lines',f:'attach-copy.pdf',k:'PDF',x:[['Plain text','attach-copy.txt']]}];
-const KB='/valimail/kits/',KV='20260929b';
-function seed(){const blank=()=>[[false,false,false],[false,false,false,false],[false,false],[false,false,false],[false]];const mk=(o)=>{const c=blank();c[1][0]=true;c[1][1]=true;return Object.assign({s:{intro:{done:false,date:''},form:{done:false,date:''},onb:{done:false,date:''},kit:{done:false,date:''},shared:{done:false,date:''}},checks:c,next:'Schedule the intro meeting',due:'2026-10-06',blocked:false,block:'',notes:'',meetings:[]},o)};return{v:5,sel:'bb',log:[],
+const KB='/valimail/kits/',KV='20260929b',KITS=['bb','pa','irh','bk'];
+function mkP(o){const c=[[false,false,false],[false,true,true,false],[false,false],[false,false,false],[false]];return Object.assign({s:{intro:{done:false,date:''},form:{done:false,date:''},onb:{done:false,date:''},kit:{done:false,date:''},shared:{done:false,date:''}},checks:c,next:'Schedule the intro meeting',due:'2026-10-06',blocked:false,block:'',notes:'',meetings:[],batch:1,pid:'',legal:'',contact:''},o)}
+const BATCHES={1:{t:'Batch 1',d:'Priority partners'},2:{t:'Batch 2',d:'Follow-up partners'}};
+const B2=[
+ {id:'hkz',name:'Hoster.KZ',site:'hoster.kz',market:'Host/Domain'},
+ {id:'dmn',name:'DomaiNesia',site:'domainesia.com',market:'Host/Domain'},
+ {id:'psk',name:'Internet Kompanija',site:'ps.kz',market:'Host/Domain'},
+ {id:'shj',name:'Shinjiru Technology',site:'shinjiru.com',market:'Host/Domain'},
+ {id:'dww',name:'PT Dewaweb',site:'dewaweb.com',market:'Host/Domain'},
+ {id:'dpx',name:'DAPYXIS',site:'dapyxis.com',market:'Host/Domain'},
+ {id:'hgf',name:'Host Graf LLC',site:'ssls.uz',market:'Host/Domain'},
+ {id:'mde',name:'Modoeye Co.',site:'modoeye.com',market:'Host/Domain'},
+ {id:'nth',name:'Nethub Online',site:'nethub.com.hk',market:'Brand Agency / Web Dev'}].map(o=>Object.assign(o,{batch:2,due:'2026-10-13'}));
+function addBatch2(){if(S.b2)return false;S.partners.forEach(p=>{if(!p.batch)p.batch=1});B2.forEach(o=>{if(!S.partners.some(p=>p.id===o.id))S.partners.push(mkP(JSON.parse(JSON.stringify(o))))});S.b2=1;return true}
+function seed(){const mk=mkP;return{v:5,sel:'bb',log:[],b2:1,
 partners:[
 mk({id:'bb',name:'Blue Bits',pid:'82997420',legal:'Công ty Cổ phần Chứng Thực Số Toàn Cầu Việt Nam',site:'bluebit.vn',market:'Vietnam · MSP',contact:'bluebit@bluebit.vn'}),
 mk({id:'pa',name:'P.A Vietnam',pid:'82981944',legal:'P.A Viet Nam Company Limited',site:'pavietnam.vn',market:'Vietnam · Registrar and hosting',contact:'pa@pavietnam.vn'}),
 mk({id:'irh',name:'IReallyHost',pid:'83013282',legal:'Extra Corporation Co., Ltd.',site:'ireallyhost.com',market:'Thailand · Hosting',contact:'Line @ir.th'}),
-mk({id:'bk',name:'BKNS',pid:'82925531',legal:'Bach Kim Network Solutions JSC',site:'bkns.vn',market:'Vietnam · Hosting and .vn',contact:'info@bkns.vn'})]}}
+mk({id:'bk',name:'BKNS',pid:'82925531',legal:'Bach Kim Network Solutions JSC',site:'bkns.vn',market:'Vietnam · Hosting and .vn',contact:'info@bkns.vn'}),...B2.map(o=>mkP(JSON.parse(JSON.stringify(o))))]}}
 const SB='https://telukonfwodrqmbkwjnz.supabase.co',KEY='sb_publishable_9mqGZuuItkW-y5oA2ccsuQ_gE8vhalM';
 let S=seed(),VER=0,ME=null,CODE=null,SYNC='idle',LAST=null,timer=null,dirty=false,LOCAL=false;
 try{const c=JSON.parse(localStorage.getItem('valimail-auth')||'null');if(c){ME=c.name;CODE=c.code}}catch(e){}
 async function rpc(fn,body){const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
  if(r.status===404)throw new Error('not_setup');const j=await r.json().catch(()=>null);if(!r.ok){throw new Error(j&&j.message&&j.message.includes('invalid_code')?'invalid_code':'server')}return j}
 function setSync(st){SYNC=st;const e=document.getElementById('sync');if(e)e.outerHTML=syncPill()}
-function normalize(){S.partners.forEach(p=>{migrate(p);(p.meetings=p.meetings||[]);if(p.meetings.every(m=>m.status!=='planned'||true))refreshDue(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
+function normalize(){if(addBatch2())setTimeout(save,0);S.partners.forEach(p=>{if(!p.batch)p.batch=1;migrate(p);(p.meetings=p.meetings||[]);if(p.meetings.every(m=>m.status!=='planned'||true))refreshDue(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
 function syncPill(){const t={idle:LAST?'Saved, '+fmt(LAST.at)+(LAST.by?' by '+esc(LAST.by):''):'Connected',saving:'Saving…',error:'Could not save. Retrying…',local:'Not connected: saved on this device only'}[SYNC];
  return`<span id="sync" class="sync ${SYNC}">${SYNC==='saving'?'<i class="spin"></i>':SYNC==='error'||SYNC==='local'?'⚠':'●'} ${t}</span>`}
 function save(){if(LOCAL){try{localStorage.setItem('valimail-local',JSON.stringify(S))}catch(e){}setSync('local');return}dirty=true;setSync('saving');clearTimeout(timer);timer=setTimeout(push,700)}
@@ -218,6 +242,11 @@ ${msg?`<div class="gerr" role="alert">${esc(msg)}</div>`:''}<div class="f"><labe
 function start(){render();setInterval(()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})},20000);document.addEventListener('visibilitychange',()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})})}
 const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P=id=>S.partners.find(p=>p.id===id);
+let BV=(()=>{try{return localStorage.getItem('valimail-batch')||'all'}catch(e){return'all'}})();
+const inB=(p,b)=>(p.batch||1)===+b;
+const vis=()=>BV==='all'?S.partners:S.partners.filter(p=>inB(p,BV));
+function btabs(){const n=b=>S.partners.filter(p=>inB(p,b)).length;const tabs=[['all','All partners',S.partners.length],['1',BATCHES[1].t+' · '+BATCHES[1].d,n(1)],['2',BATCHES[2].t+' · '+BATCHES[2].d,n(2)]];
+ return`<div class="btabs" role="tablist" aria-label="Partner batch">${tabs.map(([k,t,c])=>`<button role="tab" aria-selected="${BV===k}" data-a="bview" data-b="${k}">${esc(t)}<span>${c}</span></button>`).join('')}</div>`}
 const nowISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)};const today=()=>nowISO().slice(0,10);
 const md=t=>new Date(t+'T00:00');const mon=t=>md(t).toLocaleDateString('en-US',{month:'short'});const dom=t=>md(t).getDate();const late=t=>t&&t<today();
 const fmt=t=>{const d=new Date(t);return d.toDateString()===new Date().toDateString()?'Today '+d.toTimeString().slice(0,5):d.toLocaleDateString('en-US',{month:'short',day:'numeric'})};
@@ -234,7 +263,8 @@ function stageLabel(p){const s=stageOf(p);return s===5?'All steps complete':STAG
 function summary(){const ps=S.partners;const on=ps.filter(live);const blk=ps.filter(p=>p.blocked);const rest=ps.filter(p=>!live(p));
 let t=`<b>${on.length} of 4 partners onboarded.</b> `;if(!S.log.length&&!on.length)return t+'Kits are drafted for all four partners. Next up: intro meetings.';if(rest.length)t+=rest.map(p=>`${esc(p.name)} is at ${stageLabel(p).toLowerCase()}`).join(', ')+'. ';if(blk.length)t+=`<span style="color:var(--red);font-weight:600">${blk.map(p=>esc(p.name)+' is blocked: '+esc(p.block.charAt(0).toLowerCase()+p.block.slice(1))).join('; ')}.</span>`;return t}
 
-function logo(p){return p.id==='irh'?'<span class="lg"><span class="wm">IReallyHost<span>.com</span></span></span>':`<span class="lg"><img src="${LOGOS[p.id]}" alt="${esc(p.name)}"></span>`}
+function logo(p){if(p.id==='irh')return'<span class="lg"><span class="wm">IReallyHost<span>.com</span></span></span>';if(LOGOS[p.id])return`<span class="lg"><img src="${LOGOS[p.id]}" alt="${esc(p.name)}"></span>`;
+ const ws=String(p.name||'?').replace(/^(PT|CV)\s+/i,'').replace(/\s+(LLC|Co\.?|Ltd\.?|Inc\.?)$/i,'').split(/[\s.]+/).filter(Boolean);const ini=(ws.length>1?ws[0][0]+ws[1][0]:ws[0].slice(0,2)).toUpperCase();return`<span class="lg mono" aria-hidden="true">${esc(ini)}</span>`}
 function summaryText(){const ps=S.partners,on=ps.filter(live),blk=ps.filter(p=>p.blocked);let t=`${on.length} of 4 partners have completed every step.`;
  const rest=ps.filter(p=>!live(p));if(rest.length)t+=' '+rest.map(p=>`${p.name}: ${stageLabel(p).toLowerCase()}`).join('; ')+'.';if(blk.length)t+=' Blocked: '+blk.map(p=>`${p.name} (${p.block})`).join('; ')+'.';return t}
 function gate(msg){document.getElementById('app').innerHTML=`<div class="gate"><form class="gcard" id="gform"><div class="brand" style="color:var(--navy)"><i></i>DMARC Essentials</div><h1>Partner launch tracker</h1><p>Sign in to view and update partner progress.</p>
@@ -243,7 +273,7 @@ ${msg?`<div class="gerr" role="alert">${esc(msg)}</div>`:''}<div class="f"><labe
  document.getElementById('gform').addEventListener('submit',async e=>{e.preventDefault();ME=document.getElementById('g-name').value.trim();CODE=document.getElementById('g-code').value;const b=e.target.querySelector('button');b.textContent='Signing in…';b.disabled=true;
   try{await pull(true);try{localStorage.setItem('valimail-auth',JSON.stringify({name:ME,code:CODE}))}catch(x){}start()}catch(x){if(x.message!=='invalid_code')gate('Could not reach the tracker. Check your connection and try again.')}});
  setTimeout(()=>document.getElementById(ME?'g-code':'g-name')?.focus(),30)}
-function normalize(){S.partners.forEach(p=>{migrate(p);(p.meetings=p.meetings||[]);if(p.meetings.every(m=>m.status!=='planned'||true))refreshDue(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
+function normalize(){if(addBatch2())setTimeout(save,0);S.partners.forEach(p=>{if(!p.batch)p.batch=1;migrate(p);(p.meetings=p.meetings||[]);if(p.meetings.every(m=>m.status!=='planned'||true))refreshDue(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
 function syncPill(){const t={idle:LAST?'Saved '+fmt(LAST.at)+(LAST.by?' by '+esc(LAST.by):''):'Connected',saving:'Saving…',error:'Could not save, retrying',local:'Not connected: saved on this device only'}[SYNC];
  return`<span id="sync" class="sync ${SYNC}">${SYNC==='saving'?'<i class="spin"></i>':SYNC==='idle'?'●':'⚠'} ${t}</span>`}
 let OPEN=null;
@@ -259,22 +289,23 @@ function animKpis(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matc
   if(rm||from===to){c.textContent=to;if(from!==to)el.classList.add('bump');return}
   el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
   const t0=performance.now()+idx*70,dur=700;c.textContent=from;const step=now=>{const q=Math.min(1,Math.max(0,(now-t0)/dur));const e=1-Math.pow(1-q,3);c.textContent=Math.round(from+(to-from)*e);if(q<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
-function render(){normalize();const ps=S.partners;const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
+function render(){normalize();const ps=vis();const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
 document.getElementById('app').innerHTML=`
 <div class="bar"><div class="in"><div class="brand"><i></i>DMARC Essentials<small>Partner launch tracker</small></div><div class="r">${syncPill()}<span>${esc(ME||'')}</span><button data-a="signout">Sign out</button></div></div></div>
 <main class="wrap">
-<div class="head"><div><h1>Partner launch status</h1></div><button class="btn p" data-a="copy">Export update for manager</button></div>
-<div class="kpis">${STAGES.map((st,i)=>{const n=ps.filter(p=>isDone(p,i)).length;return`<div class="kpi" data-k="k${i}"><span>${st.t}</span><b><span class="cnt" data-to="${n}">${n}</span><small>of 4 ${st.yes.toLowerCase()}</small></b><i class="kbar"><em data-w="${n/4*100}"></em></i></div>`}).join('')}
+<div class="head"><div><h1>Partner launch status</h1></div><button class="btn p" data-a="copy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Report</button></div>
+${btabs()}
+<div class="kpis">${STAGES.map((st,i)=>{const n=ps.filter(p=>isDone(p,i)).length;return`<div class="kpi" data-k="k${i}"><span>${st.t}</span><b><span class="cnt" data-to="${n}">${n}</span><small>of ${ps.length} ${st.yes.toLowerCase()}</small></b><i class="kbar"><em data-w="${ps.length?n/ps.length*100:0}"></em></i></div>`}).join('')}
 <div class="kpi ${blk.length?'red alert':''}" data-k="kb"><span>Blocked</span><b><span class="cnt" data-to="${blk.length}">${blk.length}</span></b><em>${blk.length?esc(blk.map(p=>p.name).join(', ')):'None'}</em></div></div>
 <div class="tbox"><div class="tscroll"><table class="main"><thead><tr><th>Partner</th>${STAGES.map((s,i)=>`<th><span class="n">${i+1}</span>${s.t}</th>`).join('')}<th>Next action</th><th>Due</th><th>Status</th><th><span class="sr" style="position:absolute;left:-9999px">Details</span></th></tr></thead><tbody>
-${ps.map(p=>`<tr class="prow ${OPEN===p.id?'open':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>ID ${p.pid}</small></div></div></td>
+${ps.map((p,ix)=>`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="10">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)} · ${ps.filter(q=>q.batch===p.batch).length}</span></td></tr>`:''}<tr class="prow ${OPEN===p.id?'open':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>${p.pid?'ID '+p.pid:esc(p.site)}</small></div></div></td>
 ${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:260px">${nextCell(p)}</td><td><span class="due ${late(p.due)?'late':''}" title="${esc(dueReason(p))}">${mon(p.due)} ${dom(p.due)}</span><small class="dr">${esc(dueReason(p).replace(/^Date of the next scheduled meeting$/,'Next meeting').replace(/^Set by hand.*/,'Set by hand'))}</small></td><td>${status(p)}</td>
 <td><button class="chev" data-row="${p.id}" aria-expanded="${OPEN===p.id}" aria-label="${OPEN===p.id?'Hide':'Show'} details for ${esc(p.name)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></td></tr>
 ${OPEN===p.id?`<tr class="drow"><td colspan="10">${detail(p)}</td></tr>`:''}`).join('')}
 </tbody></table></div></div>
 ${contentSection()}
 <section class="sec"><h2>Upcoming meetings</h2><div class="tbox"><div class="tscroll"><table class="log"><thead><tr><th>When</th><th>Partner</th><th>Meeting</th><th>Format</th><th>With</th><th></th></tr></thead><tbody>
-${(()=>{const u=upcomingAll();return u.length?u.map(({p,m})=>`<tr><td class="${late(m.d)?'lt':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td><td>${esc(m.who||'')}</td><td style="text-align:right"><button class="lnk" data-row="${p.id}" data-go="1">Open</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No meetings scheduled. Open a partner to schedule one.</td></tr>'})()}
+${(()=>{const u=upcomingAll().filter(x=>vis().includes(x.p));return u.length?u.map(({p,m})=>`<tr><td class="${late(m.d)?'lt':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td><td>${esc(m.who||'')}</td><td style="text-align:right"><button class="lnk" data-row="${p.id}" data-go="1">Open</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No meetings scheduled. Open a partner to schedule one.</td></tr>'})()}
 </tbody></table></div></div></section>
 
 </main>`;animKpis()}
@@ -311,7 +342,7 @@ function nextCell(p){const up=planned(p)[0];return up?`<span class="mtag">Meetin
 function draftFor(p,type){const x=mt(type);return{type:x.t,t:x.t==='Other'?'':x.t,d:addDays(3),time:'10:00',fmt:'Video call',who:'',agenda:x.t==='Other'?'':x.d}}
 function detail(p){const s=stageOf(p),up=planned(p),pa=past(p),sg=suggest(p);if(!DRAFT||DRAFT.pid!==p.id)DRAFT=Object.assign(draftFor(p,sg[0].t),{pid:p.id});
 return`<div class="dwrap">
-<div class="dh"><span><b>${esc(p.legal)}</b></span><span>Partner ID ${p.pid}</span><span>${esc(p.site)}</span><span>${esc(p.market)}</span><span>${esc(p.contact)}</span></div>
+<div class="dh">${[p.legal&&`<b>${esc(p.legal)}</b>`,p.pid&&'Partner ID '+p.pid,p.site&&`<a href="https://${esc(p.site)}" target="_blank" rel="noopener">${esc(p.site)}</a>`,esc(p.market),esc(p.contact),esc(BATCHES[p.batch||1].t)].filter(Boolean).map(x=>`<span>${x}</span>`).join('')}</div>
 <div class="sgrid">${STAGES.map((st,i)=>{const d=p.s[st.k];return`<div class="sg ${d.done?'done':overdue(p,i)?'od':i===s?'cur':''}"><h4>${i+1}. ${st.t}</h4><div class="sgb">
 <div class="seg2" role="group" aria-label="${st.t}"><button data-a="set" data-i="${i}" data-v="1" aria-pressed="${!!d.done}">${st.yes}</button><button data-a="set" data-i="${i}" data-v="0" aria-pressed="${!d.done}">${st.no}</button></div>
 ${d.done?`<div class="f"><label for="sd-${i}">${st.yes} on</label><input class="inp" type="date" id="sd-${i}" data-sd="${i}" value="${d.date||''}"></div>`:`<p class="sdesc">${st.d}${(()=>{const od=overdue(p,i),dd=stageDue(p,i);if(od)return`<br><b class="odt">Overdue by ${od} day${od>1?'s':''} (due ${dlong(dd)})</b>`;if(i>0)return`<br><b>Due ${GAP[i]} days after ${STAGES[i-1].t.toLowerCase()}${dd?' ('+dlong(dd)+')':''}</b>`;return''})()}</p>`}</div></div>`}).join('')}</div>
@@ -346,8 +377,8 @@ ${pa.length?`<h5 style="margin-top:6px">Past meetings</h5><table class="mini"><t
 <div class="blk"><div class="tg"><button class="switch" role="switch" aria-checked="${p.blocked}" aria-label="Blocked" data-a="block"></button><span>Blocked</span></div>
 ${p.blocked?`<div class="f"><label for="bl">What is blocking them?</label><input class="inp" id="bl" data-k="block" value="${esc(p.block)}"></div>`:''}</div>
 <div class="blk"><div class="f"><label for="nt">Notes</label><textarea class="inp" id="nt" data-k="notes">${esc(p.notes)}</textarea></div></div>
-<div class="blk"><h5>Kit files</h5><div class="kl">${KIT.map(k=>`<a href="${KB+p.id+'/'+k.f}?v=${KV}" target="_blank" rel="noopener">${k.t}<span>${k.k==='PDF'?'PDF':'Web'}</span></a>`).join('')}
-<a href="${KB+p.id}/full-kit.zip?v=${KV}" download>Full kit<span>ZIP</span></a><a href="${KB}dmarc-essentials-go-to-market.pdf?v=${KV}" target="_blank" rel="noopener">Go-to-market strategy<span>PDF</span></a></div></div>
+<div class="blk"><h5>Kit files</h5>${!KITS.includes(p.id)?`<p class="empty" style="margin-top:-4px">The branded kit for ${esc(p.name)} has not been built yet.</p><div class="kl"><a href="${KB}dmarc-essentials-go-to-market.pdf?v=${KV}" target="_blank" rel="noopener">Go-to-market strategy<span>PDF</span></a></div>`:`<div class="kl">${KIT.map(k=>`<a href="${KB+p.id+'/'+k.f}?v=${KV}" target="_blank" rel="noopener">${k.t}<span>${k.k==='PDF'?'PDF':'Web'}</span></a>`).join('')}
+<a href="${KB+p.id}/full-kit.zip?v=${KV}" download>Full kit<span>ZIP</span></a><a href="${KB}dmarc-essentials-go-to-market.pdf?v=${KV}" target="_blank" rel="noopener">Go-to-market strategy<span>PDF</span></a></div>`}</div>
 </div></div></div>`}
 function icsFor(p,m){const pad=n=>String(n).padStart(2,'0');const d=m.d.replace(/-/g,'');let dt;if(m.time){const[h,mi]=m.time.split(':');const e=new Date(`${m.d}T${m.time}:00`);e.setMinutes(e.getMinutes()+45);dt=`DTSTART:${d}T${h}${mi}00\r\nDTEND:${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}T${pad(e.getHours())}${pad(e.getMinutes())}00`}else{const e=md(m.d);e.setDate(e.getDate()+1);dt=`DTSTART;VALUE=DATE:${d}\r\nDTEND;VALUE=DATE:${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}`}
  const clean=x=>String(x||'').replace(/[\r\n]+/g,' ').replace(/[,;]/g,'\\$&');
@@ -363,13 +394,13 @@ function ccell(p,x){const c=cinit(p)[x.k];const ed=CED&&CED.p===p.id&&CED.k===x.
  const pill=`<button class="cpill ${c.done?'on':''}" data-a="ctog" data-p="${p.id}" data-k="${x.k}" aria-pressed="${!!c.done}" title="Click to change to ${(c.done?x.no:x.yes).toLowerCase()}">${c.done?'✓ '+x.yes:x.no}</button>`;
  const meta=c.done?`<div class="cmeta">${c.date?mon(c.date)+' '+dom(c.date):''}${x.url&&c.url?` · <a href="${esc(c.url)}" target="_blank" rel="noopener">Open page ↗</a> · <button class="lnk" data-a="cedit" data-p="${p.id}" data-k="${x.k}">Edit link</button>`:''}</div>`:'';
  return`<div class="cc">${pill}${meta}</div>`}
-function contentSection(){const ps=S.partners;return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click a status to switch it between yes and no. When the website is live, “Open page” goes to it.</p>
+function contentSection(){const ps=vis();return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click a status to switch it between yes and no. When the website is live, “Open page” goes to it.</p>
 <div class="tbox"><div class="tscroll"><table class="main ctab"><thead><tr><th>Partner</th>${CITEMS.map(x=>`<th>${x.t}</th>`).join('')}<th>Done</th></tr></thead><tbody>
-${ps.map(p=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`<tr><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b></div></div></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${n}</b>/${CITEMS.length}</td></tr>`}).join('')}
+${ps.map((p,ix)=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="${CITEMS.length+2}">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)}</span></td></tr>`:''}<tr><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b></div></div></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${n}</b>/${CITEMS.length}</td></tr>`}).join('')}
 </tbody></table></div></div></section>`}
 
 const XCOLS=[
- {k:'pid',t:'Partner ID',g:'Partner'},
+ {k:'pid',t:'Partner ID',g:'Partner'},{k:'batch',t:'Batch',g:'Partner'},{k:'site',t:'Website',g:'Partner'},
  {k:'st_intro',t:'Intro meeting',g:'Launch stages'},{k:'st_form',t:'Onboard form',g:'Launch stages'},{k:'st_onb',t:'Onboarding',g:'Launch stages'},{k:'st_kit',t:'Kit creation',g:'Launch stages'},{k:'st_shared',t:'Kit shared',g:'Launch stages'},
  {k:'status',t:'Overall status',g:'Progress'},{k:'next',t:'Next action',g:'Progress'},{k:'due',t:'Due date',g:'Progress'},{k:'meeting',t:'Next meeting',g:'Progress'},{k:'block',t:'Blocker',g:'Progress'},
  {k:'c_web',t:'Website product page',g:'Content launch'},{k:'c_sheet',t:'Sales sheet sent',g:'Content launch'},{k:'c_email',t:'Email campaign sent',g:'Content launch'},
@@ -377,10 +408,10 @@ const XCOLS=[
 const XPRESETS={summary:['st_intro','st_form','st_onb','st_kit','st_shared','status','next','due'],content:['c_web','c_sheet','c_email','status'],full:XCOLS.map(c=>c.k)};
 let XO=null;
 function xdefaults(){let o=null;try{o=JSON.parse(localStorage.getItem('valimail-export')||'null')}catch(e){}
- const d={title:'DMARC Essentials partner launch update',note:'',cols:XPRESETS.full.slice(),parts:S.partners.map(p=>p.id),dates:true,counts:true,links:true,sec:{kpi:true,charts:true,table:true,timeline:true,content:true,meetings:true,notes:true},view:'report'};const r=Object.assign(d,o||{},{parts:S.partners.map(p=>p.id)});r.sec=Object.assign({},d.sec,(o&&o.sec)||{});r.view=r.view||'report';return r}
+ const d={title:'DMARC Essentials partner launch update',note:'',cols:XPRESETS.full.slice(),parts:S.partners.map(p=>p.id),dates:true,counts:true,links:true,sec:{kpi:true,charts:true,table:true,timeline:true,content:true,meetings:true,notes:true},view:'report'};const r=Object.assign(d,o||{},{parts:S.partners.map(p=>p.id)});r.sec=Object.assign({},d.sec,(o&&o.sec)||{});r.parts=vis().map(p=>p.id);r.view=r.view||'report';return r}
 function xstatus(p){return p.blocked?'Blocked':STAGES.some((x,i)=>overdue(p,i))?'Overdue':live(p)?'Complete':'On track'}
 function xval(p,k,html){const D=d=>d?`${mon(d)} ${dom(d)}`:'';
- if(k==='pid')return p.pid;
+ if(k==='pid')return p.pid||'';if(k==='batch')return BATCHES[p.batch||1].t;if(k==='site')return p.site||'';
  if(k.startsWith('st_')){const i=STAGES.findIndex(x=>x.k===k.slice(3)),st=STAGES[i],d=p.s[st.k];if(d.done)return st.yes+(XO.dates&&d.date?` (${D(d.date)})`:'');const od=overdue(p,i);return st.no+(od?` (${od}d late)`:'')}
  if(k==='status')return xstatus(p);
  if(k==='next'){const up=planned(p)[0];return up?`Meeting: ${up.t}`:p.next}
@@ -407,12 +438,12 @@ function xopen(){XO=xdefaults();drawX();document.getElementById('xscrim').classL
 function xclose(){document.getElementById('xscrim').classList.remove('open');const d=document.getElementById('xdlg');d.classList.remove('open');d.setAttribute('aria-hidden','true');document.querySelector('[data-a="copy"]')?.focus()}
 function xsave(){try{const {title,cols,dates,counts,links,sec,view}=XO;localStorage.setItem('valimail-export',JSON.stringify({title,cols,dates,counts,links,sec,view}))}catch(e){}}
 function drawX(){const groups=[...new Set(XCOLS.map(c=>c.g))];const pre=Object.keys(XPRESETS).find(k=>XPRESETS[k].length===XO.cols.length&&XPRESETS[k].every(c=>XO.cols.includes(c)));
- document.getElementById('xdlg').innerHTML=`<div class="xh"><div><h2 id="xtitle">Export update</h2><p>Choose what to include. The preview updates as you go.</p></div><button class="close2" data-x="close" aria-label="Close">✕</button></div>
+ document.getElementById('xdlg').innerHTML=`<div class="xh"><div><h2 id="xtitle">Partner report</h2><p>Choose what to include. The preview updates as you go.</p></div><button class="close2" data-x="close" aria-label="Close">✕</button></div>
  <div class="xb"><div class="xopts">
  <div class="f"><label for="x-title">Title</label><input class="inp" id="x-title" data-xf="title" value="${esc(XO.title)}"></div>
  <div class="f"><label for="x-note">Message above the table (optional)</label><textarea class="inp" id="x-note" data-xf="note" rows="3" placeholder="For example: Two partners are waiting on the onboard form.">${esc(XO.note)}</textarea></div>
  <div class="xg"><span class="xl">Quick layouts</span><div class="xpre">${[['summary','Status summary'],['content','Content launch'],['full','Everything']].map(([k,t])=>`<button class="chip ${pre===k?'on':''}" data-x="pre" data-k="${k}">${t}</button>`).join('')}</div></div>
- <div class="xg"><span class="xl">Partners</span>${S.partners.map(p=>`<label class="xc"><input type="checkbox" data-xp="${p.id}" ${XO.parts.includes(p.id)?'checked':''}> ${esc(p.name)}</label>`).join('')}</div>
+ <div class="xg"><span class="xl">Partners</span><div class="xbq">${[['all','All'],['1','Batch 1'],['2','Batch 2']].map(([k,t])=>{const ids=k==='all'?S.partners.map(p=>p.id):S.partners.filter(p=>inB(p,k)).map(p=>p.id);const on=ids.length===XO.parts.length&&ids.every(i=>XO.parts.includes(i));return`<button class="chip ${on?'on':''}" data-x="xb" data-b="${k}">${t}</button>`}).join('')}</div>${[1,2].map(b=>`<span class="xsub">${BATCHES[b].t}</span>`+S.partners.filter(p=>inB(p,b)).map(p=>`<label class="xc"><input type="checkbox" data-xp="${p.id}" ${XO.parts.includes(p.id)?'checked':''}> ${esc(p.name)}</label>`).join('')).join('')}</div>
  ${groups.map(g=>`<div class="xg"><span class="xl">${g}</span>${XCOLS.filter(c=>c.g===g).map(c=>`<label class="xc"><input type="checkbox" data-xc="${c.k}" ${XO.cols.includes(c.k)?'checked':''}> ${c.t}</label>`).join('')}</div>`).join('')}
  <div class="xg"><span class="xl">Report sections</span>${[['kpi','Headline figures'],['charts','Charts'],['table','Partner launch matrix'],['timeline','Launch timeline'],['content','Content launch'],['meetings','Upcoming meetings'],['notes','Notes']].map(([k,t])=>`<label class="xc"><input type="checkbox" data-xs="${k}" ${XO.sec[k]?'checked':''}> ${t}</label>`).join('')}</div>
  <div class="xg"><span class="xl">Options</span><label class="xc"><input type="checkbox" data-xo="dates" ${XO.dates?'checked':''}> Show completed dates</label><label class="xc"><input type="checkbox" data-xo="links" ${XO.links?'checked':''}> Include website links</label><label class="xc"><input type="checkbox" data-xo="counts" ${XO.counts?'checked':''}> Stage totals above the table</label></div>
@@ -492,7 +523,7 @@ function rstagebars(M){const n=M.ps.length||1;return STAGES.map((st,i)=>{const d
  `<div class="r-leg"><span><i style="background:${SCOL.d}"></i>Done</span><span><i style="background:${SCOL.o}"></i>Overdue</span><span><i style="background:${SCOL.n}"></i>Not due yet</span></div>`}
 function rmatrix(M){const extra=XO.cols;const showNext=extra.includes('next')||extra.includes('due');
  return`<table class="r-mx"><thead><tr><th>Partner</th>${STAGES.map((s,i)=>`<th>${i+1}. ${s.t}</th>`).join('')}<th>Progress</th><th>Status</th>${showNext?'<th>Next action</th>':''}</tr></thead><tbody>
- ${M.ps.map(p=>{const pc=pct(p);return`<tr><td class="nm">${esc(p.name)}${extra.includes('pid')?`<div style="font-weight:400;color:#7A879C;font-size:10.5px">ID ${p.pid}</div>`:''}</td>${STAGES.map((st,i)=>{const d=p.s[st.k];if(d.done)return`<td class="d">✓ ${st.yes}${XO.dates&&d.date?`<div style="font-weight:400;font-size:10.5px;opacity:.85">${mon(d.date)} ${dom(d.date)}</div>`:''}</td>`;const od=overdue(p,i);if(od)return`<td class="o">${st.no}<div style="font-weight:500;font-size:10.5px">${od} days late</div></td>`;const dd=stageDue(p,i);return`<td class="n">${st.no}${dd?`<div style="font-size:10.5px">due ${mon(dd)} ${dom(dd)}</div>`:''}</td>`}).join('')}
+ ${M.ps.map(p=>{const pc=pct(p);return`<tr><td class="nm">${esc(p.name)}${extra.includes('pid')&&p.pid?`<div style="font-weight:400;color:#7A879C;font-size:10.5px">ID ${p.pid}</div>`:''}</td>${STAGES.map((st,i)=>{const d=p.s[st.k];if(d.done)return`<td class="d">✓ ${st.yes}${XO.dates&&d.date?`<div style="font-weight:400;font-size:10.5px;opacity:.85">${mon(d.date)} ${dom(d.date)}</div>`:''}</td>`;const od=overdue(p,i);if(od)return`<td class="o">${st.no}<div style="font-weight:500;font-size:10.5px">${od} days late</div></td>`;const dd=stageDue(p,i);return`<td class="n">${st.no}${dd?`<div style="font-size:10.5px">due ${mon(dd)} ${dom(dd)}</div>`:''}</td>`}).join('')}
  <td class="c"><b>${pc}%</b><div class="pb"><i style="width:${pc}%"></i></div></td><td class="c">${(()=>{const v=xstatus(p);return`<span class="r-st ${v==='Complete'?'done':v==='On track'?'ok':'bad'}">${v}</span>`})()}${p.blocked&&extra.includes('block')?`<div style="font-size:10.5px;color:#C8102E;margin-top:3px">${esc(p.block)}</div>`:''}</td>
  ${showNext?`<td class="c" style="font-size:11px">${esc(xval(p,'next',false))}<div style="color:#51607A">Due ${mon(p.due)} ${dom(p.due)}</div></td>`:''}</tr>`}).join('')}</tbody></table>`}
 function rtimeline(M){const pts=[];M.ps.forEach(p=>{STAGES.forEach((st,i)=>{const d=p.s[st.k];if(d.done&&d.date)pts.push(d.date);const dd=stageDue(p,i);if(dd)pts.push(dd)});planned(p).forEach(m=>pts.push(m.d))});
@@ -569,6 +600,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data
  if(a==='ics'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);const blob=new Blob([icsFor(p,m)],{type:'text/calendar'});const u=URL.createObjectURL(blob);const l=document.createElement('a');l.href=u;l.download=(p.name+' '+m.t).replace(/[^\w]+/g,'-')+'.ics';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return}
  if(a==='block'&&p){p.blocked=!p.blocked;if(!p.blocked){p.block='';log(p,'blocker cleared')}else log(p,'marked as blocked');rerender();if(p.blocked)setTimeout(()=>document.getElementById('bl')?.focus(),30)}
  else if(a==='copy'){xopen()}
+ else if(a==='bview'){BV=t.dataset.b;try{localStorage.setItem('valimail-batch',BV)}catch(x){}OPEN=null;render()}
  else if(a==='signout'){localStorage.removeItem('valimail-auth');location.reload()}});
 document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='ced-in'){if(e.key==='Enter'){e.preventDefault();document.querySelector('[data-a="csave"]')?.click()}if(e.key==='Escape'){CED=null;render()}return}if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('tr.prow')){e.preventDefault();OPEN=OPEN===e.target.dataset.row?null:e.target.dataset.row;render()}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.dr&&DRAFT){DRAFT[t.dataset.dr]=t.value}});
@@ -581,11 +613,12 @@ document.addEventListener('change',e=>{const t=e.target,p=P(OPEN);if(!p)return;
 document.addEventListener('click',e=>{const t=e.target.closest('[data-x]');if(!t||!XO)return;const x=t.dataset.x;
  if(x==='close')return xclose();if(x==='pre'){XO.cols=XPRESETS[t.dataset.k].slice();drawX();xsave();return}
  if(x==='view'){XO.view=t.dataset.v;drawX();xsave();return}
+ if(x==='xb'){const b=t.dataset.b;XO.parts=(b==='all'?S.partners:S.partners.filter(p=>inB(p,b))).map(p=>p.id);drawX();xsave();return}
  if(x==='copy')return xcopy();if(x==='csv')return xcsv();if(x==='xlsx')return xxlsx();if(x==='pdf')return xpdf()});
 document.addEventListener('input',e=>{const t=e.target;if(!XO)return;if(t.dataset.xf){XO[t.dataset.xf]=t.value;xrefresh()}});
 document.addEventListener('change',e=>{const t=e.target;if(!XO)return;
  if(t.dataset.xc){XO.cols=XCOLS.map(c=>c.k).filter(k=>k===t.dataset.xc?t.checked:XO.cols.includes(k));drawX();xsave()}
- if(t.dataset.xp){XO.parts=S.partners.map(p=>p.id).filter(k=>k===t.dataset.xp?t.checked:XO.parts.includes(k));xrefresh()}
+ if(t.dataset.xp){XO.parts=S.partners.map(p=>p.id).filter(k=>k===t.dataset.xp?t.checked:XO.parts.includes(k));drawX()}
  if(t.dataset.xo){XO[t.dataset.xo]=t.checked;xrefresh()}
  if(t.dataset.xs){XO.sec[t.dataset.xs]=t.checked;xrefresh()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('xdlg')?.classList.contains('open'))xclose()});
