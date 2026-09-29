@@ -37,7 +37,7 @@ button,input,textarea{font:inherit;color:inherit}a{color:var(--blue)}
 .kpi.red b{color:var(--red)}
 .tbox{border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .tscroll{overflow-x:auto}
-table.main{width:100%;border-collapse:collapse;min-width:1120px}
+table.main{width:100%;border-collapse:collapse;min-width:1240px}
 .main thead th{background:var(--blue-50);color:var(--navy);font-size:12.5px;font-weight:600;text-align:left;padding:10px 12px;border-bottom:1px solid var(--blue-100);white-space:nowrap}
 .main thead th .n{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:9px;background:var(--blue);color:#fff;font-size:11px;margin-right:6px}
 .main td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -56,7 +56,19 @@ tr.prow.open td{border-bottom-color:transparent}
 tr.grp td{background:var(--row);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);padding:8px 14px!important}
 tr.grp td span{font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)}
 .xbq{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.xsub{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:8px 0 2px}
-.dh a{color:inherit}.dh .lnk.red{margin-left:14px}
+.dh a{color:inherit}
+.sfseg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
+.sfseg button{border:0;background:none;font:inherit;font-size:12px;font-weight:600;color:var(--muted);min-height:28px;padding:0 10px;cursor:pointer;transition:background var(--fast) var(--ease),color var(--fast) var(--ease)}
+.sfseg button+button{border-left:1px solid var(--line)}
+.sfseg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+tr.na .sfseg button[aria-pressed="true"]{background:var(--muted)}
+tr.na>td{background:#F2F4F7}
+tr.na>td:not(.sfc)>*{opacity:.45;filter:grayscale(1)}
+tr.na>td:not(.sfc) .lg{filter:grayscale(1)}
+tr.na:hover>td{background:#ECEFF3}
+.st.na{background:#E4E8EE;color:var(--muted)}
+.nat{color:var(--muted);font-size:13px;font-style:italic}
+.ggnote{margin:-6px 0 14px;font-size:13px;color:var(--muted)}.dh .lnk.red{margin-left:14px}
 .delbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:10px;padding:12px 14px;border:1px solid var(--red);background:var(--red-50);border-radius:8px}.delbar b{display:block;color:var(--red)}.delbar span{font-size:13px;color:var(--ink)}
 .btn.danger{background:var(--red);border-color:var(--red);color:#fff}
 .undo{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:16px;background:var(--navy);color:#fff;padding:10px 12px 10px 16px;border-radius:6px;z-index:41;font-weight:500}.undo button{background:none;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:4px;min-height:32px;padding:0 12px;font:inherit;font-weight:600;cursor:pointer}.dh .miss{font-style:normal;color:var(--red);font-weight:600}.dh .lnk{margin-left:auto}
@@ -246,6 +258,8 @@ ${msg?`<div class="gerr" role="alert">${esc(msg)}</div>`:''}<div class="f"><labe
 function start(){render();setInterval(()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})},20000);document.addEventListener('visibilitychange',()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})})}
 const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P=id=>S.partners.find(p=>p.id===id);
+const SF={tss:'TSS',gg:'GoGetSSL'};const isGG=p=>p.sf==='gg';const avail=p=>!isGG(p);
+function sfCell(p){return`<div class="sfseg" role="group" aria-label="Storefront for ${esc(p.name)}">${Object.entries(SF).map(([k,t])=>`<button data-a="sf" data-p="${p.id}" data-v="${k}" aria-pressed="${(p.sf||'tss')===k}">${t}</button>`).join('')}</div>`}
 let BV=(()=>{try{return localStorage.getItem('valimail-batch')||'all'}catch(e){return'all'}})();
 const inB=(p,b)=>(p.batch||1)===+b;
 const vis=()=>BV==='all'?S.partners:S.partners.filter(p=>inB(p,BV));
@@ -285,7 +299,7 @@ let OPEN=null,INFO=null,DEL=null,UNDO=null;
 function cellFor(p,i){const st=STAGES[i],d=p.s[st.k],cur=stageOf(p)===i;
  return d.done?`<span class="cell done" title="${st.t}: ${st.yes}${d.date?' on '+dlong(d.date):''}">✓ ${st.yes}</span>`
  :(()=>{const od=overdue(p,i);return od?`<span class="cell late" title="${st.t} was due ${dlong(stageDue(p,i))}">${st.no} · ${od}d late</span>`:`<span class="cell ${cur?'part cur':'none'}">${st.no}</span>`})()}
-function status(p){const od=STAGES.some((x,i)=>overdue(p,i));return p.blocked?'<span class="st bad">⚠ Blocked</span>':od?'<span class="st bad">Overdue</span>':live(p)?'<span class="st live">✓ Complete</span>':'<span class="st ok">On track</span>'}
+function status(p){if(isGG(p))return'<span class="st na">Not available</span>';const od=STAGES.some((x,i)=>overdue(p,i));return p.blocked?'<span class="st bad">⚠ Blocked</span>':od?'<span class="st bad">Overdue</span>':live(p)?'<span class="st live">✓ Complete</span>':'<span class="st ok">On track</span>'}
 const PREVK={};
 function animKpis(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
  document.querySelectorAll('.kpi[data-k]').forEach((el,idx)=>{const k=el.dataset.k,c=el.querySelector('.cnt'),to=+c.dataset.to,from=PREVK[k]===undefined?0:PREVK[k],bar=el.querySelector('.kbar em');
@@ -294,19 +308,19 @@ function animKpis(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matc
   if(rm||from===to){c.textContent=to;if(from!==to)el.classList.add('bump');return}
   el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
   const t0=performance.now()+idx*70,dur=700;c.textContent=from;const step=now=>{const q=Math.min(1,Math.max(0,(now-t0)/dur));const e=1-Math.pow(1-q,3);c.textContent=Math.round(from+(to-from)*e);if(q<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
-function render(){normalize();const ps=vis();const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
+function render(){normalize();const all=vis(),ps=all.filter(avail),ggN=all.length-ps.length;const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
 document.getElementById('app').innerHTML=`
 <div class="bar"><div class="in"><div class="brand"><i></i>DMARC Essentials<small>Partner launch tracker</small></div><div class="r">${syncPill()}<span>${esc(ME||'')}</span><button data-a="signout">Sign out</button></div></div></div>
 <main class="wrap">
 <div class="head"><div><h1>Partner launch status</h1></div><button class="btn p" data-a="copy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Report</button></div>
-${btabs()}
+${btabs()}${ggN?`<p class="ggnote">${ggN} GoGetSSL partner${ggN>1?'s are':' is'} greyed out and left out of the counts. DMARC Essentials is not currently available for GoGetSSL partners.</p>`:''}
 <div class="kpis">${STAGES.map((st,i)=>{const n=ps.filter(p=>isDone(p,i)).length;return`<div class="kpi" data-k="k${i}"><span>${st.t}</span><b><span class="cnt" data-to="${n}">${n}</span><small>of ${ps.length} ${st.yes.toLowerCase()}</small></b><i class="kbar"><em data-w="${ps.length?n/ps.length*100:0}"></em></i></div>`}).join('')}
 <div class="kpi ${blk.length?'red alert':''}" data-k="kb"><span>Blocked</span><b><span class="cnt" data-to="${blk.length}">${blk.length}</span></b><em>${blk.length?esc(blk.map(p=>p.name).join(', ')):'None'}</em></div></div>
-<div class="tbox"><div class="tscroll"><table class="main"><thead><tr><th>Partner</th>${STAGES.map((s,i)=>`<th><span class="n">${i+1}</span>${s.t}</th>`).join('')}<th>Next action</th><th>Due</th><th>Status</th><th><span class="sr" style="position:absolute;left:-9999px">Details</span></th></tr></thead><tbody>
-${ps.map((p,ix)=>`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="10">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)} · ${ps.filter(q=>q.batch===p.batch).length}</span></td></tr>`:''}<tr class="prow ${OPEN===p.id?'open':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>${p.pid?'ID '+p.pid:esc(p.site)}</small></div></div></td>
-${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:260px">${nextCell(p)}</td><td><span class="due ${late(p.due)?'late':''}" title="${esc(dueReason(p))}">${mon(p.due)} ${dom(p.due)}</span><small class="dr">${esc(dueReason(p).replace(/^Date of the next scheduled meeting$/,'Next meeting').replace(/^Set by hand.*/,'Set by hand'))}</small></td><td>${status(p)}</td>
+<div class="tbox"><div class="tscroll"><table class="main"><thead><tr><th>Partner</th><th>Storefront</th>${STAGES.map((s,i)=>`<th><span class="n">${i+1}</span>${s.t}</th>`).join('')}<th>Next action</th><th>Due</th><th>Status</th><th><span class="sr" style="position:absolute;left:-9999px">Details</span></th></tr></thead><tbody>
+${all.map((p,ix,ps)=>`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="11">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)} · ${ps.filter(q=>q.batch===p.batch).length}</span></td></tr>`:''}<tr class="prow ${OPEN===p.id?'open':''} ${isGG(p)?'na':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>${p.pid?'ID '+p.pid:esc(p.site)}</small></div></div></td><td class="sfc">${sfCell(p)}</td>
+${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:260px">${isGG(p)?'<span class="nat">Not available for GoGetSSL partners</span>':nextCell(p)}</td><td><span class="due ${late(p.due)?'late':''}" title="${esc(dueReason(p))}">${mon(p.due)} ${dom(p.due)}</span><small class="dr">${esc(dueReason(p).replace(/^Date of the next scheduled meeting$/,'Next meeting').replace(/^Set by hand.*/,'Set by hand'))}</small></td><td>${status(p)}</td>
 <td><button class="chev" data-row="${p.id}" aria-expanded="${OPEN===p.id}" aria-label="${OPEN===p.id?'Hide':'Show'} details for ${esc(p.name)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></td></tr>
-${OPEN===p.id?`<tr class="drow"><td colspan="10">${detail(p)}</td></tr>`:''}`).join('')}
+${OPEN===p.id?`<tr class="drow"><td colspan="11">${detail(p)}</td></tr>`:''}`).join('')}
 </tbody></table></div></div>
 ${contentSection()}
 <section class="sec"><h2>Upcoming meetings</h2><div class="tbox"><div class="tscroll"><table class="log"><thead><tr><th>When</th><th>Partner</th><th>Meeting</th><th>Format</th><th>With</th><th></th></tr></thead><tbody>
@@ -339,7 +353,7 @@ function lastDone(p){let best='';STAGES.forEach((st,i)=>{const d=p.s[st.k];if(d.
 function autoDue(p){const s=stageOf(p);if(s===0)return null;if(s===5)return addTo(lastDone(p),GAP_DONE);const prev=p.s[STAGES[s-1].k].date||today();return addTo(prev,GAP[s])}
 function dueReason(p){if(planned(p).length)return'Date of the next scheduled meeting';if(p.dueManual)return'Set by hand';const s=stageOf(p);if(s===0)return'Set by hand for the intro meeting';if(s===5)return`${GAP_DONE} days after the last step, for a check-in`;return`${GAP[s]} days after ${STAGES[s-1].t.toLowerCase()} ${STAGES[s-1].yes.toLowerCase()}`}
 function stageDue(p,i){if(isDone(p,i))return null;if(i===0)return stageOf(p)===0?p.due:null;const pr=p.s[STAGES[i-1].k];if(!pr.done||!pr.date)return null;return addTo(pr.date,GAP[i])}
-function overdue(p,i){const d=stageDue(p,i);if(!d||d>=today())return 0;return Math.round((md(today())-md(d))/864e5)}
+function overdue(p,i){if(isGG(p))return 0;const d=stageDue(p,i);if(!d||d>=today())return 0;return Math.round((md(today())-md(d))/864e5)}
 function refreshDue(p){if(planned(p).length)return;if(p.dueManual)return;const a=autoDue(p);if(a)p.due=a}
 function syncNext(p){const up=planned(p);if(up.length){const m=up[0];p.next=m.t;p.due=m.d;p.nextMeeting=m.id}
  else if(p.nextMeeting){p.nextMeeting=null;const sg=suggest(p)[0];p.next=live(p)?'Schedule a check-in':'Schedule the '+sg.t.toLowerCase();p.due=addDays(7);refreshDue(p)}}
@@ -347,7 +361,7 @@ function nextCell(p){const up=planned(p)[0];return up?`<span class="mtag">Meetin
 function draftFor(p,type){const x=mt(type);return{type:x.t,t:x.t==='Other'?'':x.t,d:addDays(3),time:'10:00',fmt:'Video call',who:'',agenda:x.t==='Other'?'':x.d}}
 function detail(p){const s=stageOf(p),up=planned(p),pa=past(p),sg=suggest(p);if(!DRAFT||DRAFT.pid!==p.id)DRAFT=Object.assign(draftFor(p,sg[0].t),{pid:p.id});
 return`<div class="dwrap">
-${INFO===p.id?`<div class="pinf"><div class="f"><label for="pi-pid">Partner ID</label><input class="inp" id="pi-pid" data-pi="pid" value="${esc(p.pid)}" inputmode="numeric"></div><div class="f"><label for="pi-legal">Legal name</label><input class="inp" id="pi-legal" data-pi="legal" value="${esc(p.legal)}"></div><div class="f"><label for="pi-site">Website</label><input class="inp" id="pi-site" data-pi="site" value="${esc(p.site)}"></div><div class="f"><label for="pi-market">Market</label><input class="inp" id="pi-market" data-pi="market" value="${esc(p.market)}" placeholder="Country · Business type"></div><div class="f"><label for="pi-contact">Contact</label><input class="inp" id="pi-contact" data-pi="contact" value="${esc(p.contact)}" placeholder="Email or chat handle"></div><div class="f" style="justify-content:flex-end"><button class="btn p" data-a="pinfo">Done</button></div></div>`:`<div class="dh">${[p.legal&&`<b>${esc(p.legal)}</b>`,p.pid&&'Partner ID '+p.pid,p.site&&`<a href="https://${esc(p.site)}" target="_blank" rel="noopener">${esc(p.site)}</a>`,esc(p.market),esc(p.contact),esc(BATCHES[p.batch||1].t),!p.pid&&'<em class="miss">Partner ID missing</em>',!p.contact&&'<em class="miss">Contact missing</em>'].filter(Boolean).map(x=>`<span>${x}</span>`).join('')}<button class="lnk" data-a="pinfo">Edit details</button><button class="lnk red" data-a="pdel">Delete partner</button></div>`}
+${INFO===p.id?`<div class="pinf"><div class="f"><label for="pi-pid">Partner ID</label><input class="inp" id="pi-pid" data-pi="pid" value="${esc(p.pid)}" inputmode="numeric"></div><div class="f"><label for="pi-legal">Legal name</label><input class="inp" id="pi-legal" data-pi="legal" value="${esc(p.legal)}"></div><div class="f"><label for="pi-site">Website</label><input class="inp" id="pi-site" data-pi="site" value="${esc(p.site)}"></div><div class="f"><label for="pi-market">Market</label><input class="inp" id="pi-market" data-pi="market" value="${esc(p.market)}" placeholder="Country · Business type"></div><div class="f"><label for="pi-contact">Contact</label><input class="inp" id="pi-contact" data-pi="contact" value="${esc(p.contact)}" placeholder="Email or chat handle"></div><div class="f" style="justify-content:flex-end"><button class="btn p" data-a="pinfo">Done</button></div></div>`:`<div class="dh">${[p.legal&&`<b>${esc(p.legal)}</b>`,p.pid&&'Partner ID '+p.pid,p.site&&`<a href="https://${esc(p.site)}" target="_blank" rel="noopener">${esc(p.site)}</a>`,esc(p.market),esc(p.contact),esc(BATCHES[p.batch||1].t),SF[p.sf||'tss'],!p.pid&&'<em class="miss">Partner ID missing</em>',!p.contact&&'<em class="miss">Contact missing</em>'].filter(Boolean).map(x=>`<span>${x}</span>`).join('')}<button class="lnk" data-a="pinfo">Edit details</button><button class="lnk red" data-a="pdel">Delete partner</button></div>`}
 ${DEL===p.id?`<div class="delbar" role="alertdialog" aria-labelledby="del-t"><div><b id="del-t">Delete ${esc(p.name)}?</b><span>This removes its stages, meetings, content status and notes for everyone using the tracker.</span></div><div class="ib"><button class="btn danger" data-a="pdelok">Delete partner</button><button class="btn" data-a="pdelno">Cancel</button></div></div>`:''}
 <div class="sgrid">${STAGES.map((st,i)=>{const d=p.s[st.k];return`<div class="sg ${d.done?'done':overdue(p,i)?'od':i===s?'cur':''}"><h4>${i+1}. ${st.t}</h4><div class="sgb">
 <div class="seg2" role="group" aria-label="${st.t}"><button data-a="set" data-i="${i}" data-v="1" aria-pressed="${!!d.done}">${st.yes}</button><button data-a="set" data-i="${i}" data-v="0" aria-pressed="${!d.done}">${st.no}</button></div>
@@ -402,11 +416,11 @@ function ccell(p,x){const c=cinit(p)[x.k];const ed=CED&&CED.p===p.id&&CED.k===x.
  return`<div class="cc">${pill}${meta}</div>`}
 function contentSection(){const ps=vis();return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click a status to switch it between yes and no. When the website is live, “Open page” goes to it.</p>
 <div class="tbox"><div class="tscroll"><table class="main ctab"><thead><tr><th>Partner</th>${CITEMS.map(x=>`<th>${x.t}</th>`).join('')}<th>Done</th></tr></thead><tbody>
-${ps.map((p,ix)=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="${CITEMS.length+2}">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)}</span></td></tr>`:''}<tr><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b></div></div></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${n}</b>/${CITEMS.length}</td></tr>`}).join('')}
+${ps.map((p,ix)=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="${CITEMS.length+2}">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)}</span></td></tr>`:''}<tr class="${isGG(p)?'na':''}"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b>${isGG(p)?'<small>GoGetSSL · not available</small>':''}</div></div></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${n}</b>/${CITEMS.length}</td></tr>`}).join('')}
 </tbody></table></div></div></section>`}
 
 const XCOLS=[
- {k:'pid',t:'Partner ID',g:'Partner'},{k:'batch',t:'Batch',g:'Partner'},{k:'site',t:'Website',g:'Partner'},
+ {k:'pid',t:'Partner ID',g:'Partner'},{k:'batch',t:'Batch',g:'Partner'},{k:'sf',t:'Storefront',g:'Partner'},{k:'site',t:'Website',g:'Partner'},
  {k:'st_intro',t:'Intro meeting',g:'Launch stages'},{k:'st_form',t:'Onboard form',g:'Launch stages'},{k:'st_onb',t:'Onboarding',g:'Launch stages'},{k:'st_kit',t:'Kit creation',g:'Launch stages'},{k:'st_shared',t:'Kit shared',g:'Launch stages'},
  {k:'status',t:'Overall status',g:'Progress'},{k:'next',t:'Next action',g:'Progress'},{k:'due',t:'Due date',g:'Progress'},{k:'meeting',t:'Next meeting',g:'Progress'},{k:'block',t:'Blocker',g:'Progress'},
  {k:'c_web',t:'Website product page',g:'Content launch'},{k:'c_sheet',t:'Sales sheet sent',g:'Content launch'},{k:'c_email',t:'Email campaign sent',g:'Content launch'},
@@ -414,10 +428,10 @@ const XCOLS=[
 const XPRESETS={summary:['st_intro','st_form','st_onb','st_kit','st_shared','status','next','due'],content:['c_web','c_sheet','c_email','status'],full:XCOLS.map(c=>c.k)};
 let XO=null;
 function xdefaults(){let o=null;try{o=JSON.parse(localStorage.getItem('valimail-export')||'null')}catch(e){}
- const d={title:'DMARC Essentials partner launch update',note:'',cols:XPRESETS.full.slice(),parts:S.partners.map(p=>p.id),dates:true,counts:true,links:true,sec:{kpi:true,charts:true,table:true,timeline:true,content:true,meetings:true,notes:true},view:'report'};const r=Object.assign(d,o||{},{parts:S.partners.map(p=>p.id)});r.sec=Object.assign({},d.sec,(o&&o.sec)||{});r.parts=vis().map(p=>p.id);r.view=r.view||'report';return r}
-function xstatus(p){return p.blocked?'Blocked':STAGES.some((x,i)=>overdue(p,i))?'Overdue':live(p)?'Complete':'On track'}
+ const d={title:'DMARC Essentials partner launch update',note:'',cols:XPRESETS.full.slice(),parts:S.partners.map(p=>p.id),dates:true,counts:true,links:true,sec:{kpi:true,charts:true,table:true,timeline:true,content:true,meetings:true,notes:true},view:'report'};const r=Object.assign(d,o||{},{parts:S.partners.map(p=>p.id)});r.sec=Object.assign({},d.sec,(o&&o.sec)||{});r.parts=vis().filter(avail).map(p=>p.id);r.view=r.view||'report';return r}
+function xstatus(p){if(isGG(p))return'Not available (GoGetSSL)';return p.blocked?'Blocked':STAGES.some((x,i)=>overdue(p,i))?'Overdue':live(p)?'Complete':'On track'}
 function xval(p,k,html){const D=d=>d?`${mon(d)} ${dom(d)}`:'';
- if(k==='pid')return p.pid||'';if(k==='batch')return BATCHES[p.batch||1].t;if(k==='site')return p.site||'';
+ if(k==='pid')return p.pid||'';if(k==='batch')return BATCHES[p.batch||1].t;if(k==='sf')return SF[p.sf||'tss'];if(k==='site')return p.site||'';
  if(k.startsWith('st_')){const i=STAGES.findIndex(x=>x.k===k.slice(3)),st=STAGES[i],d=p.s[st.k];if(d.done)return st.yes+(XO.dates&&d.date?` (${D(d.date)})`:'');const od=overdue(p,i);return st.no+(od?` (${od}d late)`:'')}
  if(k==='status')return xstatus(p);
  if(k==='next'){const up=planned(p)[0];return up?`Meeting: ${up.t}`:p.next}
@@ -575,6 +589,7 @@ function xemail(){const M=rmetrics();const td='style="padding:10px 12px;border:1
  ${XO.sec.meetings&&M.mt.length?`<div style="font:700 13px Arial,sans-serif;color:#0B2447;margin:14px 0 6px">Upcoming meetings</div><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse">${M.mt.slice(0,8).map(({p,m})=>`<tr><td ${td}>${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td ${td}><b>${esc(p.name)}</b></td><td ${td}>${esc(m.t)}</td><td ${td}>${esc(m.fmt||'')}</td></tr>`).join('')}</table>`:''}</div>`}
 function upcomingAll(){return S.partners.flatMap(p=>planned(p).map(m=>({p,m}))).sort((a,b)=>(a.m.d+(a.m.time||'')).localeCompare(b.m.d+(b.m.time||'')))}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data-a]');if(!t)return;
+ if(t.dataset.a==='sf'){const q=P(t.dataset.p);if(!q||(q.sf||'tss')===t.dataset.v)return;q.sf=t.dataset.v;log(q,'storefront set to '+SF[q.sf]);const y=window.scrollY;render();window.scrollTo(0,y);toast(q.sf==='gg'?`${q.name} set to GoGetSSL: greyed out, not available`:`${q.name} set to TSS`);return}
  if(t.dataset.row&&!e.target.closest('.drow')){if(t.dataset.go){OPEN=t.dataset.row;render();document.querySelector(`tr.prow[data-row="${OPEN}"]`)?.scrollIntoView({block:'start',behavior:'smooth'});return}OPEN=OPEN===t.dataset.row?null:t.dataset.row;EXP=null;const y=window.scrollY;render();window.scrollTo(0,y);return}
  const a0=t.dataset.a;
  if(['ctog','cyes','cno','cedit','csave','cclose'].includes(a0)){const q=P(t.dataset.p||(CED&&CED.p));const k=t.dataset.k||(CED&&CED.k);const y0=window.scrollY;
