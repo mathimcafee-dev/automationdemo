@@ -67,7 +67,7 @@ tr.drow td{background:var(--blue-50);padding:0 12px 16px;border-bottom:1px solid
 .cell.late{background:var(--red-50);color:var(--red);border:1px solid var(--red)}
 .sg.od h4{background:var(--red);color:#fff}.odt{color:var(--red)}
 .secp{margin:-4px 0 10px;color:var(--muted);font-size:13.5px}
-.ctab{min-width:1180px}.ctab td{vertical-align:top}
+.ctab{min-width:760px}.ctab td{vertical-align:top}
 .cno{min-height:30px;padding:0 12px;border-radius:15px;border:1px dashed var(--off);background:#fff;color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit}.cno:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-50)}
 .cyes{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:14px;background:var(--blue);color:#fff;font-weight:600;font-size:12.5px;text-decoration:none;white-space:nowrap}a.cyes:hover{background:var(--blue-d);text-decoration:none}
 .cmeta{font-size:11.5px;color:var(--muted);margin-top:4px}.cmeta .lnk{font-size:11.5px;min-height:22px}
@@ -219,7 +219,7 @@ function render(){normalize();const ps=S.partners;const on=ps.filter(live).lengt
 document.getElementById('app').innerHTML=`
 <div class="bar"><div class="in"><div class="brand"><i></i>DMARC Essentials<small>Partner launch tracker</small></div><div class="r">${syncPill()}<span>${esc(ME||'')}</span><button data-a="signout">Sign out</button></div></div></div>
 <main class="wrap">
-<div class="head"><div><h1>Partner launch status</h1><p>${esc(summaryText())}</p></div><button class="btn p" data-a="copy">Copy update for manager</button></div>
+<div class="head"><div><h1>Partner launch status</h1></div><button class="btn p" data-a="copy">Copy update for manager</button></div>
 <div class="kpis">${STAGES.map((st,i)=>`<div class="kpi"><span>${st.t}</span><b>${ps.filter(p=>isDone(p,i)).length}<small>of 4 ${st.yes.toLowerCase()}</small></b></div>`).join('')}
 <div class="kpi ${blk.length?'red':''}"><span>Blocked</span><b>${blk.length}</b><em>${blk.length?esc(blk.map(p=>p.name).join(', ')):'None'}</em></div></div>
 <div class="tbox"><div class="tscroll"><table class="main"><thead><tr><th>Partner</th>${STAGES.map((s,i)=>`<th><span class="n">${i+1}</span>${s.t}</th>`).join('')}<th>Next action</th><th>Due</th><th>Status</th><th><span class="sr" style="position:absolute;left:-9999px">Details</span></th></tr></thead><tbody>
@@ -310,17 +310,16 @@ function icsFor(p,m){const pad=n=>String(n).padStart(2,'0');const d=m.d.replace(
  return`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//DMARC Essentials tracker//EN\r\nBEGIN:VEVENT\r\nUID:${m.id}@valimail.ssldemo.site\r\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').slice(0,15)}Z\r\n${dt}\r\nSUMMARY:${clean(p.name+': '+m.t)}\r\nDESCRIPTION:${clean([m.fmt,m.who&&'With '+m.who,m.agenda].filter(Boolean).join('. '))}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`}
 
 const CITEMS=[{k:'web',t:'Website product page',yes:'Live',no:'Not live',url:true},{k:'sheet',t:'Sales sheet sent to customers',yes:'Yes',no:'No'},
- {k:'e1',t:'Email 1',yes:'Sent',no:'Not sent'},{k:'e2',t:'Email 2',yes:'Sent',no:'Not sent'},{k:'e3',t:'Email 3',yes:'Sent',no:'Not sent'},{k:'e4',t:'Email 4',yes:'Sent',no:'Not sent'},
- {k:'attach',t:'Attach copy live',yes:'Yes',no:'No',url:true,opt:true}];
+ {k:'email',t:'Email campaign sent',yes:'Yes',no:'No'}];
 let CED=null;
-function cinit(p){if(!p.c)p.c={};CITEMS.forEach(x=>{if(!p.c[x.k])p.c[x.k]={done:false,date:'',url:''}});return p.c}
+function cinit(p){if(!p.c)p.c={};if(!p.c.email&&['e1','e2','e3','e4'].some(k=>p.c[k])){const d=['e1','e2','e3','e4'].map(k=>p.c[k]).filter(x=>x&&x.done);p.c.email={done:d.length>0,date:d.length?d.map(x=>x.date).sort()[0]:'',url:''}}CITEMS.forEach(x=>{if(!p.c[x.k])p.c[x.k]={done:false,date:'',url:''}});return p.c}
 const safeUrl=u=>{u=(u||'').trim();if(!u||/\s/.test(u))return'';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return/^https?:$/.test(x.protocol)&&/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(x.hostname)?x.href:''}catch(e){return''}};
 function ccell(p,x){const c=cinit(p)[x.k];const ed=CED&&CED.p===p.id&&CED.k===x.k;
  if(ed)return`<div class="ced"><input class="inp" id="ced-in" type="url" inputmode="url" placeholder="${x.opt?'Link (optional)':'https://partner-site/page'}" value="${esc(c.url||'')}" aria-label="${esc(x.t)} link"><div class="ib"><button class="btn sm p" data-a="csave" data-p="${p.id}" data-k="${x.k}">Save</button><button class="btn sm" data-a="cclose">Cancel</button></div></div>`;
  if(c.done){const link=c.url?`<a class="cyes" href="${esc(c.url)}" target="_blank" rel="noopener" title="Open ${esc(c.url)}">✓ ${x.yes} ↗</a>`:`<span class="cyes">✓ ${x.yes}</span>`;
   return`<div class="cc">${link}<div class="cmeta">${c.date?mon(c.date)+' '+dom(c.date):''}${x.url?` · <button class="lnk" data-a="cedit" data-p="${p.id}" data-k="${x.k}">${c.url?'Edit link':'Add link'}</button>`:''} · <button class="lnk" data-a="cno" data-p="${p.id}" data-k="${x.k}">Set ${x.no.toLowerCase()}</button></div></div>`}
  return`<button class="cno" data-a="${x.url&&!x.opt?'cedit':'cyes'}" data-p="${p.id}" data-k="${x.k}" title="Mark ${x.yes.toLowerCase()}">${x.no}</button>`}
-function contentSection(){const ps=S.partners;return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click a “No” to switch it to yes; a live website becomes a link to the page.</p>
+function contentSection(){const ps=S.partners;return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click “No” to switch it to yes. A live website becomes a link to the page.</p>
 <div class="tbox"><div class="tscroll"><table class="main ctab"><thead><tr><th>Partner</th>${CITEMS.map(x=>`<th>${x.t}</th>`).join('')}<th>Done</th></tr></thead><tbody>
 ${ps.map(p=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`<tr><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b></div></div></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${n}</b>/${CITEMS.length}</td></tr>`}).join('')}
 </tbody></table></div></div></section>`}
