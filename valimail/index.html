@@ -64,6 +64,14 @@ tr.drow td{background:var(--blue-50);padding:0 12px 16px;border-bottom:1px solid
 .seg2{display:flex;border:1px solid var(--blue);border-radius:6px;overflow:hidden}.seg2 button{flex:1;min-height:36px;border:0;background:#fff;color:var(--blue-d);font-weight:600;font-size:12.5px;cursor:pointer;padding:0 6px}
 .seg2 button+button{border-left:1px solid var(--blue)}.seg2 button[aria-pressed="true"]{background:var(--blue);color:#fff}.sg:not(.done) .seg2 button[data-v="0"][aria-pressed="true"]{background:var(--blue-100);color:var(--navy)}
 .duehint{margin:0;font-size:12.5px;color:var(--muted)}.dr{display:block;font-size:11.5px;color:var(--muted);font-weight:400;max-width:130px;line-height:1.3}
+.cell.late{background:var(--red-50);color:var(--red);border:1px solid var(--red)}
+.sg.od h4{background:var(--red);color:#fff}.odt{color:var(--red)}
+.secp{margin:-4px 0 10px;color:var(--muted);font-size:13.5px}
+.ctab{min-width:1180px}.ctab td{vertical-align:top}
+.cno{min-height:30px;padding:0 12px;border-radius:15px;border:1px dashed var(--off);background:#fff;color:var(--muted);font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit}.cno:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-50)}
+.cyes{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:14px;background:var(--blue);color:#fff;font-weight:600;font-size:12.5px;text-decoration:none;white-space:nowrap}a.cyes:hover{background:var(--blue-d);text-decoration:none}
+.cmeta{font-size:11.5px;color:var(--muted);margin-top:4px}.cmeta .lnk{font-size:11.5px;min-height:22px}
+.ced{display:flex;flex-direction:column;gap:6px;min-width:220px}.ced .btn.sm{width:auto}
 .sdesc{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
 button.cell{border:0;cursor:pointer;font-family:inherit}button.cell.none{background:none;color:var(--muted)}button.cell.none:hover,button.cell.part:hover{background:var(--blue-50)}button.cell.done:hover{background:var(--blue-d)}
 .sg h4 small{color:var(--muted);font-weight:500}.sg.done h4{background:var(--blue);color:#fff}.sg.done h4 small{color:#D6EAF9}.sg.cur h4{background:var(--blue-100);color:var(--navy)}
@@ -205,8 +213,8 @@ function syncPill(){const t={idle:LAST?'Saved '+fmt(LAST.at)+(LAST.by?' by '+esc
 let OPEN=null;
 function cellFor(p,i){const st=STAGES[i],d=p.s[st.k],cur=stageOf(p)===i;
  return d.done?`<span class="cell done" title="${st.t}: ${st.yes}${d.date?' on '+dlong(d.date):''}">✓ ${st.yes}</span>`
- :`<span class="cell ${cur?'part cur':'none'}">${st.no}</span>`}
-function status(p){return p.blocked?'<span class="st bad">⚠ Blocked</span>':live(p)?'<span class="st live">✓ Complete</span>':'<span class="st ok">On track</span>'}
+ :(()=>{const od=overdue(p,i);return od?`<span class="cell late" title="${st.t} was due ${dlong(stageDue(p,i))}">${st.no} · ${od}d late</span>`:`<span class="cell ${cur?'part cur':'none'}">${st.no}</span>`})()}
+function status(p){const od=STAGES.some((x,i)=>overdue(p,i));return p.blocked?'<span class="st bad">⚠ Blocked</span>':od?'<span class="st bad">Overdue</span>':live(p)?'<span class="st live">✓ Complete</span>':'<span class="st ok">On track</span>'}
 function render(){normalize();const ps=S.partners;const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
 document.getElementById('app').innerHTML=`
 <div class="bar"><div class="in"><div class="brand"><i></i>DMARC Essentials<small>Partner launch tracker</small></div><div class="r">${syncPill()}<span>${esc(ME||'')}</span><button data-a="signout">Sign out</button></div></div></div>
@@ -220,6 +228,7 @@ ${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:26
 <td><button class="chev" data-row="${p.id}" aria-expanded="${OPEN===p.id}" aria-label="${OPEN===p.id?'Hide':'Show'} details for ${esc(p.name)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></td></tr>
 ${OPEN===p.id?`<tr class="drow"><td colspan="10">${detail(p)}</td></tr>`:''}`).join('')}
 </tbody></table></div></div>
+${contentSection()}
 <section class="sec"><h2>Upcoming meetings</h2><div class="tbox"><div class="tscroll"><table class="log"><thead><tr><th>When</th><th>Partner</th><th>Meeting</th><th>Format</th><th>With</th><th></th></tr></thead><tbody>
 ${(()=>{const u=upcomingAll();return u.length?u.map(({p,m})=>`<tr><td class="${late(m.d)?'lt':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td><td>${esc(m.who||'')}</td><td style="text-align:right"><button class="lnk" data-row="${p.id}" data-go="1">Open</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No meetings scheduled. Open a partner to schedule one.</td></tr>'})()}
 </tbody></table></div></div></section>
@@ -249,6 +258,8 @@ const addTo=(d,n)=>{const x=md(d||today());x.setDate(x.getDate()+n);return`${x.g
 function lastDone(p){let best='';STAGES.forEach((st,i)=>{const d=p.s[st.k];if(d.done&&(d.date||'')>best)best=d.date});return best}
 function autoDue(p){const s=stageOf(p);if(s===0)return null;if(s===5)return addTo(lastDone(p),GAP_DONE);const prev=p.s[STAGES[s-1].k].date||today();return addTo(prev,GAP[s])}
 function dueReason(p){if(planned(p).length)return'Date of the next scheduled meeting';if(p.dueManual)return'Set by hand';const s=stageOf(p);if(s===0)return'Set by hand for the intro meeting';if(s===5)return`${GAP_DONE} days after the last step, for a check-in`;return`${GAP[s]} days after ${STAGES[s-1].t.toLowerCase()} ${STAGES[s-1].yes.toLowerCase()}`}
+function stageDue(p,i){if(isDone(p,i))return null;if(i===0)return stageOf(p)===0?p.due:null;const pr=p.s[STAGES[i-1].k];if(!pr.done||!pr.date)return null;return addTo(pr.date,GAP[i])}
+function overdue(p,i){const d=stageDue(p,i);if(!d||d>=today())return 0;return Math.round((md(today())-md(d))/864e5)}
 function refreshDue(p){if(planned(p).length)return;if(p.dueManual)return;const a=autoDue(p);if(a)p.due=a}
 function syncNext(p){const up=planned(p);if(up.length){const m=up[0];p.next=m.t;p.due=m.d;p.nextMeeting=m.id}
  else if(p.nextMeeting){p.nextMeeting=null;const sg=suggest(p)[0];p.next=live(p)?'Schedule a check-in':'Schedule the '+sg.t.toLowerCase();p.due=addDays(7);refreshDue(p)}}
@@ -257,9 +268,9 @@ function draftFor(p,type){const x=mt(type);return{type:x.t,t:x.t==='Other'?'':x.
 function detail(p){const s=stageOf(p),up=planned(p),pa=past(p),sg=suggest(p);if(!DRAFT||DRAFT.pid!==p.id)DRAFT=Object.assign(draftFor(p,sg[0].t),{pid:p.id});
 return`<div class="dwrap">
 <div class="dh"><span><b>${esc(p.legal)}</b></span><span>Partner ID ${p.pid}</span><span>${esc(p.site)}</span><span>${esc(p.market)}</span><span>${esc(p.contact)}</span></div>
-<div class="sgrid">${STAGES.map((st,i)=>{const d=p.s[st.k];return`<div class="sg ${d.done?'done':i===s?'cur':''}"><h4>${i+1}. ${st.t}</h4><div class="sgb">
+<div class="sgrid">${STAGES.map((st,i)=>{const d=p.s[st.k];return`<div class="sg ${d.done?'done':overdue(p,i)?'od':i===s?'cur':''}"><h4>${i+1}. ${st.t}</h4><div class="sgb">
 <div class="seg2" role="group" aria-label="${st.t}"><button data-a="set" data-i="${i}" data-v="1" aria-pressed="${!!d.done}">${st.yes}</button><button data-a="set" data-i="${i}" data-v="0" aria-pressed="${!d.done}">${st.no}</button></div>
-${d.done?`<div class="f"><label for="sd-${i}">${st.yes} on</label><input class="inp" type="date" id="sd-${i}" data-sd="${i}" value="${d.date||''}"></div>`:`<p class="sdesc">${st.d}${i>0?`<br><b>Due ${GAP[i]} days after ${STAGES[i-1].t.toLowerCase()}</b>`:''}</p>`}</div></div>`}).join('')}</div>
+${d.done?`<div class="f"><label for="sd-${i}">${st.yes} on</label><input class="inp" type="date" id="sd-${i}" data-sd="${i}" value="${d.date||''}"></div>`:`<p class="sdesc">${st.d}${(()=>{const od=overdue(p,i),dd=stageDue(p,i);if(od)return`<br><b class="odt">Overdue by ${od} day${od>1?'s':''} (due ${dlong(dd)})</b>`;if(i>0)return`<br><b>Due ${GAP[i]} days after ${STAGES[i-1].t.toLowerCase()}${dd?' ('+dlong(dd)+')':''}</b>`;return''})()}</p>`}</div></div>`}).join('')}</div>
 <div class="mgrid">
 <div class="blk mbox">
 <div class="nextbar"><span class="nl">Next step</span>${up.length?`<b>${esc(up[0].t)}</b><span>${dlong(up[0].d)}${up[0].time?', '+t12(up[0].time):''}${up[0].fmt?' · '+esc(up[0].fmt):''}</span>`:`<b>${esc(p.next)}</b><span>Due ${dlong(p.due)}</span>`}</div>
@@ -297,10 +308,34 @@ ${p.blocked?`<div class="f"><label for="bl">What is blocking them?</label><input
 function icsFor(p,m){const pad=n=>String(n).padStart(2,'0');const d=m.d.replace(/-/g,'');let dt;if(m.time){const[h,mi]=m.time.split(':');const e=new Date(`${m.d}T${m.time}:00`);e.setMinutes(e.getMinutes()+45);dt=`DTSTART:${d}T${h}${mi}00\r\nDTEND:${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}T${pad(e.getHours())}${pad(e.getMinutes())}00`}else{const e=md(m.d);e.setDate(e.getDate()+1);dt=`DTSTART;VALUE=DATE:${d}\r\nDTEND;VALUE=DATE:${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}`}
  const clean=x=>String(x||'').replace(/[\r\n]+/g,' ').replace(/[,;]/g,'\\$&');
  return`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//DMARC Essentials tracker//EN\r\nBEGIN:VEVENT\r\nUID:${m.id}@valimail.ssldemo.site\r\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').slice(0,15)}Z\r\n${dt}\r\nSUMMARY:${clean(p.name+': '+m.t)}\r\nDESCRIPTION:${clean([m.fmt,m.who&&'With '+m.who,m.agenda].filter(Boolean).join('. '))}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`}
+
+const CITEMS=[{k:'web',t:'Website product page',yes:'Live',no:'Not live',url:true},{k:'sheet',t:'Sales sheet sent to customers',yes:'Yes',no:'No'},
+ {k:'e1',t:'Email 1',yes:'Sent',no:'Not sent'},{k:'e2',t:'Email 2',yes:'Sent',no:'Not sent'},{k:'e3',t:'Email 3',yes:'Sent',no:'Not sent'},{k:'e4',t:'Email 4',yes:'Sent',no:'Not sent'},
+ {k:'attach',t:'Attach copy live',yes:'Yes',no:'No',url:true,opt:true}];
+let CED=null;
+function cinit(p){if(!p.c)p.c={};CITEMS.forEach(x=>{if(!p.c[x.k])p.c[x.k]={done:false,date:'',url:''}});return p.c}
+const safeUrl=u=>{u=(u||'').trim();if(!u||/\s/.test(u))return'';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return/^https?:$/.test(x.protocol)&&/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(x.hostname)?x.href:''}catch(e){return''}};
+function ccell(p,x){const c=cinit(p)[x.k];const ed=CED&&CED.p===p.id&&CED.k===x.k;
+ if(ed)return`<div class="ced"><input class="inp" id="ced-in" type="url" inputmode="url" placeholder="${x.opt?'Link (optional)':'https://partner-site/page'}" value="${esc(c.url||'')}" aria-label="${esc(x.t)} link"><div class="ib"><button class="btn sm p" data-a="csave" data-p="${p.id}" data-k="${x.k}">Save</button><button class="btn sm" data-a="cclose">Cancel</button></div></div>`;
+ if(c.done){const link=c.url?`<a class="cyes" href="${esc(c.url)}" target="_blank" rel="noopener" title="Open ${esc(c.url)}">✓ ${x.yes} ↗</a>`:`<span class="cyes">✓ ${x.yes}</span>`;
+  return`<div class="cc">${link}<div class="cmeta">${c.date?mon(c.date)+' '+dom(c.date):''}${x.url?` · <button class="lnk" data-a="cedit" data-p="${p.id}" data-k="${x.k}">${c.url?'Edit link':'Add link'}</button>`:''} · <button class="lnk" data-a="cno" data-p="${p.id}" data-k="${x.k}">Set ${x.no.toLowerCase()}</button></div></div>`}
+ return`<button class="cno" data-a="${x.url&&!x.opt?'cedit':'cyes'}" data-p="${p.id}" data-k="${x.k}" title="Mark ${x.yes.toLowerCase()}">${x.no}</button>`}
+function contentSection(){const ps=S.partners;return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click a “No” to switch it to yes; a live website becomes a link to the page.</p>
+<div class="tbox"><div class="tscroll"><table class="main ctab"><thead><tr><th>Partner</th>${CITEMS.map(x=>`<th>${x.t}</th>`).join('')}<th>Done</th></tr></thead><tbody>
+${ps.map(p=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`<tr><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b></div></div></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${n}</b>/${CITEMS.length}</td></tr>`}).join('')}
+</tbody></table></div></div></section>`}
 function upcomingAll(){return S.partners.flatMap(p=>planned(p).map(m=>({p,m}))).sort((a,b)=>(a.m.d+(a.m.time||'')).localeCompare(b.m.d+(b.m.time||'')))}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data-a]');if(!t)return;
  if(t.dataset.row&&!e.target.closest('.drow')){if(t.dataset.go){OPEN=t.dataset.row;render();document.querySelector(`tr.prow[data-row="${OPEN}"]`)?.scrollIntoView({block:'start',behavior:'smooth'});return}OPEN=OPEN===t.dataset.row?null:t.dataset.row;EXP=null;const y=window.scrollY;render();window.scrollTo(0,y);return}
  const a0=t.dataset.a;
+ if(['cyes','cno','cedit','csave','cclose'].includes(a0)){const q=P(t.dataset.p||(CED&&CED.p));const k=t.dataset.k||(CED&&CED.k);const y0=window.scrollY;
+  if(a0==='cclose'){CED=null;render();window.scrollTo(0,y0);return}
+  const x=CITEMS.find(z=>z.k===k);const c=cinit(q)[k];
+  if(a0==='cedit'){CED={p:q.id,k};render();window.scrollTo(0,y0);setTimeout(()=>document.getElementById('ced-in')?.focus(),20);return}
+  if(a0==='csave'){const raw=document.getElementById('ced-in').value;const u=safeUrl(raw);if(raw.trim()&&!u){toast('That link does not look right. Check it and try again.');return}if(x.url&&!x.opt&&!u){toast('Add the page link to mark the website live');return}
+   const was=c.done;c.url=u;if(!c.done){c.done=true;c.date=today()}CED=null;log(q,`${x.t}: ${was?'link updated':x.yes.toLowerCase()}${u?' ('+u+')':''}`);render();window.scrollTo(0,y0);toast(`${q.name}: ${x.t} ${was?'link saved':x.yes.toLowerCase()}`);return}
+  if(a0==='cyes'){c.done=true;c.date=today();log(q,`${x.t}: ${x.yes.toLowerCase()}`);render();window.scrollTo(0,y0);toast(`${q.name}: ${x.t} ${x.yes.toLowerCase()}`);return}
+  if(a0==='cno'){if(!confirm(`Set ${x.t} to ${x.no.toLowerCase()} for ${q.name}?`))return;c.done=false;c.date='';log(q,`${x.t}: ${x.no.toLowerCase()}`);render();window.scrollTo(0,y0);return}}
  if(a0==='tog'||a0==='set'){const q=P(t.dataset.p||OPEN);if(!q)return;const i=+t.dataset.i,st=STAGES[i],cur=q.s[st.k];const v=a0==='tog'?!cur.done:t.dataset.v==='1';if(v===!!cur.done)return;
   const before=stageOf(q);cur.done=v;cur.date=v?today():'';DRAFT=null;q.dueManual=false;refreshDue(q);if(!planned(q).length&&/^Schedule/i.test(q.next)&&stageOf(q)!==before){q.next=live(q)?'Schedule a check-in':'Schedule the '+suggest(q)[0].t.toLowerCase()}refreshDue(q);log(q,`${st.t}: ${(v?st.yes:st.no).toLowerCase()}`);const after=stageOf(q);const y=window.scrollY;render();window.scrollTo(0,y);
   toast(after===5?q.name+': all steps complete':`${q.name}: ${st.t} ${(v?st.yes:st.no).toLowerCase()}`);return}
@@ -320,9 +355,9 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data
  if(a==='mcancel'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);if(!confirm('Cancel '+m.t+'?'))return;m.status='cancelled';syncNext(p);log(p,'cancelled '+m.t);rr();toast('Meeting cancelled');return}
  if(a==='ics'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);const blob=new Blob([icsFor(p,m)],{type:'text/calendar'});const u=URL.createObjectURL(blob);const l=document.createElement('a');l.href=u;l.download=(p.name+' '+m.t).replace(/[^\w]+/g,'-')+'.ics';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return}
  if(a==='block'&&p){p.blocked=!p.blocked;if(!p.blocked){p.block='';log(p,'blocker cleared')}else log(p,'marked as blocked');rerender();if(p.blocked)setTimeout(()=>document.getElementById('bl')?.focus(),30)}
- else if(a==='copy'){const txt='DMARC Essentials partner launch, update\n\n'+summaryText()+'\n\n'+S.partners.map(q=>`${q.name}: ${stageLabel(q)}${q.blocked?' (blocked: '+q.block+')':''}. Next: ${q.next} by ${mon(q.due)} ${dom(q.due)}.`).join('\n');(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Update copied'),()=>toast('Copy is not available in this browser'))}
+ else if(a==='copy'){const txt='DMARC Essentials partner launch, update\n\n'+summaryText()+'\n\n'+S.partners.map(q=>`${q.name}: ${STAGES.map((st,i)=>st.t+' '+(isDone(q,i)?st.yes:st.no).toLowerCase()).join(', ')}. Content: ${CITEMS.map(x=>x.t+' '+(cinit(q)[x.k].done?x.yes:x.no).toLowerCase()).join(', ')}${q.blocked?' (blocked: '+q.block+')':''}. Next: ${q.next} by ${mon(q.due)} ${dom(q.due)}.`).join('\n');(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Update copied'),()=>toast('Copy is not available in this browser'))}
  else if(a==='signout'){localStorage.removeItem('valimail-auth');location.reload()}});
-document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('tr.prow')){e.preventDefault();OPEN=OPEN===e.target.dataset.row?null:e.target.dataset.row;render()}});
+document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='ced-in'){if(e.key==='Enter'){e.preventDefault();document.querySelector('[data-a="csave"]')?.click()}if(e.key==='Escape'){CED=null;render()}return}if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('tr.prow')){e.preventDefault();OPEN=OPEN===e.target.dataset.row?null:e.target.dataset.row;render()}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.dr&&DRAFT){DRAFT[t.dataset.dr]=t.value}});
 document.addEventListener('change',e=>{const t=e.target,p=P(OPEN);if(!p)return;
  if(t.dataset.sd!==undefined){const st=STAGES[+t.dataset.sd];p.s[st.k].date=t.value;refreshDue(p);log(p,`${st.t} date set to ${t.value?dlong(t.value):'none'}`);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved');return}
