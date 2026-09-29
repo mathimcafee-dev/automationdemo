@@ -57,18 +57,21 @@ tr.grp td{background:var(--row);font-size:12px;font-weight:700;letter-spacing:.0
 tr.grp td span{font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)}
 .xbq{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.xsub{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:8px 0 2px}
 .dh a{color:inherit}
-.sfseg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
-.sfseg button{border:0;background:none;font:inherit;font-size:12px;font-weight:600;color:var(--muted);min-height:28px;padding:0 10px;cursor:pointer;transition:background var(--fast) var(--ease),color var(--fast) var(--ease)}
-.sfseg button+button{border-left:1px solid var(--line)}
-.sfseg button[aria-pressed="true"]{background:var(--blue);color:#fff}
-tr.na .sfseg button[aria-pressed="true"]{background:var(--muted)}
-tr.na>td{background:#F2F4F7}
-tr.na>td:not(.sfc)>*{opacity:.45;filter:grayscale(1)}
-tr.na>td:not(.sfc) .lg{filter:grayscale(1)}
-tr.na:hover>td{background:#ECEFF3}
-.st.na{background:#E4E8EE;color:var(--muted)}
+.sfsel{position:relative;display:inline-flex;align-items:center;height:30px;border:1px solid var(--line);border-radius:15px;background:#fff;transition:border-color var(--fast) var(--ease),box-shadow var(--fast) var(--ease)}
+.sfsel:hover{border-color:var(--blue)}
+.sfsel:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50)}
+.sfsel select{appearance:none;-webkit-appearance:none;border:0;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2351607A' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);height:100%;padding:0 28px 0 24px;border-radius:15px;cursor:pointer;outline:none}
+.sfdot{position:absolute;left:10px;width:8px;height:8px;border-radius:50%;pointer-events:none}
+.sfdot.tss{background:var(--blue)}.sfdot.gg{background:var(--off)}
+.ggsec{margin-top:28px}
+.gghd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%;text-align:left;background:var(--row);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer;margin-bottom:10px}
+.gghd svg{transition:transform var(--fast) var(--ease);color:var(--muted)}
+.gghd span{font-weight:600;font-size:15px}
+.gghd em{font-style:normal;font-size:12px;font-weight:600;padding:1px 8px;border-radius:10px;background:#E4E8EE;color:var(--muted)}
+.gghd small{color:var(--muted);font-size:13px}
+.ggt .pn{gap:10px}.ggt .btn{white-space:nowrap}.ggt .lg{filter:grayscale(1);opacity:.7}
 .nat{color:var(--muted);font-size:13px;font-style:italic}
-.ggnote{margin:-6px 0 14px;font-size:13px;color:var(--muted)}.dh .lnk.red{margin-left:14px}
+.ggnote{margin:-8px 0 12px;font-size:13px;color:var(--muted)}.ggnote .lnk{font-size:13px;margin-left:4px}.dh .lnk.red{margin-left:14px}
 .delbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:10px;padding:12px 14px;border:1px solid var(--red);background:var(--red-50);border-radius:8px}.delbar b{display:block;color:var(--red)}.delbar span{font-size:13px;color:var(--ink)}
 .btn.danger{background:var(--red);border-color:var(--red);color:#fff}
 .undo{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:16px;background:var(--navy);color:#fff;padding:10px 12px 10px 16px;border-radius:6px;z-index:41;font-weight:500}.undo button{background:none;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:4px;min-height:32px;padding:0 12px;font:inherit;font-weight:600;cursor:pointer}.dh .miss{font-style:normal;color:var(--red);font-weight:600}.dh .lnk{margin-left:auto}
@@ -259,17 +262,22 @@ function start(){render();setInterval(()=>{if(!LOCAL&&document.visibilityState==
 const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P=id=>S.partners.find(p=>p.id===id);
 const SF={tss:'TSS',gg:'GoGetSSL'};const isGG=p=>p.sf==='gg';const avail=p=>!isGG(p);
-function sfCell(p){return`<div class="sfseg" role="group" aria-label="Storefront for ${esc(p.name)}">${Object.entries(SF).map(([k,t])=>`<button data-a="sf" data-p="${p.id}" data-v="${k}" aria-pressed="${(p.sf||'tss')===k}">${t}</button>`).join('')}</div>`}
+function sfCell(p){const v=p.sf||'tss';return`<label class="sfsel"><span class="sr" style="position:absolute;left:-9999px">Storefront for ${esc(p.name)}</span><i class="sfdot ${v}" aria-hidden="true"></i><select data-sf="${p.id}">${Object.entries(SF).map(([k,t])=>`<option value="${k}" ${v===k?'selected':''}>${t}</option>`).join('')}</select></label>`}
+let GGOPEN=false;
+function ggSection(gg){if(!gg.length)return'';return`<section class="sec ggsec" id="ggsec"><button class="gghd" data-a="ggtoggle" aria-expanded="${GGOPEN}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" style="transform:rotate(${GGOPEN?0:-90}deg)"><path d="M6 9l6 6 6-6"/></svg><span>GoGetSSL partners</span><em>${gg.length}</em><small>Hidden from the tracker. DMARC Essentials is not currently available on the GoGetSSL storefront.</small></button>
+${GGOPEN?`<div class="tbox"><div class="tscroll"><table class="log ggt"><thead><tr><th>Partner</th><th>Batch</th><th>Website</th><th>Market</th><th></th></tr></thead><tbody>${gg.map(p=>`<tr><td><div class="pn">${logo(p)}<b>${esc(p.name)}</b></div></td><td>${esc(BATCHES[p.batch||1].t)}</td><td>${esc(p.site||'')}</td><td>${esc(p.market||'')}</td><td style="text-align:right"><button class="btn sm" data-a="sftss" data-p="${p.id}">Move back to TSS</button></td></tr>`).join('')}</tbody></table></div></div>`:''}</section>`}
 let BV=(()=>{try{return localStorage.getItem('valimail-batch')||'all'}catch(e){return'all'}})();
 const inB=(p,b)=>(p.batch||1)===+b;
 const vis=()=>BV==='all'?S.partners:S.partners.filter(p=>inB(p,BV));
-function btabs(){const n=b=>S.partners.filter(p=>inB(p,b)).length;const tabs=[['all','All partners',S.partners.length],['1',BATCHES[1].t+' · '+BATCHES[1].d,n(1)],['2',BATCHES[2].t+' · '+BATCHES[2].d,n(2)]];
+function btabs(){const n=b=>S.partners.filter(p=>inB(p,b)&&avail(p)).length;const tabs=[['all','All partners',S.partners.filter(avail).length],['1',BATCHES[1].t+' · '+BATCHES[1].d,n(1)],['2',BATCHES[2].t+' · '+BATCHES[2].d,n(2)]];
  return`<div class="btabs" role="tablist" aria-label="Partner batch">${tabs.map(([k,t,c])=>`<button role="tab" aria-selected="${BV===k}" data-a="bview" data-b="${k}">${esc(t)}<span>${c}</span></button>`).join('')}</div>`}
 const nowISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)};const today=()=>nowISO().slice(0,10);
 const md=t=>new Date(t+'T00:00');const mon=t=>md(t).toLocaleDateString('en-US',{month:'short'});const dom=t=>md(t).getDate();const late=t=>t&&t<today();
 const fmt=t=>{const d=new Date(t);return d.toDateString()===new Date().toDateString()?'Today '+d.toTimeString().slice(0,5):d.toLocaleDateString('en-US',{month:'short',day:'numeric'})};
 function logo(p){return p.id==='irh'?'<span class="wordmark">IReallyHost<span>.com</span></span>':`<span class="logo-bg"><img class="logo ${p.id}" src="${LOGOS[p.id]}" alt="${esc(p.name)}"></span>`}
 function undoBar(){document.getElementById('undo')?.remove();if(!UNDO)return;const d=document.createElement('div');d.id='undo';d.className='undo';d.setAttribute('role','status');d.innerHTML=`<span>${esc(UNDO.p.name)} deleted.</span><button data-a="undo">Undo</button>`;document.body.appendChild(d);clearTimeout(undoBar.h);undoBar.h=setTimeout(()=>{UNDO=null;d.remove()},10000)}
+function setSF(id,v){const q=P(id);if(!q||(q.sf||'tss')===v)return;q.sf=v;if(v==='gg'&&OPEN===id)OPEN=null;log(q,'storefront set to '+SF[v]);const y=window.scrollY;render();window.scrollTo(0,y);toast(v==='gg'?`${q.name} moved to GoGetSSL partners and hidden`:`${q.name} is back on the tracker`)}
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.sf)setSF(t.dataset.sf,t.value)});
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove('show'),2200)}
 function log(p,x){S.log.unshift({t:nowISO(),p:p.id,x,by:ME});S.log=S.log.slice(0,200);save()}
 function migrate(p){if(!p.s){const f=i=>!!(p.checks&&p.checks[i]&&p.checks[i].every(Boolean));p.s={intro:{done:f(0),date:''},form:{done:false,date:''},onb:{done:f(3),date:''},kit:{done:f(1),date:''},shared:{done:f(2),date:''}}}return p}
@@ -308,25 +316,26 @@ function animKpis(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matc
   if(rm||from===to){c.textContent=to;if(from!==to)el.classList.add('bump');return}
   el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
   const t0=performance.now()+idx*70,dur=700;c.textContent=from;const step=now=>{const q=Math.min(1,Math.max(0,(now-t0)/dur));const e=1-Math.pow(1-q,3);c.textContent=Math.round(from+(to-from)*e);if(q<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
-function render(){normalize();const all=vis(),ps=all.filter(avail),ggN=all.length-ps.length;const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
+function render(){normalize();const all=vis(),ps=all.filter(avail),gg=all.filter(isGG),ggN=gg.length;const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
 document.getElementById('app').innerHTML=`
 <div class="bar"><div class="in"><div class="brand"><i></i>DMARC Essentials<small>Partner launch tracker</small></div><div class="r">${syncPill()}<span>${esc(ME||'')}</span><button data-a="signout">Sign out</button></div></div></div>
 <main class="wrap">
 <div class="head"><div><h1>Partner launch status</h1></div><button class="btn p" data-a="copy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Report</button></div>
-${btabs()}${ggN?`<p class="ggnote">${ggN} GoGetSSL partner${ggN>1?'s are':' is'} greyed out and left out of the counts. DMARC Essentials is not currently available for GoGetSSL partners.</p>`:''}
+${btabs()}${ggN?`<p class="ggnote">${ggN} GoGetSSL partner${ggN>1?'s':''} hidden. <button class="lnk" data-a="ggshow">View</button></p>`:''}
 <div class="kpis">${STAGES.map((st,i)=>{const n=ps.filter(p=>isDone(p,i)).length;return`<div class="kpi" data-k="k${i}"><span>${st.t}</span><b><span class="cnt" data-to="${n}">${n}</span><small>of ${ps.length} ${st.yes.toLowerCase()}</small></b><i class="kbar"><em data-w="${ps.length?n/ps.length*100:0}"></em></i></div>`}).join('')}
 <div class="kpi ${blk.length?'red alert':''}" data-k="kb"><span>Blocked</span><b><span class="cnt" data-to="${blk.length}">${blk.length}</span></b><em>${blk.length?esc(blk.map(p=>p.name).join(', ')):'None'}</em></div></div>
 <div class="tbox"><div class="tscroll"><table class="main"><thead><tr><th>Partner</th><th>Storefront</th>${STAGES.map((s,i)=>`<th><span class="n">${i+1}</span>${s.t}</th>`).join('')}<th>Next action</th><th>Due</th><th>Status</th><th><span class="sr" style="position:absolute;left:-9999px">Details</span></th></tr></thead><tbody>
-${all.map((p,ix,ps)=>`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="11">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)} · ${ps.filter(q=>q.batch===p.batch).length}</span></td></tr>`:''}<tr class="prow ${OPEN===p.id?'open':''} ${isGG(p)?'na':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>${p.pid?'ID '+p.pid:esc(p.site)}</small></div></div></td><td class="sfc">${sfCell(p)}</td>
+${ps.map((p,ix,ps)=>`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="11">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)} · ${ps.filter(q=>q.batch===p.batch).length}</span></td></tr>`:''}<tr class="prow ${OPEN===p.id?'open':''} ${isGG(p)?'na':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>${p.pid?'ID '+p.pid:esc(p.site)}</small></div></div></td><td class="sfc">${sfCell(p)}</td>
 ${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:260px">${isGG(p)?'<span class="nat">Not available for GoGetSSL partners</span>':nextCell(p)}</td><td><span class="due ${late(p.due)?'late':''}" title="${esc(dueReason(p))}">${mon(p.due)} ${dom(p.due)}</span><small class="dr">${esc(dueReason(p).replace(/^Date of the next scheduled meeting$/,'Next meeting').replace(/^Set by hand.*/,'Set by hand'))}</small></td><td>${status(p)}</td>
 <td><button class="chev" data-row="${p.id}" aria-expanded="${OPEN===p.id}" aria-label="${OPEN===p.id?'Hide':'Show'} details for ${esc(p.name)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></td></tr>
 ${OPEN===p.id?`<tr class="drow"><td colspan="11">${detail(p)}</td></tr>`:''}`).join('')}
 </tbody></table></div></div>
 ${contentSection()}
 <section class="sec"><h2>Upcoming meetings</h2><div class="tbox"><div class="tscroll"><table class="log"><thead><tr><th>When</th><th>Partner</th><th>Meeting</th><th>Format</th><th>With</th><th></th></tr></thead><tbody>
-${(()=>{const u=upcomingAll().filter(x=>vis().includes(x.p));return u.length?u.map(({p,m})=>`<tr><td class="${late(m.d)?'lt':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td><td>${esc(m.who||'')}</td><td style="text-align:right"><button class="lnk" data-row="${p.id}" data-go="1">Open</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No meetings scheduled. Open a partner to schedule one.</td></tr>'})()}
+${(()=>{const u=upcomingAll().filter(x=>ps.includes(x.p));return u.length?u.map(({p,m})=>`<tr><td class="${late(m.d)?'lt':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td><td>${esc(m.who||'')}</td><td style="text-align:right"><button class="lnk" data-row="${p.id}" data-go="1">Open</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No meetings scheduled. Open a partner to schedule one.</td></tr>'})()}
 </tbody></table></div></div></section>
 
+${ggSection(gg)}
 </main>`;animKpis()}
 
 const MTYPES=[
@@ -414,7 +423,7 @@ function ccell(p,x){const c=cinit(p)[x.k];const ed=CED&&CED.p===p.id&&CED.k===x.
  const pill=`<button class="cpill ${c.done?'on':''}" data-a="ctog" data-p="${p.id}" data-k="${x.k}" aria-pressed="${!!c.done}" title="Click to change to ${(c.done?x.no:x.yes).toLowerCase()}">${c.done?'✓ '+x.yes:x.no}</button>`;
  const meta=c.done?`<div class="cmeta">${c.date?mon(c.date)+' '+dom(c.date):''}${x.url&&c.url?` · <a href="${esc(c.url)}" target="_blank" rel="noopener">Open page ↗</a> · <button class="lnk" data-a="cedit" data-p="${p.id}" data-k="${x.k}">Edit link</button>`:''}</div>`:'';
  return`<div class="cc">${pill}${meta}</div>`}
-function contentSection(){const ps=vis();return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click a status to switch it between yes and no. When the website is live, “Open page” goes to it.</p>
+function contentSection(){const ps=vis().filter(avail);return`<section class="sec"><h2>Partner content launch</h2><p class="secp">What each partner has done with the kit. Click a status to switch it between yes and no. When the website is live, “Open page” goes to it.</p>
 <div class="tbox"><div class="tscroll"><table class="main ctab"><thead><tr><th>Partner</th>${CITEMS.map(x=>`<th>${x.t}</th>`).join('')}<th>Done</th></tr></thead><tbody>
 ${ps.map((p,ix)=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="${CITEMS.length+2}">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)}</span></td></tr>`:''}<tr class="${isGG(p)?'na':''}"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b>${isGG(p)?'<small>GoGetSSL · not available</small>':''}</div></div></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${n}</b>/${CITEMS.length}</td></tr>`}).join('')}
 </tbody></table></div></div></section>`}
@@ -588,7 +597,10 @@ function xemail(){const M=rmetrics();const td='style="padding:10px 12px;border:1
  ${xtable()}
  ${XO.sec.meetings&&M.mt.length?`<div style="font:700 13px Arial,sans-serif;color:#0B2447;margin:14px 0 6px">Upcoming meetings</div><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse">${M.mt.slice(0,8).map(({p,m})=>`<tr><td ${td}>${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td ${td}><b>${esc(p.name)}</b></td><td ${td}>${esc(m.t)}</td><td ${td}>${esc(m.fmt||'')}</td></tr>`).join('')}</table>`:''}</div>`}
 function upcomingAll(){return S.partners.flatMap(p=>planned(p).map(m=>({p,m}))).sort((a,b)=>(a.m.d+(a.m.time||'')).localeCompare(b.m.d+(b.m.time||'')))}
-document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data-a]');if(!t)return;
+document.addEventListener('click',e=>{if(e.target.closest('.sfsel'))return;const t=e.target.closest('[data-row],[data-a]');if(!t)return;
+ if(t.dataset.a==='ggtoggle'){GGOPEN=!GGOPEN;const y=window.scrollY;render();window.scrollTo(0,y);return}
+ if(t.dataset.a==='ggshow'){GGOPEN=true;render();document.getElementById('ggsec')?.scrollIntoView({behavior:'smooth',block:'start'});return}
+ if(t.dataset.a==='sftss'){setSF(t.dataset.p,'tss');return}
  if(t.dataset.a==='sf'){const q=P(t.dataset.p);if(!q||(q.sf||'tss')===t.dataset.v)return;q.sf=t.dataset.v;log(q,'storefront set to '+SF[q.sf]);const y=window.scrollY;render();window.scrollTo(0,y);toast(q.sf==='gg'?`${q.name} set to GoGetSSL: greyed out, not available`:`${q.name} set to TSS`);return}
  if(t.dataset.row&&!e.target.closest('.drow')){if(t.dataset.go){OPEN=t.dataset.row;render();document.querySelector(`tr.prow[data-row="${OPEN}"]`)?.scrollIntoView({block:'start',behavior:'smooth'});return}OPEN=OPEN===t.dataset.row?null:t.dataset.row;EXP=null;const y=window.scrollY;render();window.scrollTo(0,y);return}
  const a0=t.dataset.a;
