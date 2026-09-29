@@ -191,6 +191,87 @@ td.lt{color:var(--red);font-weight:600}.muted{color:var(--muted)}
 @media (max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}.dgrid{grid-template-columns:1fr}.sgrid{grid-template-columns:1fr}.sg{border-right:0;border-bottom:1px solid var(--line)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi:nth-child(2){border-right:0}.kpi:nth-child(-n+2){border-bottom:1px solid var(--line)}}
 @media (max-width:640px){.wrap,.bar .in{padding-left:14px;padding-right:14px}.head h1{font-size:22px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{background:#EEF2F7}
+.dash{font-family:var(--font);color:var(--ink)}
+.dash .tb{background:var(--navy);color:#fff;height:56px;display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:6}
+.dash .bn{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;white-space:nowrap}.dash .bn i{width:4px;height:18px;background:var(--blue);border-radius:1px}.dash .bn small{font-weight:500;color:#AFC0DA;font-size:13px;margin-left:4px}
+.dash .tb .sp{flex:1}.dash .tb .sync{color:#AFC0DA;font-size:12px}.dash .tb .sync.idle{color:#9FD3B5}.dash .tb .sync.error,.dash .tb .sync.local{color:#F7B6C1}
+.dash .us{font-size:13px;color:#AFC0DA}
+.dash .rb{background:var(--blue);border:0;color:#fff;font:inherit;font-weight:600;font-size:13px;height:34px;padding:0 14px;border-radius:6px;display:flex;align-items:center;gap:7px;cursor:pointer;transition:background var(--fast) var(--ease)}.dash .rb:hover{background:#0a86dc}
+.dash .so{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;font:inherit;font-size:12.5px;height:32px;padding:0 12px;border-radius:6px;cursor:pointer}
+.dash .sl{background:#fff;border-bottom:1px solid #E1E7EF;padding:10px 24px;position:sticky;top:56px;z-index:5}
+.dash .slr{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.dash .sgp{display:inline-flex;align-items:center}.dash .lb{font-size:11px;color:var(--muted);font-weight:600;margin-right:6px}
+.dash .seg{display:inline-flex;background:#F1F4F8;border-radius:7px;padding:3px;gap:2px}
+.dash .seg button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);padding:0 12px;height:28px;border-radius:5px;border:0;background:none;cursor:pointer;white-space:nowrap;transition:background var(--fast) var(--ease),color var(--fast) var(--ease)}
+.dash .seg button:hover{color:var(--navy)}
+.dash .seg button[aria-selected="true"],.dash .seg button[aria-pressed="true"]{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(11,36,71,.14)}
+.dash .seg button em{font-style:normal;color:#8A97AD;margin-left:5px;font-weight:500}
+.dash .dd{position:relative;display:inline-flex}.dash .dd select{appearance:none;-webkit-appearance:none;border:1px solid var(--line);border-radius:7px;height:32px;padding:0 30px 0 10px;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2351607A' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;min-width:150px;cursor:pointer}
+.dash .dd select:focus-visible,.dash .sch:focus-within{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50)}
+.dash .sch{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:7px;height:32px;padding:0 10px;color:#8A97AD;width:220px}.dash .sch input{border:0;outline:none;font:inherit;font-size:12.5px;color:var(--ink);width:100%;background:none}
+.dash .gh{margin-left:auto;font-size:12px;color:var(--muted)}.dash .gh .lnk{font-size:12px;min-height:0}
+.dash .fchips{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted)}
+.dash .chipf{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12px;font-weight:600;padding:4px 10px;border-radius:14px;background:var(--blue-50);color:var(--blue-d);border:1px solid var(--blue-100);cursor:pointer}.dash .chipf b{font-size:10px}.dash .chipf:hover{border-color:var(--blue)}
+.dash .fchips .lnk{font-size:12px;min-height:0}
+.wrapd{padding:16px 24px 48px;display:flex;flex-direction:column;gap:12px;max-width:1680px;margin:0 auto}
+.wrapd .cd{box-shadow:0 1px 2px rgba(11,36,71,.04)}
+.wrapd .g1{display:grid;grid-template-columns:282px 1fr;gap:12px;height:212px}
+.wrapd .g2{display:grid;grid-template-columns:1.2fr .85fr 1fr 1fr;gap:12px;height:236px}
+.wrapd .g3{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.wrapd .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;height:240px}
+.wrapd .hint{font-size:10.5px;color:#8A97AD;font-weight:500}
+.wrapd .mxh{display:flex;gap:14px;align-items:baseline}
+.wrapd .clk{cursor:pointer;transition:opacity var(--fast) var(--ease)}.wrapd svg .clk:hover{opacity:.82}
+.wrapd .dl .clk{border-radius:5px;padding:2px 4px;margin:-2px -4px}.wrapd .dl .clk:hover{background:var(--row)}.wrapd .dl .clk.on{background:var(--blue-50);box-shadow:inset 0 0 0 1px var(--blue-100)}
+.wrapd svg g.clk.on rect{stroke:#0B2447;stroke-width:2}
+.wrapd .ri[data-row]{cursor:pointer;transition:filter var(--fast) var(--ease)}.wrapd .ri[data-row]:hover{filter:brightness(.97)}
+.wrapd table.dhm{min-width:1240px!important;width:100%!important}
+.wrapd .dhm th:nth-child(2){width:210px}.wrapd .dhm th:last-child{width:190px}
+.wrapd .dhm tr.mrow{cursor:pointer}.wrapd .dhm tr.mrow>td{transition:background var(--fast) var(--ease)}
+.wrapd .dhm tr.mrow:hover>td.pn2,.wrapd .dhm tr.mrow:hover>td.rk{background:var(--row)}
+.wrapd .dhm tr.mrow.sel>td.pn2{background:var(--blue-50);box-shadow:inset 3px 0 0 var(--blue)}
+.wrapd .dhm tr.mrow:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.wrapd .dhm td.pn2,.wrapd .dhm td.rk{border-radius:5px}
+.wrapd .pnx{display:flex;align-items:center;gap:8px;padding:2px 4px}.wrapd .pnx .lg{width:52px;height:26px;padding:1px 4px}.wrapd .pnx .lg img{max-height:20px;max-width:44px}.wrapd .pnx .lg .wm{font-size:8px}.wrapd .pnx>div{min-width:0}
+.wrapd button.hc{width:100%;border:0;font:inherit;font-size:10px;font-weight:600;cursor:pointer;transition:filter var(--fast) var(--ease),transform var(--fast) var(--ease)}
+.wrapd button.hc:hover{filter:brightness(.95)}.wrapd button.hc.n:hover{background:#DDE5EF}
+.wrapd button.hc:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+.wrapd .hc.sm{width:60%}
+.wrapd .pg2c{padding:0 4px!important}.wrapd .nxc{font-size:11px;line-height:1.25;padding-left:6px!important}.wrapd .nxc small{display:block;color:#8A97AD;font-size:10px}
+.wrapd .mtag{font-size:9.5px;font-weight:700;color:var(--blue-d);background:var(--blue-50);padding:1px 5px;border-radius:3px}
+.wrapd .dempty{padding:28px;text-align:center;color:var(--muted);font-size:13px;display:flex;gap:10px;justify-content:center;align-items:center}
+.wrapd .upl{display:flex;flex-direction:column;gap:6px}
+.wrapd .mtg{display:flex;gap:10px;align-items:center;border:1px solid #E1E7EF;border-radius:8px;padding:7px 10px;font:inherit;font-size:12px;background:#fff;text-align:left;cursor:pointer;color:var(--ink);transition:border-color var(--fast) var(--ease)}
+.wrapd .mtg:hover{border-color:var(--blue)}.wrapd .mtg .dt{background:var(--blue-50);border-radius:6px;text-align:center;padding:3px 8px;color:#0167AE;font-weight:700;font-size:15px;line-height:1.1;min-width:40px}.wrapd .mtg .dt.lt{background:var(--red-50);color:var(--red)}.wrapd .mtg .dt small{display:block;font-size:9.5px;font-weight:600}
+.wrapd .mtg .mi{display:flex;flex-direction:column;min-width:0}.wrapd .mtg .mi>span{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wrapd .mtg em{margin-left:auto;font-style:normal;font-size:11px;color:var(--blue);font-weight:600}
+.wrapd .g5{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}
+.wrapd .g5 .rings .cr{grid-template-columns:1fr;gap:14px;margin:6px 0}.wrapd .g5 .rings .cr>div{display:grid;grid-template-columns:78px 1fr;align-items:center;text-align:left;gap:0 12px}.wrapd .g5 .rings .rw{grid-row:span 2;margin:0}
+.wrapd .ctab2{width:100%;border-collapse:collapse;font-size:13px}.wrapd .ctab2 th{text-align:left;font-size:11.5px;font-weight:600;color:var(--navy);background:var(--blue-50);padding:8px 10px}.wrapd .ctab2 td{padding:7px 10px;border-bottom:1px solid #EEF2F7}
+.wrapd .ggsec{margin-top:4px}
+.dash .scrim{position:fixed;inset:0;background:rgba(11,36,71,.32);z-index:19;animation:fadeIn var(--fast) var(--ease)}
+.dash .drw{position:fixed;right:0;top:0;bottom:0;width:min(680px,100vw);background:#fff;box-shadow:-12px 0 40px rgba(11,36,71,.22);z-index:20;display:flex;flex-direction:column;animation:slideIn 220ms var(--ease)}
+@keyframes slideIn{from{transform:translateX(40px);opacity:.4}to{transform:none;opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.dash .drw,.dash .scrim{animation:none}}
+.dash .dhd{background:var(--navy);color:#fff;padding:16px 22px;position:relative;flex:none}
+.dash .dhd .brandrow{display:flex;gap:8px;align-items:center;font-size:11.5px;color:#AFC0DA}.dash .dhd .brandrow i{width:4px;height:14px;background:var(--blue);border-radius:1px}
+.dash .dhd h2{margin:6px 0 2px;font-size:21px;font-weight:700}.dash .dhd p{margin:0;font-size:12px;color:#AFC0DA}
+.dash .dst{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12px;color:#AFC0DA}
+.dash .dst .sfsel{margin-left:auto;background:#fff}
+.dash .dx{position:absolute;right:14px;top:12px;width:34px;height:34px;border-radius:6px;border:0;background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer}.dash .dx:hover{background:rgba(255,255,255,.18)}
+.dash .dbd{overflow:auto;flex:1;padding:14px 18px 28px}
+.dash .dbd .dwrap{border:0;padding:0;gap:16px}
+.dash .dbd .sgrid{grid-template-columns:1fr}
+.dash .dbd .sg{display:grid;grid-template-columns:150px 1fr;border-right:0;border-bottom:1px solid var(--line)}.dash .dbd .sg:last-child{border-bottom:0}
+.dash .dbd .sg h4{border-bottom:0;align-items:center}
+.dash .dbd .sgb{flex-direction:row;align-items:center;flex-wrap:wrap}.dash .dbd .sgb .seg2{flex:0 0 240px}.dash .dbd .sgb .f{flex-direction:row;align-items:center;gap:8px}.dash .dbd .sgb .sdesc{flex:1;min-width:160px;font-size:11.5px}
+.dash .dbd .mgrid{grid-template-columns:1fr}.dash .dbd .sform{grid-template-columns:1fr 1fr}.dash .dbd .up{grid-template-columns:52px 1fr}
+.dash .dbd .dh{font-size:12px}.dash .dbd .dh>span:not(:has(.miss)){display:none}
+.dash .dbd .sgb{padding:8px 12px;gap:8px 12px}.dash .dbd .sgb .f label{white-space:nowrap}.dash .dbd .sgb .seg2{flex:0 0 220px}.dash .dbd .seg2 button{min-height:32px}
+.wrapd .dhm td.nxc{text-align:left!important}
+@media (max-width:1280px){.wrapd .g2{grid-template-columns:1fr 1fr;height:auto}.wrapd .g2>.cd{min-height:230px}.wrapd .g4{grid-template-columns:1fr 1fr;height:auto}.wrapd .g4>.cd{min-height:230px}}
+@media (max-width:1000px){.wrapd .g1{grid-template-columns:1fr;height:auto}.wrapd .g1 .kp{grid-template-rows:auto}.wrapd .g3{grid-template-columns:1fr}.wrapd .g5{grid-template-columns:1fr}.dash .sl{position:static}}
+@media (max-width:700px){.wrapd{padding:12px}.wrapd .g2,.wrapd .g4{grid-template-columns:1fr}.wrapd .kp{grid-template-columns:1fr 1fr}.dash .tb{padding:0 12px}.dash .bn small,.dash .us{display:none}.dash .sl{padding:10px 12px}.dash .sch{width:100%}.dash .dbd .sg{grid-template-columns:1fr}.dash .dbd .sform{grid-template-columns:1fr}.wrapd.rp .kp{grid-template-columns:1fr 1fr;grid-template-rows:auto}.dash .tb .sync{display:none}.dash .tb{gap:10px}.dash .seg{max-width:100%;overflow-x:auto}.dash .slr{gap:10px}}
 </style>
 </head>
 <body>
@@ -258,7 +339,7 @@ ${msg?`<div class="gerr" role="alert">${esc(msg)}</div>`:''}<div class="f"><labe
  document.getElementById('gform').addEventListener('submit',async e=>{e.preventDefault();ME=document.getElementById('g-name').value.trim();CODE=document.getElementById('g-code').value;const btn=e.target.querySelector('button');btn.textContent='Signing in…';btn.disabled=true;
   try{await pull(true);try{localStorage.setItem('valimail-auth',JSON.stringify({name:ME,code:CODE}))}catch(x){}start()}catch(x){if(x.message!=='invalid_code')gate('Could not reach the tracker. Check your connection and try again.')}});
  setTimeout(()=>document.getElementById(ME?'g-code':'g-name')?.focus(),30)}
-function start(){render();setInterval(()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})},20000);document.addEventListener('visibilitychange',()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})})}
+function start(){if(!document.getElementById('rptcss')){const st=document.createElement('style');st.id='rptcss';st.textContent=RPT_CSS;document.head.appendChild(st)}render();setInterval(()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})},20000);document.addEventListener('visibilitychange',()=>{if(!LOCAL&&document.visibilityState==='visible')pull(false).catch(()=>{})})}
 const $=s=>document.querySelector(s);const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P=id=>S.partners.find(p=>p.id===id);
 const SF={tss:'TSS',gg:'GoGetSSL'};const isGG=p=>p.sf==='gg';const avail=p=>!isGG(p);
@@ -316,27 +397,7 @@ function animKpis(){const rm=matchMedia('(prefers-reduced-motion: reduce)').matc
   if(rm||from===to){c.textContent=to;if(from!==to)el.classList.add('bump');return}
   el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
   const t0=performance.now()+idx*70,dur=700;c.textContent=from;const step=now=>{const q=Math.min(1,Math.max(0,(now-t0)/dur));const e=1-Math.pow(1-q,3);c.textContent=Math.round(from+(to-from)*e);if(q<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
-function render(){normalize();const all=vis(),ps=all.filter(avail),gg=all.filter(isGG),ggN=gg.length;const on=ps.filter(live).length,shared=ps.filter(p=>full(p,2)).length,blk=ps.filter(p=>p.blocked);const nx=[...ps].sort((a,b)=>a.due.localeCompare(b.due))[0];
-document.getElementById('app').innerHTML=`
-<div class="bar"><div class="in"><div class="brand"><i></i>DMARC Essentials<small>Partner launch tracker</small></div><div class="r">${syncPill()}<span>${esc(ME||'')}</span><button data-a="signout">Sign out</button></div></div></div>
-<main class="wrap">
-<div class="head"><div><h1>Partner launch status</h1></div><button class="btn p" data-a="copy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Report</button></div>
-${btabs()}${ggN?`<p class="ggnote">${ggN} GoGetSSL partner${ggN>1?'s':''} hidden. <button class="lnk" data-a="ggshow">View</button></p>`:''}
-<div class="kpis">${STAGES.map((st,i)=>{const n=ps.filter(p=>isDone(p,i)).length;return`<div class="kpi" data-k="k${i}"><span>${st.t}</span><b><span class="cnt" data-to="${n}">${n}</span><small>of ${ps.length} ${st.yes.toLowerCase()}</small></b><i class="kbar"><em data-w="${ps.length?n/ps.length*100:0}"></em></i></div>`}).join('')}
-<div class="kpi ${blk.length?'red alert':''}" data-k="kb"><span>Blocked</span><b><span class="cnt" data-to="${blk.length}">${blk.length}</span></b><em>${blk.length?esc(blk.map(p=>p.name).join(', ')):'None'}</em></div></div>
-<div class="tbox"><div class="tscroll"><table class="main"><thead><tr><th>Partner</th><th>Storefront</th>${STAGES.map((s,i)=>`<th><span class="n">${i+1}</span>${s.t}</th>`).join('')}<th>Next action</th><th>Due</th><th>Status</th><th><span class="sr" style="position:absolute;left:-9999px">Details</span></th></tr></thead><tbody>
-${ps.map((p,ix,ps)=>`${BV==='all'&&(ix===0||ps[ix-1].batch!==p.batch)?`<tr class="grp"><td colspan="11">${esc(BATCHES[p.batch||1].t)} <span>· ${esc(BATCHES[p.batch||1].d)} · ${ps.filter(q=>q.batch===p.batch).length}</span></td></tr>`:''}<tr class="prow ${OPEN===p.id?'open':''} ${isGG(p)?'na':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>${p.pid?'ID '+p.pid:esc(p.site)}</small></div></div></td><td class="sfc">${sfCell(p)}</td>
-${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:260px">${isGG(p)?'<span class="nat">Not available for GoGetSSL partners</span>':nextCell(p)}</td><td><span class="due ${late(p.due)?'late':''}" title="${esc(dueReason(p))}">${mon(p.due)} ${dom(p.due)}</span><small class="dr">${esc(dueReason(p).replace(/^Date of the next scheduled meeting$/,'Next meeting').replace(/^Set by hand.*/,'Set by hand'))}</small></td><td>${status(p)}</td>
-<td><button class="chev" data-row="${p.id}" aria-expanded="${OPEN===p.id}" aria-label="${OPEN===p.id?'Hide':'Show'} details for ${esc(p.name)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></td></tr>
-${OPEN===p.id?`<tr class="drow"><td colspan="11">${detail(p)}</td></tr>`:''}`).join('')}
-</tbody></table></div></div>
-${contentSection()}
-<section class="sec"><h2>Upcoming meetings</h2><div class="tbox"><div class="tscroll"><table class="log"><thead><tr><th>When</th><th>Partner</th><th>Meeting</th><th>Format</th><th>With</th><th></th></tr></thead><tbody>
-${(()=>{const u=upcomingAll().filter(x=>ps.includes(x.p));return u.length?u.map(({p,m})=>`<tr><td class="${late(m.d)?'lt':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td><td>${esc(m.who||'')}</td><td style="text-align:right"><button class="lnk" data-row="${p.id}" data-go="1">Open</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No meetings scheduled. Open a partner to schedule one.</td></tr>'})()}
-</tbody></table></div></div></section>
 
-${ggSection(gg)}
-</main>`;animKpis()}
 
 const MTYPES=[
  {t:'Intro meeting',st:0,tick:0,d:'Explain the DMARC Essentials program'},
@@ -596,7 +657,7 @@ const RPT_CSS=`
 `;
 const SCOL={d:'#0174C3',o:'#C8102E',n:'#D5DCE6',b:'#C8102E',ok:'#5FA8E0',done:'#0B7A4B'};
 function rdays(a,b){return Math.round((md(b)-md(a))/864e5)}
-function rmetrics(){const ps=xrows(),n=ps.length||1;const cells=ps.length*5;const done=ps.reduce((a,p)=>a+STAGES.filter((x,i)=>isDone(p,i)).length,0);
+function rmetrics(P0){const ps=P0||xrows(),n=ps.length||1;const cells=ps.length*5;const done=ps.reduce((a,p)=>a+STAGES.filter((x,i)=>isDone(p,i)).length,0);
  const od=ps.reduce((a,p)=>a+STAGES.filter((x,i)=>overdue(p,i)).length,0);const blk=ps.filter(p=>p.blocked).length;
  const soon=addTo(today(),14);const mt=ps.flatMap(p=>planned(p).map(m=>({p,m}))).sort((a,b)=>(a.m.d+(a.m.time||'')).localeCompare(b.m.d+(b.m.time||'')));
  const cDone=ps.reduce((a,p)=>a+CITEMS.filter(x=>cinit(p)[x.k].done).length,0);
@@ -634,7 +695,7 @@ function rmeet(M){return M.mt.length?`<table class="r-tb"><thead><tr><th>When</t
 const RC={blue:'#0174C3',deep:'#005A99',navy:'#0B2447',ink:'#14213D',mut:'#5B6B85',faint:'#8A97AD',line:'#E3E9F2',track:'#EDF1F6',red:'#C8102E',amber:'#D98E04',green:'#0B7A4B'};
 const BSEQ=['#EEF5FC','#CFE3F6','#9DC6EC','#5CA1DE','#1B82CD','#0167AE'];
 const bshade=p=>BSEQ[Math.min(5,Math.round(p/20))];
-function rx(){const M=rmetrics(),ps=M.ps,n=ps.length,T=today();
+function rx(P0){const M=rmetrics(P0),ps=M.ps,n=ps.length,T=today();
  M.reach=STAGES.map((st,i)=>ps.filter(p=>stageOf(p)>i).length);
  const dueN=ps.reduce((a,p)=>a+STAGES.filter((x,i)=>stageDue(p,i)).length,0);const onTime=dueN?1-M.od/dueN:1;
  M.health=n?Math.round(M.pct*.5+onTime*30+(1-M.blk/n)*20):0;
@@ -671,18 +732,18 @@ function rgauge(v){const cx=130,cy=118,R=92,sw=20;const ang=d=>Math.PI*(1-d/100)
  <text x="${cx}" y="${cy+28}" text-anchor="middle" font-size="30" font-weight="700" fill="${RC.navy}">${v}<tspan font-size="13" fill="${RC.mut}" font-weight="500"> /100</tspan></text>
  <text x="${pt(0,0)[0]-R-4}" y="${cy+16}" font-size="10" fill="${RC.faint}">0</text><text x="${cx+R-8}" y="${cy+16}" font-size="10" fill="${RC.faint}">100</text></svg>
  <div class="gz" style="--z:${zone[1]}"><i></i>${zone[0]}</div>`}
-function rfunnel(M){const n=M.ps.length||1,lv=[['Partners in scope',M.ps.length],...STAGES.map((s,i)=>[s.t+' '+s.yes.toLowerCase(),M.reach[i]])];
+function rfunnel(M,ia){const n=M.ps.length||1,lv=[['Partners in scope',M.ps.length],...STAGES.map((s,i)=>[s.t+' '+s.yes.toLowerCase(),M.reach[i]])];
  const W=470,rh=24,gap=7,L=150,maxW=W-L-58;let g='';
  lv.forEach(([t,v],i)=>{const y=i*(rh+gap),w=Math.max(6,v/n*maxW),x=L+(maxW-w)/2,c=BSEQ[Math.min(5,i)+0]||RC.blue;const fill=i===0?'#0B2447':['#0167AE','#1B82CD','#3F95D8','#6AADE2','#96C5EB'][i-1];
   if(i>0){const[pt,pv]=lv[i-1],pw=Math.max(6,pv/n*maxW),px=L+(maxW-pw)/2,py=y-gap;g+=`<path d="M${px} ${py} L${px+pw} ${py} L${x+w} ${y} L${x} ${y}Z" fill="#E6EEF7"/>`;
    const conv=pv?Math.round(v/pv*100):0;g+=`<text x="${L+maxW+10}" y="${y+rh/2+3}" font-size="10" fill="${pv&&conv<100?RC.deep:RC.faint}">${pv?conv+'%':'–'}</text>`}
-  g+=`<rect x="${x}" y="${y}" width="${w}" height="${rh}" rx="4" fill="${fill}"/><text x="${L-10}" y="${y+rh/2+4}" text-anchor="end" font-size="11" fill="${RC.ink}">${esc(t)}</text>
-  <text x="${L+maxW/2}" y="${y+rh/2+4.5}" text-anchor="middle" font-size="12.5" font-weight="700" fill="${w>40?'#fff':RC.navy}" ${w>40?'':`dx="${w/2+16}"`}>${v}</text>`});
+  g+=`${ia&&i>0?`<g data-a="ff" data-v="${i}" class="clk${FF===i?' on':''}"><title>Filter to partners who reached this</title>`:'<g>'}<rect x="${x}" y="${y}" width="${w}" height="${rh}" rx="4" fill="${fill}"/><text x="${L-10}" y="${y+rh/2+4}" text-anchor="end" font-size="11" fill="${RC.ink}">${esc(t)}</text>
+  <text x="${L+maxW/2}" y="${y+rh/2+4.5}" text-anchor="middle" font-size="12.5" font-weight="700" fill="${w>40?'#fff':RC.navy}" ${w>40?'':`dx="${w/2+16}"`}>${v}</text></g>`});
  const H=lv.length*(rh+gap);return`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Launch funnel">${g}<text x="${L+maxW+10}" y="-2" font-size="0"></text></svg><div class="leg"><span>Right-hand figures: share carried over from the stage above</span></div>`}
-function rdonut2(M){const segs=[['Complete',M.st.Complete||0,RC.green],['On track',M.st['On track']||0,RC.blue],['Overdue',M.st.Overdue||0,RC.red],['Blocked',M.st.Blocked||0,'#7A1020']];
- const tot=M.ps.length||1,R=52,C=2*Math.PI*R;let off=0;const arcs=segs.filter(s=>s[1]).map(([l,v,c])=>{const len=v/tot*C;const a=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${c}" stroke-width="20" stroke-dasharray="${Math.max(0,len-1.5)} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=len;return a}).join('');
+function rdonut2(M,ia){const segs=[['Complete',M.st.Complete||0,RC.green],['On track',M.st['On track']||0,RC.blue],['Overdue',M.st.Overdue||0,RC.red],['Blocked',M.st.Blocked||0,'#7A1020']];
+ const tot=M.ps.length||1,R=52,C=2*Math.PI*R;let off=0;const arcs=segs.filter(s=>s[1]).map(([l,v,c])=>{const len=v/tot*C;const a=`<circle ${ia?`data-a="fs" data-v="${l}" class="clk"`:''} r="${R}" cx="70" cy="70" fill="none" stroke="${c}" stroke-width="20" stroke-dasharray="${Math.max(0,len-1.5)} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=len;return a}).join('');
  return`<div class="dn"><svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Partner status"><circle r="${R}" cx="70" cy="70" fill="none" stroke="${RC.track}" stroke-width="20"/>${arcs}<text x="70" y="68" text-anchor="middle" font-size="28" font-weight="700" fill="${RC.navy}">${M.ps.length}</text><text x="70" y="86" text-anchor="middle" font-size="10.5" fill="${RC.mut}">partners</text></svg>
- <div class="dl">${segs.map(([l,v,c])=>`<div><i style="background:${c}"></i><span>${l}</span><b>${v}</b><em>${Math.round(v/tot*100)}%</em></div>`).join('')}</div></div>`}
+ <div class="dl">${segs.map(([l,v,c])=>`<div ${ia?`data-a="fs" data-v="${l}" class="clk${FS===l?' on':''}" role="button" tabindex="0"`:''}><i style="background:${c}"></i><span>${l}</span><b>${v}</b><em>${Math.round(v/tot*100)}%</em></div>`).join('')}</div></div>`}
 function rbatch(M){if(!M.batches.length)return'<p class="nd">No partners selected.</p>';const W=320,L=100,R=56,rh=19,rows=[['Average progress',M.batches.map(b=>b.avg)],...STAGES.map((s,i)=>[s.t,M.batches.map(b=>b.st[i])])];const x=v=>L+(W-L-R)*v/100;const cols=[RC.blue,'#8CC0EA'];
  let g='';[0,25,50,75,100].forEach(v=>{g+=`<line x1="${x(v)}" x2="${x(v)}" y1="4" y2="${rows.length*rh+4}" stroke="${RC.line}" ${v%50?'stroke-dasharray="2 3"':''}/><text x="${x(v)}" y="${rows.length*rh+16}" font-size="9" fill="${RC.faint}" text-anchor="middle">${v}%</text>`});
  rows.forEach(([t,vs],i)=>{const y=i*rh+rh/2+4;g+=`<text x="${L-8}" y="${y+3.5}" font-size="10.5" text-anchor="end" fill="${RC.ink}" ${i===0?'font-weight="700"':''}>${t}</text>`;if(vs.length===2)g+=`<line x1="${x(Math.min(...vs))}" x2="${x(Math.max(...vs))}" y1="${y}" y2="${y}" stroke="#B9D5EE" stroke-width="4" stroke-linecap="round"/>`;
@@ -690,8 +751,8 @@ function rbatch(M){if(!M.batches.length)return'<p class="nd">No partners selecte
  return`<svg viewBox="0 0 ${W} ${rows.length*rh+20}" width="100%" role="img" aria-label="Batch comparison">${g}</svg><div class="leg">${M.batches.map((b,k)=>`<span><i style="background:${cols[k]};border-radius:50%"></i>Batch ${b.b} (${b.n})</span>`).join('')}</div>`}
 function tmap(it,x,y,w,h,out){if(!it.length)return;if(it.length===1){out.push(Object.assign({},it[0],{x,y,w,h}));return}const tot=it.reduce((a,b)=>a+b.v,0);let acc=0,k=0;for(;k<it.length-1;k++){if(k>0&&acc+it[k].v/2>tot/2)break;acc+=it[k].v}
  const A=it.slice(0,k),B=it.slice(k),fa=A.reduce((a,b)=>a+b.v,0)/tot;if(w>=h){tmap(A,x,y,w*fa,h,out);tmap(B,x+w*fa,y,w*(1-fa),h,out)}else{tmap(A,x,y,w,h*fa,out);tmap(B,x,y+h*fa,w,h*(1-fa),out)}}
-function rtree(M){const W=320,H=150,out=[];tmap(M.mk,0,0,W,H,out);return`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Partners by market">${out.map(r=>{const a=Math.round(r.sum/r.v),f=bshade(a),dark=a>=50;return`<g><rect x="${r.x+1.5}" y="${r.y+1.5}" width="${Math.max(0,r.w-3)}" height="${Math.max(0,r.h-3)}" rx="5" fill="${f}" stroke="#C9DCEF"/>${(()=>{const fs=r.w>120?13:r.w>70?11:9.5,mx=Math.floor((r.w-12)/(fs*.56)),nm=r.c.length>mx?r.c.slice(0,Math.max(2,mx-1))+'…':r.c,big=r.w>100,sub=big?`${r.v} partner${r.v>1?'s':''}, ${a}%`:`${r.v} · ${a}%`;return r.h>26&&r.w>26?`<text x="${r.x+8}" y="${r.y+17}" font-size="${fs}" font-weight="700" fill="${dark?'#fff':RC.navy}">${esc(nm)}</text>${r.h>40?`<text x="${r.x+8}" y="${r.y+31}" font-size="9.5" fill="${dark?'#E6F1FB':RC.mut}">${sub}</text>`:''}`:''})()}</g>`}).join('')}</svg>
- <div class="leg"><span>Size is partner count. Shade is average progress:</span>${BSEQ.map(c=>`<i style="background:${c};margin:0;border-radius:0;width:14px"></i>`).join('')}</div>`}
+function rtree(M,ia){const W=320,H=150,out=[];tmap(M.mk,0,0,W,H,out);return`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Partners by market">${out.map(r=>{const a=Math.round(r.sum/r.v),f=bshade(a),dark=a>=50;return`<g ${ia?`data-a="fm" data-v="${esc(r.c)}" class="clk${FM===r.c?' on':''}"`:''}><title>${esc(r.c)}: ${r.v} partner${r.v>1?'s':''}, ${a}% average progress</title><rect x="${r.x+1.5}" y="${r.y+1.5}" width="${Math.max(0,r.w-3)}" height="${Math.max(0,r.h-3)}" rx="5" fill="${f}" stroke="#C9DCEF"/>${(()=>{const fs=r.w>120?13:r.w>70?11:9.5,mx=Math.floor((r.w-12)/(fs*.56)),nm=r.c.length>mx?r.c.slice(0,Math.max(2,mx-1))+'…':r.c,big=r.w>100,sub=big?`${r.v} partner${r.v>1?'s':''}, ${a}%`:`${r.v} · ${a}%`;return r.h>26&&r.w>26?`<text x="${r.x+8}" y="${r.y+17}" font-size="${fs}" font-weight="700" fill="${dark?'#fff':RC.navy}">${esc(nm)}</text>${r.h>40?`<text x="${r.x+8}" y="${r.y+31}" font-size="9.5" fill="${dark?'#E6F1FB':RC.mut}">${sub}</text>`:''}`:''})()}</g>`}).join('')}</svg>
+ <div class="leg"><span>Size: partners. Shade: average progress</span>${BSEQ.map(c=>`<i style="background:${c};margin:0;border-radius:0;width:14px"></i>`).join('')}</div>`}
 function rvel(M){const W=320,L=112,R=30,rh=30;const mx=Math.max(...M.vel.map(v=>Math.max(v.target*1.8,v.avg||0)),4);const x=d=>L+(W-L-R)*d/mx;let g='';
  M.vel.forEach((v,i)=>{const y=i*rh+6;g+=`<text x="${L-8}" y="${y+9}" font-size="10.5" text-anchor="end" fill="${RC.ink}">${esc(v.t)}</text><text x="${L-8}" y="${y+20}" font-size="9" text-anchor="end" fill="${RC.faint}">from ${esc(v.from.toLowerCase())}</text>
   <rect x="${L}" y="${y+2}" width="${W-L-R}" height="16" rx="3" fill="${RC.track}"/><rect x="${L}" y="${y+2}" width="${x(v.target)-L}" height="16" rx="3" fill="#DDE8F4"/>
@@ -713,8 +774,8 @@ function rheat(M){const T=today();const ps=M.ps.slice().sort((a,b)=>pct(b)-pct(a
  ${ps.map((p,r)=>{const pc=pct(p),v=xstatus(p);return`<tr><td class="rk">${r+1}</td><td class="pn2"><b>${esc(p.name)}</b><small>Batch ${p.batch||1}${p.market?' · '+esc(p.market.split('·')[0].trim()):''}</small></td>${STAGES.map((s,i)=>cell(p,i)).join('')}${XO.sec.content?CITEMS.map(x=>cc(p,x)).join(''):''}
  <td class="pg2"><div class="pb2"><i style="width:${pc}%"></i></div><b>${pc}%</b></td><td><span class="stc ${v==='Complete'?'sg':v==='On track'?'sb':'sr'}">${v}</span></td></tr>`}).join('')}</tbody></table>
  <div class="leg"><span><i style="background:${RC.blue}"></i>Done</span><span><i style="background:#fff;box-shadow:inset 0 0 0 2px ${RC.blue}"></i>Current stage</span><span><i style="background:#FFF4DC;box-shadow:inset 0 0 0 2px ${RC.amber}"></i>Due within 7 days</span><span><i style="background:#FDECEF;box-shadow:inset 0 0 0 2px ${RC.red}"></i>Overdue</span><span><i style="background:${RC.track}"></i>Not started</span><span style="margin-left:auto">Ranked by progress</span></div>`}
-function rrisk(M){if(!M.risk.length)return`<div class="ok0"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="${RC.green}" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg><p><b>Nothing needs attention.</b><br>No blocked, overdue or due-soon stages.</p></div>`;
- return`<div class="rl">${M.risk.slice(0,M.risk.length>5?4:5).map(r=>`<div class="ri s${r.sev}"><span>${r.t}</span><b>${esc(r.p.name)}</b><em>${esc(r.d)}</em></div>`).join('')}${M.risk.length>5?`<p class="nd">and ${M.risk.length-4} more in the partner launch matrix</p>`:''}</div>`}
+function rrisk(M,ia){if(!M.risk.length)return`<div class="ok0"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="${RC.green}" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg><p><b>Nothing needs attention.</b><br>No blocked, overdue or due-soon stages.</p></div>`;
+ return`<div class="rl">${M.risk.slice(0,M.risk.length>5?4:5).map(r=>`<div class="ri s${r.sev}" ${ia?`data-row="${r.p.id}" data-go="1" title="Open ${esc(r.p.name)}"`:''}><span>${r.t}</span><b>${esc(r.p.name)}</b><em>${esc(r.d)}</em></div>`).join('')}${M.risk.length>5?`<p class="nd">and ${M.risk.length-4} more in the partner launch matrix</p>`:''}</div>`}
 function rcal(M){const T=today(),t0=md(T),dow=(t0.getDay()+6)%7,start=addTo(T,-dow);const days=[...Array(21)].map((_,i)=>addTo(start,i));
  return`<div class="cal">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<span class="cw">${d}</span>`).join('')}${days.map(d=>{const ms=M.mt.filter(x=>x.m.d===d);return`<div class="cd2 ${d===T?'today':''} ${d<T?'past':''} ${ms.length?'has':''}" style="${ms.length?`background:${BSEQ[Math.min(3,ms.length+1)]}`:''}"><span>${dom(d)}${dom(d)===1?' '+mon(d):''}</span>${ms.slice(0,2).map(x=>`<em>${esc(x.p.name)}</em>`).join('')}${ms.length>2?`<em>+${ms.length-2} more</em>`:''}</div>`}).join('')}</div>`}
 function rcontent2(M){const n=M.ps.length||1;return`<div class="cr">${CITEMS.map(x=>{const v=M.ps.filter(p=>cinit(p)[x.k].done).length,pp=Math.round(v/n*100);return`<div><div class="rw">${rring(pp,78,RC.blue,9)}<b>${pp}%</b></div><span>${x.t}</span><small>${v} of ${M.ps.length} partners</small></div>`}).join('')}</div>`}
@@ -745,6 +806,51 @@ function xreport(){const M=rx(),S2=XO.sec,dt=new Date(),n=M.ps.length;const gen=
  const N=pages.length;
  return`<div class="rp">${pages.map((pg,i)=>`<section class="pg">${pg.h?`<header class="ph big"><div><div class="brandrow"><i></i>DigiCert Valimail DMARC Essentials</div><h1>${esc(XO.title)}</h1><p>${dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}${ME?', prepared by '+esc(ME):''}</p></div><div class="flt"><span><em>Scope</em>${scope}</span><span><em>Storefront</em>TSS</span><span><em>Partners</em>${n}</span></div></header>${XO.note?`<p class="note">${esc(XO.note).replace(/\n/g,'<br>')}</p>`:''}`:`<header class="ph"><div class="brandrow"><i></i>${esc(XO.title)}</div><h2>${pg.t}</h2></header>`}
  <div class="pbd">${pg.b}</div><footer class="pf"><span>DigiCert Valimail DMARC Essentials partner launch report. Stages: 1 Intro meeting, 2 Onboard form, 3 Onboarding, 4 Kit creation, 5 Kit shared.</span><span>Generated ${gen} &nbsp; Page ${i+1} of ${N}</span></footer></section>`).join('')}</div>`}
+let FM='',FS='',FF=0,FQ='',DSCROLL=0;
+function dps(skip){let ps=vis().filter(avail);if(FM&&skip!=='m')ps=ps.filter(p=>mkOf(p)===FM);if(FS&&skip!=='s')ps=ps.filter(p=>xstatus(p)===FS);if(FF&&skip!=='f')ps=ps.filter(p=>stageOf(p)>=FF);
+ if(FQ){const q=FQ.toLowerCase();ps=ps.filter(p=>[p.name,p.site,p.legal,p.market].some(x=>(x||'').toLowerCase().includes(q)))}return ps}
+const mkOf=p=>(p.market||'').includes('·')?p.market.split('·')[0].trim():'Unspecified';
+function dfilters(){const c=[];if(FM)c.push(['fm','Market: '+FM]);if(FS)c.push(['fs','Status: '+FS]);if(FF)c.push(['ff','Reached: '+STAGES[FF-1].t.toLowerCase()+' '+STAGES[FF-1].yes.toLowerCase()]);if(FQ)c.push(['fq','Search: “'+FQ+'”']);return c}
+function dheat(M){const T=today();const ps=M.ps.slice().sort((a,b)=>pct(b)-pct(a)||a.name.localeCompare(b.name));
+ if(!ps.length)return`<div class="dempty"><b>No partners match these filters.</b><button class="lnk" data-a="fclear">Clear filters</button></div>`;
+ const cell=(p,i)=>{const st=STAGES[i],d=p.s[st.k],tip=`${st.t}: click to mark ${(d.done?st.no:st.yes).toLowerCase()}`;let cls='n',tx='';
+  if(d.done){cls='d';tx=`✓ ${d.date?mon(d.date)+' '+dom(d.date):st.yes}`}else{const od=overdue(p,i),dd=stageDue(p,i);if(od){cls='o';tx=`${od}d late`}else if(dd&&rdays(T,dd)<=7){cls='s';tx=`Due ${mon(dd)} ${dom(dd)}`}else if(stageOf(p)===i){cls='c';tx=dd?`Due ${mon(dd)} ${dom(dd)}`:'Next'}}
+  return`<td><button class="hc ${cls}" data-a="tog" data-p="${p.id}" data-i="${i}" title="${esc(tip)}" aria-label="${esc(p.name+', '+tip)}">${tx}</button></td>`};
+ const cc=(p,x)=>{const v=cinit(p)[x.k];return`<td><button class="hc ${v.done?'d':'n'} sm" data-a="ctog" data-p="${p.id}" data-k="${x.k}" title="${esc(x.t)}: click to switch" aria-label="${esc(p.name+', '+x.t+': '+(v.done?x.yes:x.no))}">${v.done?'✓':''}</button></td>`};
+ return`<div class="tscroll"><table class="hm dhm"><thead><tr><th class="rk">#</th><th style="text-align:left">Partner</th>${STAGES.map((s,i)=>`<th>${i+1}. ${s.t}</th>`).join('')}${CITEMS.map(x=>`<th class="ct">${x.k==='web'?'Web page':x.k==='sheet'?'Sales sheet':'Emails'}</th>`).join('')}<th style="text-align:left">Progress</th><th>Status</th><th>Next action</th></tr></thead><tbody>
+ ${ps.map((p,r)=>{const pc=pct(p),v=xstatus(p),up=planned(p)[0];return`<tr class="mrow ${OPEN===p.id?'sel':''}" data-row="${p.id}" tabindex="0"><td class="rk">${r+1}</td><td class="pn2"><div class="pnx">${logo(p)}<div><b>${esc(p.name)}</b><small>Batch ${p.batch||1}${p.market?' · '+esc(mkOf(p)):''}</small></div></div></td>${STAGES.map((s,i)=>cell(p,i)).join('')}${CITEMS.map(x=>cc(p,x)).join('')}
+ <td class="pg2c"><div class="pg2"><div class="pb2"><i style="width:${pc}%"></i></div><b>${pc}%</b></div></td><td><span class="stc ${v==='Complete'?'sg':v==='On track'?'sb':'sr'}">${v}</span></td><td class="nxc">${up?`<span class="mtag">Meeting</span> `:''}${esc(up?up.t:p.next)}<small>${up?dlong(up.d)+(up.time?', '+t12(up.time):''):'Due '+dlong(p.due)}</small></td></tr>`}).join('')}</tbody></table></div>
+ <div class="leg"><span><i style="background:${RC.blue}"></i>Done</span><span><i style="background:#fff;box-shadow:inset 0 0 0 2px ${RC.blue}"></i>Current stage</span><span><i style="background:#FFF4DC;box-shadow:inset 0 0 0 2px ${RC.amber}"></i>Due within 7 days</span><span><i style="background:#FDECEF;box-shadow:inset 0 0 0 2px ${RC.red}"></i>Overdue</span><span><i style="background:${RC.track}"></i>Not started</span><span style="margin-left:auto">Ranked by progress</span></div>`}
+function dcontent(M){const n=M.ps.length;return`<div class="g5"><div class="rings">${rcontent2(M)}</div><div class="tscroll"><table class="log ctab2"><thead><tr><th>Partner</th>${CITEMS.map(x=>`<th>${x.t}</th>`).join('')}<th>Done</th></tr></thead><tbody>${n?M.ps.map(p=>{const c=cinit(p);const k=CITEMS.filter(x=>c[x.k].done).length;return`<tr><td><b>${esc(p.name)}</b></td>${CITEMS.map(x=>`<td>${ccell(p,x)}</td>`).join('')}<td><b>${k}</b>/${CITEMS.length}</td></tr>`}).join(''):'<tr><td colspan="5" class="empty">No partners match these filters.</td></tr>'}</tbody></table></div></div>`}
+function dupcoming(M){return M.mt.length?`<div class="upl">${M.mt.slice(0,4).map(({p,m})=>`<button class="mtg" data-row="${p.id}" data-go="1"><span class="dt ${late(m.d)?'lt':''}"><small>${mon(m.d).toUpperCase()}</small>${dom(m.d)}</span><span class="mi"><b>${esc(p.name)}</b><span>${esc(m.t)}${m.time?' · '+t12(m.time):''}${m.fmt?' · '+esc(m.fmt):''}</span></span><em>Open</em></button>`).join('')}${M.mt.length>4?`<p class="nd">and ${M.mt.length-4} more</p>`:''}</div>`:'<p class="nd">No meetings booked. Open a partner to schedule one.</p>'}
+function ddrawer(p){if(!p)return'';return`<div class="scrim" data-a="dclose"></div><aside class="drw" role="dialog" aria-modal="true" aria-labelledby="drw-t"><div class="dhd"><div class="brandrow"><i></i>Batch ${p.batch||1} · ${SF[p.sf||'tss']}${p.market?' · '+esc(p.market):''}</div><h2 id="drw-t">${esc(p.name)}</h2><p>${[p.legal,p.pid&&'Partner ID '+p.pid,p.site].filter(Boolean).map(esc).join(' · ')}</p><div class="dst">${status(p)}<span>${pct(p)}% complete</span>${sfCell(p)}</div><button class="dx" data-a="dclose" aria-label="Close">✕</button></div><div class="dbd">${detail(p)}</div></aside>`}
+function render(){normalize();const T0=document.querySelector('.dbd');if(T0)DSCROLL=T0.scrollTop;
+ const ps=dps(),M=rx(ps),all=vis(),gg=all.filter(isGG),ggN=gg.length,chips=dfilters();
+ const Mf=rx(dps('f')),Ms=rx(dps('s')),Mm=rx(dps('m'));
+ const markets=[...new Set(vis().filter(avail).map(mkOf))].sort();
+ const nb=b=>S.partners.filter(p=>avail(p)&&(b==='all'||inB(p,b))).length;
+ document.getElementById('app').innerHTML=`<div class="dash">
+<div class="tb"><div class="bn"><i></i>DMARC Essentials<small>Partner launch tracker</small></div><div class="sp"></div>${syncPill()}<span class="us">${esc(ME||'')}</span><button class="rb" data-a="copy"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Report</button><button class="so" data-a="signout">Sign out</button></div>
+<div class="sl"><div class="slr"><span class="sgp"><span class="lb">Batch</span><span class="seg" role="tablist" aria-label="Batch">${[['all','All'],['1','Batch 1'],['2','Batch 2']].map(([k,t])=>`<button role="tab" aria-selected="${BV===k}" data-a="bview" data-b="${k}">${t}<em>${nb(k)}</em></button>`).join('')}</span></span>
+<span class="sgp"><label class="lb" for="f-m">Market</label><span class="dd"><select id="f-m" data-f="m"><option value="">All markets</option>${markets.map(m=>`<option ${FM===m?'selected':''}>${esc(m)}</option>`).join('')}</select></span></span>
+<span class="sgp"><span class="lb">Status</span><span class="seg" role="group" aria-label="Status">${['','On track','Overdue','Blocked','Complete'].map(s=>`<button data-a="fs" data-v="${s}" aria-pressed="${FS===s}">${s||'All'}</button>`).join('')}</span></span>
+<span class="sch"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="f-q" type="search" placeholder="Search partners" value="${esc(FQ)}" aria-label="Search partners" autocomplete="off"></span>
+${ggN?`<span class="gh">${ggN} GoGetSSL partner${ggN>1?'s':''} hidden · <button class="lnk" data-a="ggshow">View</button></span>`:''}</div>
+${chips.length?`<div class="fchips"><span>Filtered to ${ps.length} of ${vis().filter(avail).length} partners:</span>${chips.map(([k,t])=>`<button class="chipf" data-a="funset" data-k="${k}">${esc(t)} <b aria-hidden="true">✕</b><span class="sr" style="position:absolute;left:-9999px">Remove filter</span></button>`).join('')}<button class="lnk" data-a="fclear">Clear all</button></div>`:''}</div>
+<main class="wrapd rp">
+<div class="g1"><div class="cd gcard"><h3>Launch health <small>index out of 100</small></h3><div class="gw">${rgauge(M.health)}</div><p class="gx">50% progress, 30% on time, 20% unblocked</p></div>${rkpis(M)}</div>
+<div class="g2"><div class="cd"><h3>Launch funnel <span class="hint">Click a stage to filter</span></h3>${rfunnel(Mf,1)}</div><div class="cd"><h3>Partner status <span class="hint">Click to filter</span></h3>${rdonut2(Ms,1)}</div><div class="cd ins"><h3>Key findings <small>updates live</small></h3><ol>${rinsights(M).map(t=>`<li>${t}</li>`).join('')}</ol></div><div class="cd"><h3>Needs attention <small>${M.risk.length} item${M.risk.length===1?'':'s'}</small></h3>${rrisk(M,1)}</div></div>
+<div class="cd mx"><h3>Partner launch matrix <span class="mxh"><span class="hint">Click a cell to switch it. Click a partner to open details.</span><small>${ps.length} partner${ps.length===1?'':'s'}</small></span></h3>${dheat(M)}</div>
+<div class="g3"><div class="cd"><h3>Launch timeline <small>completed, due and scheduled</small></h3>${ps.length?rtimeline(M):'<p class="nd">No partners match these filters.</p>'}</div><div class="cd"><h3>Meeting calendar <small>this week and the next two</small></h3>${rcal(M)}<h3 style="margin-top:14px">Upcoming meetings <small>${M.mt.length} booked</small></h3>${dupcoming(M)}</div></div>
+<div class="g4"><div class="cd"><h3>Batch comparison <small>% per stage</small></h3>${rbatch(M)}</div><div class="cd"><h3>Partners by market <span class="hint">Click to filter</span></h3>${Mm.ps.length?rtree(Mm,1):'<p class="nd">No partners.</p>'}</div><div class="cd"><h3>Stage hand-off speed <small>days</small></h3>${rvel(M)}</div><div class="cd"><h3>Tracker activity <small>30 days</small></h3>${ractivity(M)}</div></div>
+<div class="cd"><h3>Partner content launch <small>click a status to switch it between yes and no</small></h3>${dcontent(M)}</div>
+${ggSection(gg)}
+</main>${OPEN&&P(OPEN)&&avail(P(OPEN))?ddrawer(P(OPEN)):''}</div>`;
+ document.body.style.overflow=OPEN?'hidden':'';const d=document.querySelector('.dbd');if(d)d.scrollTop=DSCROLL}
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.f==='m'){FM=t.value;render()}});
+let FQT=null;document.addEventListener('input',e=>{const t=e.target;if(t.id!=='f-q')return;clearTimeout(FQT);FQT=setTimeout(()=>{FQ=t.value.trim();const pos=t.selectionStart;render();const n=document.getElementById('f-q');if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(x){}}},180)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&OPEN&&document.querySelector('.drw')&&!document.getElementById('xdlg')?.classList.contains('open')){OPEN=null;DRAFT=null;render()}});
+
 function xemail(){const M=rmetrics();const td='style="padding:10px 12px;border:1px solid #DDE3EC;font:12px Arial,sans-serif;vertical-align:top"';
  const kpis=[['Overall progress',M.pct+'%'],['Fully launched',M.full+' / '+M.ps.length],['Overdue stages',M.od],['Blocked',M.blk],['Meetings (14 days)',M.mt14],['Content launched',M.cPct+'%']];
  const bars=STAGES.map((st,i)=>{const d=M.ps.filter(p=>isDone(p,i)).length,n=M.ps.length||1;return`<tr><td style="font:12px Arial,sans-serif;padding:4px 10px 4px 0;white-space:nowrap">${st.t}</td><td style="width:100%;padding:4px 0"><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse"><tr><td style="height:12px;background:#0174C3;width:${Math.max(1,d/n*100)}%"></td><td style="height:12px;background:#E3E9F2"></td></tr></table></td><td style="font:600 12px Arial,sans-serif;padding:4px 0 4px 10px;white-space:nowrap">${d}/${M.ps.length}</td></tr>`}).join('');
@@ -756,6 +862,12 @@ function xemail(){const M=rmetrics();const td='style="padding:10px 12px;border:1
  ${XO.sec.meetings&&M.mt.length?`<div style="font:700 13px Arial,sans-serif;color:#0B2447;margin:14px 0 6px">Upcoming meetings</div><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse">${M.mt.slice(0,8).map(({p,m})=>`<tr><td ${td}>${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td ${td}><b>${esc(p.name)}</b></td><td ${td}>${esc(m.t)}</td><td ${td}>${esc(m.fmt||'')}</td></tr>`).join('')}</table>`:''}</div>`}
 function upcomingAll(){return S.partners.flatMap(p=>planned(p).map(m=>({p,m}))).sort((a,b)=>(a.m.d+(a.m.time||'')).localeCompare(b.m.d+(b.m.time||'')))}
 document.addEventListener('click',e=>{if(e.target.closest('.sfsel'))return;const t=e.target.closest('[data-row],[data-a]');if(!t)return;
+ {const a=t.dataset.a;if(a==='dclose'){OPEN=null;DRAFT=null;EXP=null;render();return}
+  if(a==='fs'){FS=t.closest('.wrapd')&&FS===t.dataset.v?'':t.dataset.v;render();return}
+  if(a==='ff'){const v=+t.dataset.v;FF=FF===v?0:v;render();return}
+  if(a==='fm'){FM=FM===t.dataset.v?'':t.dataset.v;render();return}
+  if(a==='funset'){const k=t.dataset.k;if(k==='fm')FM='';if(k==='fs')FS='';if(k==='ff')FF=0;if(k==='fq')FQ='';render();return}
+  if(a==='fclear'){FM='';FS='';FF=0;FQ='';render();return}}
  if(t.dataset.a==='ggtoggle'){GGOPEN=!GGOPEN;const y=window.scrollY;render();window.scrollTo(0,y);return}
  if(t.dataset.a==='ggshow'){GGOPEN=true;render();document.getElementById('ggsec')?.scrollIntoView({behavior:'smooth',block:'start'});return}
  if(t.dataset.a==='sftss'){setSF(t.dataset.p,'tss');return}
@@ -798,7 +910,7 @@ document.addEventListener('click',e=>{if(e.target.closest('.sfsel'))return;const
  else if(a==='undo'&&UNDO){S.partners.splice(Math.min(UNDO.i,S.partners.length),0,UNDO.p);log(UNDO.p,'partner restored');const n=UNDO.p.name;UNDO=null;document.getElementById('undo')?.remove();render();toast(n+' restored')}
  else if(a==='bview'){BV=t.dataset.b;try{localStorage.setItem('valimail-batch',BV)}catch(x){}OPEN=null;render()}
  else if(a==='signout'){localStorage.removeItem('valimail-auth');location.reload()}});
-document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='ced-in'){if(e.key==='Enter'){e.preventDefault();document.querySelector('[data-a="csave"]')?.click()}if(e.key==='Escape'){CED=null;render()}return}if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('tr.prow')){e.preventDefault();OPEN=OPEN===e.target.dataset.row?null:e.target.dataset.row;render()}});
+document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='ced-in'){if(e.key==='Enter'){e.preventDefault();document.querySelector('[data-a="csave"]')?.click()}if(e.key==='Escape'){CED=null;render()}return}if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('tr.prow,tr.mrow')){e.preventDefault();OPEN=OPEN===e.target.dataset.row?null:e.target.dataset.row;render()}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.dr&&DRAFT){DRAFT[t.dataset.dr]=t.value}});
 document.addEventListener('change',e=>{const t=e.target,p=P(OPEN);if(!p)return;
  if(t.dataset.sd!==undefined){const st=STAGES[+t.dataset.sd];p.s[st.k].date=t.value;refreshDue(p);log(p,`${st.t} date set to ${t.value?dlong(t.value):'none'}`);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved');return}
