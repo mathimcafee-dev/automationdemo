@@ -223,9 +223,7 @@ ${OPEN===p.id?`<tr class="drow"><td colspan="10">${detail(p)}</td></tr>`:''}`).j
 <section class="sec"><h2>Upcoming meetings</h2><div class="tbox"><div class="tscroll"><table class="log"><thead><tr><th>When</th><th>Partner</th><th>Meeting</th><th>Format</th><th>With</th><th></th></tr></thead><tbody>
 ${(()=>{const u=upcomingAll();return u.length?u.map(({p,m})=>`<tr><td class="${late(m.d)?'lt':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td><td>${esc(m.who||'')}</td><td style="text-align:right"><button class="lnk" data-row="${p.id}" data-go="1">Open</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No meetings scheduled. Open a partner to schedule one.</td></tr>'})()}
 </tbody></table></div></div></section>
-<section class="sec"><h2>Activity</h2><div class="tbox"><div class="tscroll"><table class="log"><thead><tr><th>When</th><th>Partner</th><th>Update</th><th>By</th></tr></thead><tbody>
-${S.log.length?S.log.slice(0,15).map(l=>`<tr><td>${fmt(l.t)}</td><td><b>${esc(P(l.p).name)}</b></td><td>${esc(l.x.charAt(0).toUpperCase()+l.x.slice(1))}</td><td>${esc(l.by||'')}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">No updates yet. Open a partner row and tick a step to get started.</td></tr>'}
-</tbody></table></div></div></section>
+
 </main>`}
 
 const MTYPES=[
