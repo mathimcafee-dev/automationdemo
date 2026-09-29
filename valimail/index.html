@@ -496,8 +496,8 @@ async function xxlsx(){try{await loadXLSX()}catch(e){toast('Could not load the E
  XLSX.utils.book_append_sheet(wb,sm,'Summary');XLSX.utils.book_append_sheet(wb,ws,'Partners');
  const mt=XLSX.utils.aoa_to_sheet([['Date','Time','Partner','Meeting','Format','With','Agenda'],...M.mt.map(({p,m})=>[m.d,m.time?t12(m.time):'',p.name,m.t,m.fmt||'',m.who||'',m.agenda||''])]);mt['!cols']=[{wch:12},{wch:10},{wch:16},{wch:28},{wch:14},{wch:20},{wch:40}];XLSX.utils.book_append_sheet(wb,mt,'Meetings');XLSX.writeFile(wb,xfile()+'.xlsx');toast('Excel file downloaded')}
 function xpdf(){const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);
- const d=f.contentDocument;d.open();d.write(`<!doctype html><html><head><title>${esc(xfile())}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><style>@page{size:A4 landscape;margin:8mm}body{margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}.r{zoom:.98}${RPT_CSS}</style></head><body>${xreport()}</body></html>`);d.close();
- setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),2000)},700);toast('Choose “Save as PDF” in the print window')}
+ const d=f.contentDocument;d.open();d.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(xfile())}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><style>@page{size:A4 landscape;margin:0}html,body{margin:0;background:#F2F5F9;-webkit-print-color-adjust:exact;print-color-adjust:exact}${RPT_CSS}</style></head><body>${xreport()}</body></html>`);d.close();
+ setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),2000)},1100);toast('Choose “Save as PDF” in the print window')}
 
 const RPT_CSS=`
 .r{font-family:'IBM Plex Sans',Arial,sans-serif;color:#14213D;width:1080px;background:#fff}
@@ -532,6 +532,67 @@ const RPT_CSS=`
 .r-yes{color:#fff;background:#0174C3;border-radius:3px;padding:1px 6px;font-weight:600;font-size:11px;white-space:nowrap}.r-no{color:#7A879C;font-size:11px}
 .r-ft{display:flex;justify-content:space-between;font-size:10.5px;color:#7A879C;border-top:1px solid #EEF2F7;padding-top:8px}
 .r a{color:inherit}
+.rp{font-family:'IBM Plex Sans',Arial,sans-serif;color:#14213D;font-variant-numeric:tabular-nums;line-height:1.35}
+.rp *{box-sizing:border-box}
+.rp .pg{width:1122px;height:792px;background:#F2F5F9;padding:16px 20px 10px;display:flex;flex-direction:column;gap:10px;overflow:hidden;break-after:page;page-break-after:always}
+.rp .pg:last-child{break-after:auto;page-break-after:auto}
+.rp .ph{background:#0B2447;color:#fff;border-radius:10px;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden}
+.rp .ph::after{content:"";position:absolute;right:-60px;top:-80px;width:320px;height:220px;border-radius:50%;background:radial-gradient(closest-side,rgba(1,116,195,.55),rgba(1,116,195,0));pointer-events:none}
+.rp .ph.big{padding:16px 20px}
+.rp .ph h1{margin:4px 0 2px;font-size:24px;font-weight:700;letter-spacing:-.015em}.rp .ph h2{margin:0;font-size:17px;font-weight:600;position:relative;z-index:1}
+.rp .ph p{margin:0;font-size:12px;color:#AFC0DA}
+.rp .brandrow{display:flex;align-items:center;gap:8px;font-size:11.5px;color:#AFC0DA;font-weight:500}.rp .brandrow i{width:4px;height:14px;background:#0174C3;border-radius:1px}
+.rp .flt{display:flex;gap:8px;position:relative;z-index:1}.rp .flt span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;display:flex;flex-direction:column;min-width:86px}.rp .flt em{font-style:normal;font-size:10.5px;font-weight:500;color:#AFC0DA}
+.rp .note{margin:0;font-size:12.5px;background:#fff;border-left:4px solid #0174C3;border-radius:0 8px 8px 0;padding:8px 12px}
+.rp .pbd{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
+.rp .cd{background:#fff;border:1px solid #E1E7EF;border-radius:10px;padding:11px 14px 10px;display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden}
+.rp .cd.grow{flex:1}
+.rp .cd h3{margin:0 0 8px;font-size:13px;font-weight:700;color:#0B2447;display:flex;justify-content:space-between;align-items:baseline;gap:8px}.rp .cd h3 small{font-size:11px;font-weight:500;color:#5B6B85}
+.rp .r1{display:grid;grid-template-columns:282px 1fr;gap:10px;height:206px;flex:none}
+.rp .cd>svg{flex:0 0 auto;display:block}
+.rp .gcard{align-items:stretch}.rp .gw{display:flex;flex-direction:column;align-items:center;margin-top:-4px}
+.rp .gz{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--z);margin-top:-2px}.rp .gz i{width:8px;height:8px;border-radius:50%;background:var(--z)}
+.rp .gx{margin:auto 0 0;font-size:10px;color:#8A97AD;text-align:center}
+.rp .kp{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:10px}
+.rp .kt{background:#fff;border:1px solid #E1E7EF;border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.rp .kt::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 2px 2px 0;background:#0174C3}.rp .kt.neg::before{background:#C8102E}
+.rp .kt>span{font-size:11.5px;font-weight:600;color:#5B6B85}
+.rp .kv{display:flex;align-items:center;gap:10px;margin:2px 0}.rp .kv b{font-size:30px;font-weight:700;line-height:1;color:#0B2447;letter-spacing:-.02em}.rp .kv b em{font-style:normal;font-size:15px;color:#8A97AD;font-weight:500;margin-left:2px}.rp .kt.neg .kv b{color:#C8102E}
+.rp .kt small{font-size:11px;color:#5B6B85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp .mini{display:flex;align-items:flex-end;gap:4px;height:28px;margin-left:auto}.rp .mini i{width:9px;border-radius:2px 2px 0 0}.rp .mini.wide{gap:2px}.rp .mini.wide i{width:7px}
+.rp .pict{display:flex;flex-wrap:wrap;gap:4px}.rp .pict i{width:11px;height:11px;border-radius:50%;background:#E4EAF2}.rp .pict i.on{background:#0B7A4B}
+.rp .r2{display:grid;grid-template-columns:1.25fr .9fr 1.05fr;gap:10px;height:212px;flex:none}
+.rp .r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;flex:1;min-height:0}
+.rp .leg{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:10px;color:#5B6B85;margin-top:auto;padding-top:6px}.rp .leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.rp .dn{display:flex;align-items:center;gap:14px;flex:1}.rp .dl{display:flex;flex-direction:column;gap:7px;flex:1}.rp .dl div{white-space:nowrap;display:grid;grid-template-columns:12px 1fr auto 36px;align-items:center;gap:6px;font-size:12px}.rp .dl i{width:10px;height:10px;border-radius:2px}.rp .dl b{font-size:13px}.rp .dl em{font-style:normal;color:#8A97AD;font-size:11px;text-align:right}
+.rp .ins ol{margin:0;padding:0;list-style:none;counter-reset:k;display:flex;flex-direction:column;gap:7px}
+.rp .ins li{counter-increment:k;font-size:11.8px;line-height:1.4;padding-left:24px;position:relative}.rp .ins li::before{content:counter(k);position:absolute;left:0;top:0;width:17px;height:17px;border-radius:50%;background:#EEF5FC;color:#0167AE;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.rp .neg{color:#C8102E}
+.rp .nd{font-size:11.5px;color:#8A97AD;margin:4px 0}
+.rp table.hm{width:100%!important;min-width:0!important;border-collapse:separate;border-spacing:3px 3px;font-size:11px;table-layout:fixed}
+.rp .hm th{font-size:10px;font-weight:600;color:#5B6B85;padding:0 4px 3px;text-align:center}.rp .hm th.ct{color:#8A97AD}
+.rp .hm .rk{width:22px;color:#8A97AD;text-align:center;font-weight:600}.rp .hm th:nth-child(2){width:160px}
+.rp .hm td{padding:0;vertical-align:middle}.rp .pn2{line-height:1.15}.rp .pn2 b{display:block;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rp .pn2 small{font-size:9.5px;color:#8A97AD;white-space:nowrap}
+.rp .hc{height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:10px;font-weight:600;white-space:nowrap}
+.rp .hc.d{background:#0174C3;color:#fff}.rp .hc.d small{font-weight:500;opacity:.85;font-size:9.5px}.rp .hc.o{background:#FDECEF;color:#C8102E;box-shadow:inset 0 0 0 1.5px #C8102E}.rp .hc.s{background:#FFF4DC;color:#8A5A00;box-shadow:inset 0 0 0 1.5px #D98E04}.rp .hc.c{background:#fff;color:#0167AE;box-shadow:inset 0 0 0 1.5px #0174C3}.rp .hc.n{background:#EDF1F6}
+.rp .hc.sm{width:60%;margin:0 auto}
+.rp .pg2{display:flex;align-items:center;gap:6px;height:22px}.rp .pb2{flex:1;height:7px;border-radius:4px;background:#EDF1F6;overflow:hidden}.rp .pb2 i{display:block;height:100%;background:linear-gradient(90deg,#5CA1DE,#0167AE)}.rp .pg2 b{font-size:11px;width:32px;text-align:right}
+.rp .stc{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap}.rp .stc.sg{background:#E7F6EF;color:#0B7A4B}.rp .stc.sb{background:#EEF5FC;color:#005A99}.rp .stc.sr{background:#FDECEF;color:#C8102E}
+.rp .hm td:last-child{text-align:center}
+.rp .r4{display:grid;grid-template-columns:.9fr 1.45fr 1fr;gap:10px;height:190px;flex:none}
+.rp .sdk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}.rp .sdk div{background:#F5F8FB;border-radius:6px;padding:5px 8px}.rp .sdk b{display:block;font-size:16px;color:#0B2447}.rp .sdk span{display:block;font-size:9.5px;line-height:1.2;color:#5B6B85;white-space:nowrap}.rp .sdk b{line-height:1.2}
+.rp .sd{flex:none;display:flex;height:26px;border-radius:6px;overflow:hidden;background:#EDF1F6;margin:4px 0 10px}.rp .sd i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;font-weight:700;min-width:22px;border-right:2px solid #fff}
+.rp .sdl{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;font-size:10.5px;color:#5B6B85}.rp .sdl i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}.rp .sdl b{color:#14213D;margin-left:2px}
+.rp .rl{display:flex;flex-direction:column;gap:5px}.rp .rl{gap:4px}.rp .ri{display:grid;grid-template-columns:58px auto 1fr;gap:0 8px;padding:4px 8px;border-radius:6px;font-size:11px;align-items:center;white-space:nowrap}.rp .ri em{overflow:hidden;text-overflow:ellipsis}.rp .ri span{font-size:9.5px;font-weight:700;text-align:center;border-radius:4px;padding:2px 0}.rp .ri b{font-size:11.5px}.rp .ri em{font-style:normal;color:#5B6B85;font-size:10.5px}
+.rp .ri.s3{background:#FDECEF}.rp .ri.s3 span{background:#7A1020;color:#fff}.rp .ri.s2{background:#FDF3F5}.rp .ri.s2 span{background:#C8102E;color:#fff}.rp .ri.s1{background:#FFF8E8}.rp .ri.s1 span{background:#D98E04;color:#fff}
+.rp .ok0{display:flex;gap:10px;align-items:center;margin:auto 0;font-size:12px;color:#5B6B85}.rp .ok0 p{margin:0}.rp .ok0 b{color:#0B7A4B}
+.rp .r5{display:grid;gap:10px;height:238px;flex:none}.rp .r5.c3{grid-template-columns:1.25fr 1fr 1fr}.rp .r5.c2{grid-template-columns:1fr 1fr}.rp .r5.c1{grid-template-columns:1fr}
+.rp .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.rp .cw{font-size:9.5px;color:#8A97AD;text-align:center;font-weight:600}
+.rp .cd2{height:52px;border-radius:6px;background:#F5F8FB;padding:4px 5px;display:flex;flex-direction:column;gap:1px;overflow:hidden}.rp .cd2 span{font-size:10px;font-weight:700;color:#5B6B85}.rp .cd2.past{opacity:.5}.rp .cd2.today{box-shadow:inset 0 0 0 2px #0B2447}.rp .cd2.has span{color:#0B2447}.rp .cd2 em{font-style:normal;font-size:9px;line-height:1.2;color:#0B2447;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp .cr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:auto 0;text-align:center}.rp .rw{position:relative;width:78px;height:78px;margin:0 auto 6px}.rp .rw b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;color:#0B2447}.rp .cr span{display:block;font-size:11px;font-weight:600;line-height:1.25}.rp .cr small{font-size:10px;color:#8A97AD}
+.rp .nts{display:flex;flex-direction:column;gap:6px;overflow:hidden}.rp .nts p{margin:0;font-size:11px;line-height:1.4;color:#14213D}.rp .nts b{display:block;font-size:11px;color:#0B2447}
+.rp .pf{display:flex;justify-content:space-between;gap:20px;font-size:9.5px;color:#8A97AD;padding:0 4px}
+.xpaper .rp{zoom:.66}.xpaper .rp .pg{margin:0 auto 16px;box-shadow:0 4px 18px rgba(11,36,71,.14);border-radius:4px}
 `;
 const SCOL={d:'#0174C3',o:'#C8102E',n:'#D5DCE6',b:'#C8102E',ok:'#5FA8E0',done:'#0B7A4B'};
 function rdays(a,b){return Math.round((md(b)-md(a))/864e5)}
@@ -570,23 +631,120 @@ function rtimeline(M){const pts=[];M.ps.forEach(p=>{STAGES.forEach((st,i)=>{cons
  <div class="r-leg"><span><i style="background:#0174C3;border-radius:50%"></i>Stage completed (number = stage)</span><span><i style="border:2px dashed #0174C3;border-radius:50%;background:#fff"></i>Stage due</span><span><i style="border:2px solid #C8102E;border-radius:50%;background:#fff"></i>Stage overdue</span><span><i style="background:#F2A900;transform:rotate(45deg)"></i>Scheduled meeting</span></div>`}
 function rcontent(M){return`<table class="r-tb"><thead><tr><th>Partner</th>${CITEMS.map(x=>`<th>${x.t}</th>`).join('')}<th>Done</th></tr></thead><tbody>${M.ps.map(p=>{const c=cinit(p);const n=CITEMS.filter(x=>c[x.k].done).length;return`<tr><td><b>${esc(p.name)}</b></td>${CITEMS.map(x=>{const v=c[x.k];return`<td>${v.done?`<span class="r-yes">✓ ${x.yes}</span>${XO.dates&&v.date?` <span style="color:#7A879C;font-size:10.5px">${mon(v.date)} ${dom(v.date)}</span>`:''}${x.url&&v.url&&XO.links?`<div style="font-size:10.5px"><a href="${esc(v.url)}">${esc(v.url.replace(/^https?:\/\//,''))}</a></div>`:''}`:`<span class="r-no">${x.no}</span>`}</td>`}).join('')}<td><b>${n}/${CITEMS.length}</b></td></tr>`}).join('')}</tbody></table>`}
 function rmeet(M){return M.mt.length?`<table class="r-tb"><thead><tr><th>When</th><th>Partner</th><th>Meeting</th><th>Format</th></tr></thead><tbody>${M.mt.slice(0,8).map(({p,m})=>`<tr><td style="white-space:nowrap;${late(m.d)?'color:#C8102E;font-weight:600':''}">${dlong(m.d)}${m.time?', '+t12(m.time):''}</td><td><b>${esc(p.name)}</b></td><td>${esc(m.t)}</td><td>${esc(m.fmt||'')}</td></tr>`).join('')}</tbody></table>`:'<p style="font-size:12px;color:#7A879C;margin:0">No meetings scheduled.</p>'}
-function xreport(){const M=rmetrics(),S2=XO.sec,dt=new Date();
- return`<div class="r"><div class="r-hd"><div><h1>${esc(XO.title)}</h1><div class="m">${dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}${ME?' · Prepared by '+esc(ME):''} · ${M.ps.length} partners</div></div><span class="tag">DigiCert Valimail DMARC Essentials</span></div><div class="r-bd">
- ${XO.note?`<p class="r-note">${esc(XO.note).replace(/\n/g,'<br>')}</p>`:''}
- ${S2.kpi?`<div class="r-k">
-  <div class="r-kc"><span>Overall progress</span><b>${M.pct}%</b><small>${M.done} of ${M.cells} stage steps</small></div>
-  <div class="r-kc grn"><span>Fully launched</span><b>${M.full}<span style="font-size:14px;color:#51607A;font-weight:500;display:inline;text-transform:none;letter-spacing:0"> / ${M.ps.length}</span></b><small>All five stages complete</small></div>
-  <div class="r-kc ${M.od?'red':''}"><span>Overdue stages</span><b>${M.od}</b><small>Past their due date</small></div>
-  <div class="r-kc ${M.blk?'red':''}"><span>Blocked partners</span><b>${M.blk}</b><small>${M.blk?esc(M.ps.filter(p=>p.blocked).map(p=>p.name).join(', ')):'None'}</small></div>
-  <div class="r-kc"><span>Meetings, next 14 days</span><b>${M.mt14}</b><small>${M.mt.length} scheduled in total</small></div>
-  <div class="r-kc"><span>Content launched</span><b>${M.cPct}%</b><small>${M.cDone} of ${M.ps.length*CITEMS.length} items${M.avg!==null?` · avg ${M.avg}d intro to kit sent`:''}</small></div></div>`:''}
- ${S2.charts?`<div class="r-row r-c2"><div class="r-p"><h3>Stage completion <small>share of partners</small></h3>${rstagebars(M)}</div><div class="r-p"><h3>Partner status <small>overall</small></h3>${rdonut(M)}</div></div>`:''}
- ${S2.table?`<div class="r-p"><h3>Partner launch matrix <small>stages in order</small></h3>${rmatrix(M)}</div>`:''}
- ${S2.timeline?`<div class="r-p"><h3>Launch timeline <small>completed, due and scheduled</small></h3>${rtimeline(M)}</div>`:''}
- ${S2.content||S2.meetings?`<div class="r-row ${S2.content&&S2.meetings?'r-c2':''}">${S2.content?`<div class="r-p"><h3>Content launch <small>partner-reported</small></h3>${rcontent(M)}</div>`:''}${S2.meetings?`<div class="r-p"><h3>Upcoming meetings <small>${M.mt.length} scheduled</small></h3>${rmeet(M)}</div>`:''}</div>`:''}
- ${S2.notes&&M.ps.some(p=>p.notes)?`<div class="r-p"><h3>Notes</h3>${M.ps.filter(p=>p.notes).map(p=>`<p style="font-size:12px;margin:0 0 6px"><b>${esc(p.name)}:</b> ${esc(p.notes)}</p>`).join('')}</div>`:''}
- <div class="r-ft"><span>Stages: 1 Intro meeting · 2 Onboard form · 3 Onboarding · 4 Kit creation · 5 Kit shared. Due dates follow the previous stage's completion.</span><span>Generated ${dt.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</span></div>
- </div></div>`}
+const RC={blue:'#0174C3',deep:'#005A99',navy:'#0B2447',ink:'#14213D',mut:'#5B6B85',faint:'#8A97AD',line:'#E3E9F2',track:'#EDF1F6',red:'#C8102E',amber:'#D98E04',green:'#0B7A4B'};
+const BSEQ=['#EEF5FC','#CFE3F6','#9DC6EC','#5CA1DE','#1B82CD','#0167AE'];
+const bshade=p=>BSEQ[Math.min(5,Math.round(p/20))];
+function rx(){const M=rmetrics(),ps=M.ps,n=ps.length,T=today();
+ M.reach=STAGES.map((st,i)=>ps.filter(p=>stageOf(p)>i).length);
+ const dueN=ps.reduce((a,p)=>a+STAGES.filter((x,i)=>stageDue(p,i)).length,0);const onTime=dueN?1-M.od/dueN:1;
+ M.health=n?Math.round(M.pct*.5+onTime*30+(1-M.blk/n)*20):0;
+ M.vel=STAGES.slice(1).map((st,j)=>{const i=j+1;const v=ps.map(p=>{const a=p.s[STAGES[i-1].k],b=p.s[st.k];return a.done&&b.done&&a.date&&b.date?rdays(a.date,b.date):null}).filter(x=>x!==null&&x>=0);return{i,t:st.t,from:STAGES[i-1].t,avg:v.length?v.reduce((a,b)=>a+b,0)/v.length:null,n:v.length,target:GAP[i]}});
+ M.batches=[1,2].map(b=>{const q=ps.filter(p=>(p.batch||1)===b);return{b,n:q.length,avg:q.length?Math.round(q.reduce((a,p)=>a+pct(p),0)/q.length):0,st:STAGES.map((s,i)=>q.length?Math.round(q.filter(p=>isDone(p,i)).length/q.length*100):0),full:q.filter(live).length}}).filter(x=>x.n);
+ const mk={};ps.forEach(p=>{const c=(p.market||'').includes('·')?p.market.split('·')[0].trim():'Unspecified';mk[c]=mk[c]||{c,v:0,sum:0,names:[]};mk[c].v++;mk[c].sum+=pct(p);mk[c].names.push(p.name)});M.mk=Object.values(mk).sort((a,b)=>b.v-a.v);
+ const ids=new Set(ps.map(p=>p.id));M.act=[];for(let k=29;k>=0;k--){const d=addTo(T,-k);M.act.push({d,n:(S.log||[]).filter(l=>l.t&&l.t.slice(0,10)===d&&ids.has(l.p)).length})}
+ M.actTot=M.act.reduce((a,x)=>a+x.n,0);
+ M.risk=[];ps.forEach(p=>{if(p.blocked)M.risk.push({p,sev:3,t:'Blocked',d:p.block||'Marked as blocked'});STAGES.forEach((st,i)=>{const od=overdue(p,i);if(od)M.risk.push({p,sev:2,t:'Overdue',d:`${st.t}, ${od} day${od>1?'s':''} late`})});const s=stageOf(p);if(s<5){const dd=stageDue(p,s);if(dd&&dd>=T&&rdays(T,dd)<=7)M.risk.push({p,sev:1,t:'Due soon',d:`${STAGES[s].t} due ${mon(dd)} ${dom(dd)}`})}});M.risk.sort((a,b)=>b.sev-a.sev);
+ M.gg=S.partners.filter(isGG).length;M.cur=[0,1,2,3,4,5].map(s=>ps.filter(p=>stageOf(p)===s).length);
+ M.d14=[];for(let k=0;k<14;k++){const d=addTo(T,k);M.d14.push(M.mt.filter(x=>x.m.d===d).length)}
+ return M}
+function rinsights(M){const n=M.ps.length,out=[];if(!n)return['No partners are selected for this report.'];
+ if(!M.done)out.push(`No stages are complete yet. All ${n} partners are waiting on the intro meeting.`);
+ else{const lv=M.reach.map((v,i)=>({i,from:i?M.reach[i-1]:n,to:v})).filter(x=>x.from>0&&x.to<x.from);const w=lv.sort((a,b)=>a.to/a.from-b.to/b.from)[0];
+  out.push(`${M.full} of ${n} partners are fully launched, and ${M.pct}% of all stage steps are done.`);
+  if(w)out.push(`The biggest drop-off is at <b>${STAGES[w.i].t.toLowerCase()}</b>: ${w.to} of the ${w.from} partners who reached it have cleared it.`)}
+ if(M.batches.length===2){const[a,b]=M.batches;const d=a.avg-b.avg;out.push(d===0?`Batch 1 and Batch 2 are level at ${a.avg}% average progress.`:`Batch ${d>0?1:2} is ahead by <b>${Math.abs(d)} points</b> (${a.avg}% against ${b.avg}% average progress).`)}
+ if(M.od){const np=new Set(M.risk.filter(r=>r.sev===2).map(r=>r.p.id)).size;out.push(`<b class="neg">${M.od} stage${M.od>1?'s are':' is'} overdue</b> across ${np} partner${np>1?'s':''}.`)}
+ const soon=M.risk.filter(r=>r.sev===1).length;if(soon)out.push(`${soon} partner${soon>1?'s have':' has'} a stage falling due in the next 7 days.`);
+ const v=M.vel.filter(x=>x.avg!==null);if(v.length){const s=v.sort((a,b)=>(b.avg-b.target)-(a.avg-a.target))[0];out.push(`The slowest hand-off is ${s.from.toLowerCase()} to ${s.t.toLowerCase()}: ${s.avg.toFixed(1)} days on average against a ${s.target}-day target.`)}
+ out.push(M.mt14?`${M.mt14} meeting${M.mt14>1?'s are':' is'} booked in the next 14 days.`:'No meetings are booked in the next 14 days.');
+ if(M.mk.length>1&&M.mk[0].c!=='Unspecified')out.push(`${esc(M.mk[0].c)} is the largest market, with ${M.mk[0].v} partners.`);
+ if(M.gg)out.push(`${M.gg} GoGetSSL partner${M.gg>1?'s are':' is'} left out, as the product is not available on that storefront.`);
+ return out.slice(0,5)}
+function rring(p,sz,c,sw){sz=sz||64;c=c||RC.blue;sw=sw||8;const h=sz/2,R=(sz-sw)/2,C=2*Math.PI*R;return`<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" aria-hidden="true"><circle cx="${h}" cy="${h}" r="${R}" fill="none" stroke="${RC.track}" stroke-width="${sw}"/>${p>0?`<circle cx="${h}" cy="${h}" r="${R}" fill="none" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${Math.max(.01,C*p/100)} ${C}" transform="rotate(-90 ${h} ${h})"/>`:''}</svg>`}
+function rgauge(v){const cx=130,cy=118,R=92,sw=20;const ang=d=>Math.PI*(1-d/100);const pt=(d,r)=>[+(cx+r*Math.cos(ang(d))).toFixed(1),+(cy-r*Math.sin(ang(d))).toFixed(1)];
+ const arc=(d0,d1,r,c,w,cap)=>{const[a,b]=pt(d0,r),[x,y]=pt(d1,r);return`<path d="M${a} ${b} A${r} ${r} 0 0 1 ${x} ${y}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="${cap||'butt'}"/>`};
+ const zone=v>=70?['Healthy',RC.green]:v>=40?['Needs attention',RC.amber]:['At risk',RC.red];const[nx,ny]=pt(v,R-30);
+ let ticks='';for(let d=0;d<=100;d+=10){const[a,b]=pt(d,R+sw/2+3),[x,y]=pt(d,R+sw/2+(d%50?7:11));ticks+=`<line x1="${a}" y1="${b}" x2="${x}" y2="${y}" stroke="#9FB0C8" stroke-width="${d%50?1:1.6}"/>`}
+ return`<svg width="236" height="136" viewBox="0 0 260 150" role="img" aria-label="Launch health ${v} of 100"><defs><linearGradient id="gg1" x1="0" x2="1"><stop offset="0" stop-color="#5CA1DE"/><stop offset="1" stop-color="#0167AE"/></linearGradient></defs>
+ ${arc(0,100,R,RC.track,sw)}${v>0?arc(0,Math.max(1,v),R,'url(#gg1)',sw):''}${arc(0,40,R-sw/2-5,'#F3C5CE',3)}${arc(40,70,R-sw/2-5,'#F5DDA8',3)}${arc(70,100,R-sw/2-5,'#B7DEC9',3)}${ticks}
+ <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="${RC.navy}" stroke-width="3" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="7" fill="${RC.navy}"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="#fff"/>
+ <text x="${cx}" y="${cy+28}" text-anchor="middle" font-size="30" font-weight="700" fill="${RC.navy}">${v}<tspan font-size="13" fill="${RC.mut}" font-weight="500"> /100</tspan></text>
+ <text x="${pt(0,0)[0]-R-4}" y="${cy+16}" font-size="10" fill="${RC.faint}">0</text><text x="${cx+R-8}" y="${cy+16}" font-size="10" fill="${RC.faint}">100</text></svg>
+ <div class="gz" style="--z:${zone[1]}"><i></i>${zone[0]}</div>`}
+function rfunnel(M){const n=M.ps.length||1,lv=[['Partners in scope',M.ps.length],...STAGES.map((s,i)=>[s.t+' '+s.yes.toLowerCase(),M.reach[i]])];
+ const W=470,rh=24,gap=7,L=150,maxW=W-L-58;let g='';
+ lv.forEach(([t,v],i)=>{const y=i*(rh+gap),w=Math.max(6,v/n*maxW),x=L+(maxW-w)/2,c=BSEQ[Math.min(5,i)+0]||RC.blue;const fill=i===0?'#0B2447':['#0167AE','#1B82CD','#3F95D8','#6AADE2','#96C5EB'][i-1];
+  if(i>0){const[pt,pv]=lv[i-1],pw=Math.max(6,pv/n*maxW),px=L+(maxW-pw)/2,py=y-gap;g+=`<path d="M${px} ${py} L${px+pw} ${py} L${x+w} ${y} L${x} ${y}Z" fill="#E6EEF7"/>`;
+   const conv=pv?Math.round(v/pv*100):0;g+=`<text x="${L+maxW+10}" y="${y+rh/2+3}" font-size="10" fill="${pv&&conv<100?RC.deep:RC.faint}">${pv?conv+'%':'–'}</text>`}
+  g+=`<rect x="${x}" y="${y}" width="${w}" height="${rh}" rx="4" fill="${fill}"/><text x="${L-10}" y="${y+rh/2+4}" text-anchor="end" font-size="11" fill="${RC.ink}">${esc(t)}</text>
+  <text x="${L+maxW/2}" y="${y+rh/2+4.5}" text-anchor="middle" font-size="12.5" font-weight="700" fill="${w>40?'#fff':RC.navy}" ${w>40?'':`dx="${w/2+16}"`}>${v}</text>`});
+ const H=lv.length*(rh+gap);return`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Launch funnel">${g}<text x="${L+maxW+10}" y="-2" font-size="0"></text></svg><div class="leg"><span>Right-hand figures: share carried over from the stage above</span></div>`}
+function rdonut2(M){const segs=[['Complete',M.st.Complete||0,RC.green],['On track',M.st['On track']||0,RC.blue],['Overdue',M.st.Overdue||0,RC.red],['Blocked',M.st.Blocked||0,'#7A1020']];
+ const tot=M.ps.length||1,R=52,C=2*Math.PI*R;let off=0;const arcs=segs.filter(s=>s[1]).map(([l,v,c])=>{const len=v/tot*C;const a=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${c}" stroke-width="20" stroke-dasharray="${Math.max(0,len-1.5)} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=len;return a}).join('');
+ return`<div class="dn"><svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Partner status"><circle r="${R}" cx="70" cy="70" fill="none" stroke="${RC.track}" stroke-width="20"/>${arcs}<text x="70" y="68" text-anchor="middle" font-size="28" font-weight="700" fill="${RC.navy}">${M.ps.length}</text><text x="70" y="86" text-anchor="middle" font-size="10.5" fill="${RC.mut}">partners</text></svg>
+ <div class="dl">${segs.map(([l,v,c])=>`<div><i style="background:${c}"></i><span>${l}</span><b>${v}</b><em>${Math.round(v/tot*100)}%</em></div>`).join('')}</div></div>`}
+function rbatch(M){if(!M.batches.length)return'<p class="nd">No partners selected.</p>';const W=320,L=100,R=56,rh=19,rows=[['Average progress',M.batches.map(b=>b.avg)],...STAGES.map((s,i)=>[s.t,M.batches.map(b=>b.st[i])])];const x=v=>L+(W-L-R)*v/100;const cols=[RC.blue,'#8CC0EA'];
+ let g='';[0,25,50,75,100].forEach(v=>{g+=`<line x1="${x(v)}" x2="${x(v)}" y1="4" y2="${rows.length*rh+4}" stroke="${RC.line}" ${v%50?'stroke-dasharray="2 3"':''}/><text x="${x(v)}" y="${rows.length*rh+16}" font-size="9" fill="${RC.faint}" text-anchor="middle">${v}%</text>`});
+ rows.forEach(([t,vs],i)=>{const y=i*rh+rh/2+4;g+=`<text x="${L-8}" y="${y+3.5}" font-size="10.5" text-anchor="end" fill="${RC.ink}" ${i===0?'font-weight="700"':''}>${t}</text>`;if(vs.length===2)g+=`<line x1="${x(Math.min(...vs))}" x2="${x(Math.max(...vs))}" y1="${y}" y2="${y}" stroke="#B9D5EE" stroke-width="4" stroke-linecap="round"/>`;
+  vs.forEach((v,k)=>{g+=`<circle cx="${x(v)}" cy="${y}" r="${i===0?6.5:5.5}" fill="${cols[k]}" stroke="#fff" stroke-width="1.5"/>`});g+=`<text x="${W-R+6}" y="${y+3.5}" font-size="10" fill="${RC.mut}">${vs.join(' / ')}</text>`});
+ return`<svg viewBox="0 0 ${W} ${rows.length*rh+20}" width="100%" role="img" aria-label="Batch comparison">${g}</svg><div class="leg">${M.batches.map((b,k)=>`<span><i style="background:${cols[k]};border-radius:50%"></i>Batch ${b.b} (${b.n})</span>`).join('')}</div>`}
+function tmap(it,x,y,w,h,out){if(!it.length)return;if(it.length===1){out.push(Object.assign({},it[0],{x,y,w,h}));return}const tot=it.reduce((a,b)=>a+b.v,0);let acc=0,k=0;for(;k<it.length-1;k++){if(k>0&&acc+it[k].v/2>tot/2)break;acc+=it[k].v}
+ const A=it.slice(0,k),B=it.slice(k),fa=A.reduce((a,b)=>a+b.v,0)/tot;if(w>=h){tmap(A,x,y,w*fa,h,out);tmap(B,x+w*fa,y,w*(1-fa),h,out)}else{tmap(A,x,y,w,h*fa,out);tmap(B,x,y+h*fa,w,h*(1-fa),out)}}
+function rtree(M){const W=320,H=150,out=[];tmap(M.mk,0,0,W,H,out);return`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Partners by market">${out.map(r=>{const a=Math.round(r.sum/r.v),f=bshade(a),dark=a>=50;return`<g><rect x="${r.x+1.5}" y="${r.y+1.5}" width="${Math.max(0,r.w-3)}" height="${Math.max(0,r.h-3)}" rx="5" fill="${f}" stroke="#C9DCEF"/>${(()=>{const fs=r.w>120?13:r.w>70?11:9.5,mx=Math.floor((r.w-12)/(fs*.56)),nm=r.c.length>mx?r.c.slice(0,Math.max(2,mx-1))+'…':r.c,big=r.w>100,sub=big?`${r.v} partner${r.v>1?'s':''}, ${a}%`:`${r.v} · ${a}%`;return r.h>26&&r.w>26?`<text x="${r.x+8}" y="${r.y+17}" font-size="${fs}" font-weight="700" fill="${dark?'#fff':RC.navy}">${esc(nm)}</text>${r.h>40?`<text x="${r.x+8}" y="${r.y+31}" font-size="9.5" fill="${dark?'#E6F1FB':RC.mut}">${sub}</text>`:''}`:''})()}</g>`}).join('')}</svg>
+ <div class="leg"><span>Size is partner count. Shade is average progress:</span>${BSEQ.map(c=>`<i style="background:${c};margin:0;border-radius:0;width:14px"></i>`).join('')}</div>`}
+function rvel(M){const W=320,L=112,R=30,rh=30;const mx=Math.max(...M.vel.map(v=>Math.max(v.target*1.8,v.avg||0)),4);const x=d=>L+(W-L-R)*d/mx;let g='';
+ M.vel.forEach((v,i)=>{const y=i*rh+6;g+=`<text x="${L-8}" y="${y+9}" font-size="10.5" text-anchor="end" fill="${RC.ink}">${esc(v.t)}</text><text x="${L-8}" y="${y+20}" font-size="9" text-anchor="end" fill="${RC.faint}">from ${esc(v.from.toLowerCase())}</text>
+  <rect x="${L}" y="${y+2}" width="${W-L-R}" height="16" rx="3" fill="${RC.track}"/><rect x="${L}" y="${y+2}" width="${x(v.target)-L}" height="16" rx="3" fill="#DDE8F4"/>
+  ${v.avg!==null?`<rect x="${L}" y="${y+6}" width="${Math.max(2,x(v.avg)-L)}" height="8" rx="2" fill="${v.avg>v.target?RC.red:RC.blue}"/><text x="${Math.max(x(v.avg),x(v.target))+5}" y="${y+14}" font-size="10" font-weight="700" fill="${v.avg>v.target?RC.red:RC.navy}">${v.avg.toFixed(1)}d</text>`:`<text x="${x(v.target)+6}" y="${y+14}" font-size="9.5" fill="${RC.faint}">no data yet</text>`}
+  <line x1="${x(v.target)}" x2="${x(v.target)}" y1="${y}" y2="${y+20}" stroke="${RC.navy}" stroke-width="2"/>`});
+ return`<svg viewBox="0 0 ${W} ${M.vel.length*rh+6}" width="100%" role="img" aria-label="Stage hand-off speed">${g}</svg><div class="leg"><span><i style="background:${RC.blue}"></i>Average days</span><span><i style="background:${RC.navy};width:3px"></i>Target</span><span><i style="background:${RC.red}"></i>Slower than target</span></div>`}
+function ractivity(M){const W=520,H=120,L=24,B=18,T=8;const mx=Math.max(3,...M.act.map(a=>a.n));const bw=(W-L)/30;const y=v=>H-B-(H-B-T)*v/mx;let g='';
+ [0,Math.round(mx/2),mx].forEach(v=>{g+=`<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="${RC.line}" ${v?'stroke-dasharray="2 3"':''}/><text x="${L-5}" y="${y(v)+3}" font-size="9" fill="${RC.faint}" text-anchor="end">${v}</text>`});
+ M.act.forEach((a,i)=>{const x=L+i*bw;if(a.n)g+=`<rect x="${x+1.5}" y="${y(a.n)}" width="${bw-3}" height="${H-B-y(a.n)}" rx="2" fill="#9DC6EC"/>`;if(i%5===0||i===29)g+=`<text x="${x+bw/2}" y="${H-4}" font-size="9" fill="${RC.faint}" text-anchor="middle">${mon(a.d)} ${dom(a.d)}</text>`});
+ const ma=M.act.map((a,i)=>{const w=M.act.slice(Math.max(0,i-6),i+1);return w.reduce((s,x)=>s+x.n,0)/w.length});g+=`<polyline points="${ma.map((v,i)=>`${(L+i*bw+bw/2).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${RC.navy}" stroke-width="2" stroke-linejoin="round"/>`;
+ return`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Tracker activity">${g}</svg><div class="leg"><span><i style="background:#9DC6EC"></i>Updates per day</span><span><i style="background:${RC.navy};height:3px"></i>7-day average</span><span style="margin-left:auto"><b>${M.actTot}</b>&nbsp;updates in 30 days</span></div>`}
+function rstagedist(M){const n=M.ps.length||1,lab=[...STAGES.map(s=>'At '+s.t.toLowerCase()),'Complete'],cols=['#DCE9F6','#B5D3EF','#86B8E6','#4F9ADB','#1B82CD',RC.green];
+ const avg=M.ps.length?Math.round(M.ps.reduce((a,p)=>a+pct(p),0)/M.ps.length):0,med=(()=>{const v=M.ps.map(pct).sort((a,b)=>a-b);return v.length?v[Math.floor((v.length-1)/2)]:0})();
+ return`<div class="sdk"><div><b>${avg}%</b><span>Average progress</span></div><div><b>${med}%</b><span>Median progress</span></div><div><b>${M.avg!==null?M.avg+'d':'–'}</b><span>Avg cycle time</span></div></div><div class="sd">${M.cur.map((v,i)=>v?`<i style="flex:${v};background:${cols[i]};color:${i>=3?'#fff':RC.navy}">${v}</i>`:'').join('')}</div><div class="sdl">${M.cur.map((v,i)=>`<span><i style="background:${cols[i]}"></i>${lab[i]} <b>${v}</b></span>`).join('')}</div>`}
+function rheat(M){const T=today();const ps=M.ps.slice().sort((a,b)=>pct(b)-pct(a)||a.name.localeCompare(b.name));
+ const cell=(p,i)=>{const st=STAGES[i],d=p.s[st.k];if(d.done)return`<td><div class="hc d" title="${st.yes}">✓${XO.dates&&d.date?`<small>${mon(d.date)} ${dom(d.date)}</small>`:''}</div></td>`;const od=overdue(p,i);if(od)return`<td><div class="hc o">${od}d late</div></td>`;const dd=stageDue(p,i);if(dd&&rdays(T,dd)<=7)return`<td><div class="hc s">Due ${mon(dd)} ${dom(dd)}</div></td>`;if(stageOf(p)===i)return`<td><div class="hc c">${dd?'Due '+mon(dd)+' '+dom(dd):'Next'}</div></td>`;return`<td><div class="hc n"></div></td>`};
+ const cc=(p,x)=>{const v=cinit(p)[x.k];return`<td><div class="hc ${v.done?'d':'n'} sm">${v.done?'✓':''}</div></td>`};
+ return`<table class="hm"><thead><tr><th class="rk">#</th><th style="text-align:left">Partner</th>${STAGES.map((s,i)=>`<th>${i+1}. ${s.t}</th>`).join('')}${XO.sec.content?CITEMS.map(x=>`<th class="ct">${x.k==='web'?'Web page':x.k==='sheet'?'Sales sheet':'Emails'}</th>`).join(''):''}<th style="text-align:left">Progress</th><th>Status</th></tr></thead><tbody>
+ ${ps.map((p,r)=>{const pc=pct(p),v=xstatus(p);return`<tr><td class="rk">${r+1}</td><td class="pn2"><b>${esc(p.name)}</b><small>Batch ${p.batch||1}${p.market?' · '+esc(p.market.split('·')[0].trim()):''}</small></td>${STAGES.map((s,i)=>cell(p,i)).join('')}${XO.sec.content?CITEMS.map(x=>cc(p,x)).join(''):''}
+ <td class="pg2"><div class="pb2"><i style="width:${pc}%"></i></div><b>${pc}%</b></td><td><span class="stc ${v==='Complete'?'sg':v==='On track'?'sb':'sr'}">${v}</span></td></tr>`}).join('')}</tbody></table>
+ <div class="leg"><span><i style="background:${RC.blue}"></i>Done</span><span><i style="background:#fff;box-shadow:inset 0 0 0 2px ${RC.blue}"></i>Current stage</span><span><i style="background:#FFF4DC;box-shadow:inset 0 0 0 2px ${RC.amber}"></i>Due within 7 days</span><span><i style="background:#FDECEF;box-shadow:inset 0 0 0 2px ${RC.red}"></i>Overdue</span><span><i style="background:${RC.track}"></i>Not started</span><span style="margin-left:auto">Ranked by progress</span></div>`}
+function rrisk(M){if(!M.risk.length)return`<div class="ok0"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="${RC.green}" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6"/></svg><p><b>Nothing needs attention.</b><br>No blocked, overdue or due-soon stages.</p></div>`;
+ return`<div class="rl">${M.risk.slice(0,M.risk.length>5?4:5).map(r=>`<div class="ri s${r.sev}"><span>${r.t}</span><b>${esc(r.p.name)}</b><em>${esc(r.d)}</em></div>`).join('')}${M.risk.length>5?`<p class="nd">and ${M.risk.length-4} more in the partner launch matrix</p>`:''}</div>`}
+function rcal(M){const T=today(),t0=md(T),dow=(t0.getDay()+6)%7,start=addTo(T,-dow);const days=[...Array(21)].map((_,i)=>addTo(start,i));
+ return`<div class="cal">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<span class="cw">${d}</span>`).join('')}${days.map(d=>{const ms=M.mt.filter(x=>x.m.d===d);return`<div class="cd2 ${d===T?'today':''} ${d<T?'past':''} ${ms.length?'has':''}" style="${ms.length?`background:${BSEQ[Math.min(3,ms.length+1)]}`:''}"><span>${dom(d)}${dom(d)===1?' '+mon(d):''}</span>${ms.slice(0,2).map(x=>`<em>${esc(x.p.name)}</em>`).join('')}${ms.length>2?`<em>+${ms.length-2} more</em>`:''}</div>`}).join('')}</div>`}
+function rcontent2(M){const n=M.ps.length||1;return`<div class="cr">${CITEMS.map(x=>{const v=M.ps.filter(p=>cinit(p)[x.k].done).length,pp=Math.round(v/n*100);return`<div><div class="rw">${rring(pp,78,RC.blue,9)}<b>${pp}%</b></div><span>${x.t}</span><small>${v} of ${M.ps.length} partners</small></div>`}).join('')}</div>`}
+function rkpis(M){const n=M.ps.length,dots=Math.min(n,24);
+ return`<div class="kp"><div class="kt"><span>Overall progress</span><div class="kv">${rring(M.pct,46,RC.blue,6)}<b>${M.pct}%</b></div><small>${M.done} of ${M.cells} stage steps</small></div>
+ <div class="kt"><span>Fully launched</span><div class="kv"><b>${M.full}<em>/${n}</em></b></div><div class="pict">${[...Array(dots)].map((_,i)=>`<i class="${i<M.full?'on':''}"></i>`).join('')}</div></div>
+ <div class="kt ${M.od?'neg':''}"><span>Overdue stages</span><div class="kv"><b>${M.od}</b><div class="mini">${STAGES.map((s,i)=>{const v=M.ps.filter(p=>overdue(p,i)).length,mo=Math.max(1,...STAGES.map((x,j)=>M.ps.filter(p=>overdue(p,j)).length));return`<i style="height:${v?Math.max(6,v/mo*26):2}px;background:${v?RC.red:RC.line}" title="${s.t}"></i>`}).join('')}</div></div><small>by stage 1 to 5</small></div>
+ <div class="kt ${M.blk?'neg':''}"><span>Blocked partners</span><div class="kv"><b>${M.blk}</b></div><small>${M.blk?esc(M.ps.filter(p=>p.blocked).map(p=>p.name).join(', ')):'None blocked'}</small></div>
+ <div class="kt"><span>Meetings, next 14 days</span><div class="kv"><b>${M.mt14}</b><div class="mini wide">${M.d14.map(v=>`<i style="height:${v?Math.min(26,6+v*7):2}px;background:${v?RC.blue:RC.line}"></i>`).join('')}</div></div><small>${M.mt.length} scheduled in total</small></div>
+ <div class="kt"><span>Content launched</span><div class="kv">${rring(M.cPct,46,RC.blue,6)}<b>${M.cPct}%</b></div><small>${M.cDone} of ${M.ps.length*CITEMS.length} items live or sent</small></div></div>`}
+function rtl2(M){if(!M.ps.length)return'';return rtimeline(M)}
+function xreport(){const M=rx(),S2=XO.sec,dt=new Date(),n=M.ps.length;const gen=dt.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+ const scope=(()=>{const b=new Set(M.ps.map(p=>p.batch||1));return b.size===2?'Batch 1 and Batch 2':b.size===1?'Batch '+[...b][0]:'No partners'})();
+ const pages=[];
+ const p1=[];
+ if(S2.kpi)p1.push(`<div class="r1"><div class="cd gcard"><h3>Launch health <small>index out of 100</small></h3><div class="gw">${rgauge(M.health)}</div><p class="gx">50% progress, 30% on time, 20% unblocked</p></div>${rkpis(M)}</div>`);
+ if(S2.charts)p1.push(`<div class="r2"><div class="cd"><h3>Launch funnel <small>partners reaching each stage</small></h3>${rfunnel(M)}</div><div class="cd"><h3>Partner status</h3>${rdonut2(M)}</div><div class="cd ins"><h3>Key findings</h3><ol>${rinsights(M).map(t=>`<li>${t}</li>`).join('')}</ol></div></div>
+ <div class="r3"><div class="cd"><h3>Batch comparison <small>% of partners per stage</small></h3>${rbatch(M)}</div><div class="cd"><h3>Partners by market</h3>${rtree(M)}</div><div class="cd"><h3>Stage hand-off speed <small>days between stages</small></h3>${rvel(M)}</div></div>`);
+ if(p1.length)pages.push({t:'Executive overview',h:true,b:p1.join('')});
+ const p2=[];if(S2.table)p2.push(`<div class="cd grow"><h3>Partner launch matrix <small>${n} partners, stages in order</small></h3>${rheat(M)}</div>`);
+ if(S2.charts)p2.push(`<div class="r4"><div class="cd"><h3>Where partners are now</h3>${rstagedist(M)}</div><div class="cd"><h3>Tracker activity <small>last 30 days</small></h3>${ractivity(M)}</div><div class="cd"><h3>Needs attention <small>${M.risk.length} item${M.risk.length===1?'':'s'}</small></h3>${rrisk(M)}</div></div>`);
+ if(p2.length)pages.push({t:'Pipeline detail',b:p2.join('')});
+ const p3=[];if(S2.timeline)p3.push(`<div class="cd grow"><h3>Launch timeline <small>completed, due and scheduled</small></h3>${rtl2(M)}</div>`);
+ const b3=[];if(S2.meetings)b3.push(`<div class="cd"><h3>Meeting calendar <small>this week and the next two</small></h3>${rcal(M)}</div>`);if(S2.content)b3.push(`<div class="cd"><h3>Content launch <small>share of partners</small></h3>${rcontent2(M)}</div>`);
+ if(S2.notes){const nn=M.ps.filter(p=>p.notes);b3.push(`<div class="cd"><h3>Partner notes</h3>${nn.length?`<div class="nts">${nn.slice(0,6).map(p=>`<p><b>${esc(p.name)}</b>${esc(p.notes.length>160?p.notes.slice(0,157)+'…':p.notes)}</p>`).join('')}</div>`:'<p class="nd">No notes recorded.</p>'}</div>`)}
+ if(b3.length)p3.push(`<div class="r5 c${b3.length}">${b3.join('')}</div>`);
+ if(p3.length)pages.push({t:'Timeline and activity',b:p3.join('')});
+ const N=pages.length;
+ return`<div class="rp">${pages.map((pg,i)=>`<section class="pg">${pg.h?`<header class="ph big"><div><div class="brandrow"><i></i>DigiCert Valimail DMARC Essentials</div><h1>${esc(XO.title)}</h1><p>${dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}${ME?', prepared by '+esc(ME):''}</p></div><div class="flt"><span><em>Scope</em>${scope}</span><span><em>Storefront</em>TSS</span><span><em>Partners</em>${n}</span></div></header>${XO.note?`<p class="note">${esc(XO.note).replace(/\n/g,'<br>')}</p>`:''}`:`<header class="ph"><div class="brandrow"><i></i>${esc(XO.title)}</div><h2>${pg.t}</h2></header>`}
+ <div class="pbd">${pg.b}</div><footer class="pf"><span>DigiCert Valimail DMARC Essentials partner launch report. Stages: 1 Intro meeting, 2 Onboard form, 3 Onboarding, 4 Kit creation, 5 Kit shared.</span><span>Generated ${gen} &nbsp; Page ${i+1} of ${N}</span></footer></section>`).join('')}</div>`}
 function xemail(){const M=rmetrics();const td='style="padding:10px 12px;border:1px solid #DDE3EC;font:12px Arial,sans-serif;vertical-align:top"';
  const kpis=[['Overall progress',M.pct+'%'],['Fully launched',M.full+' / '+M.ps.length],['Overdue stages',M.od],['Blocked',M.blk],['Meetings (14 days)',M.mt14],['Content launched',M.cPct+'%']];
  const bars=STAGES.map((st,i)=>{const d=M.ps.filter(p=>isDone(p,i)).length,n=M.ps.length||1;return`<tr><td style="font:12px Arial,sans-serif;padding:4px 10px 4px 0;white-space:nowrap">${st.t}</td><td style="width:100%;padding:4px 0"><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse"><tr><td style="height:12px;background:#0174C3;width:${Math.max(1,d/n*100)}%"></td><td style="height:12px;background:#E3E9F2"></td></tr></table></td><td style="font:600 12px Arial,sans-serif;padding:4px 0 4px 10px;white-space:nowrap">${d}/${M.ps.length}</td></tr>`}).join('');
