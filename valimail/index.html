@@ -137,7 +137,7 @@ const KIT=[
  {t:'Website product page',d:'Ready-to-publish page in their branding',f:'product-page.html',k:'Web page',x:[['Preview image','product-page-preview.png']]},
  {t:'Email campaign',d:'Four emails with subjects and copy',f:'email-campaign.pdf',k:'PDF',x:[['Plain text','email-campaign.txt']]},
  {t:'Attach copy',d:'Checkout, renewal, invoice and support lines',f:'attach-copy.pdf',k:'PDF',x:[['Plain text','attach-copy.txt']]}];
-const KB='/valimail/kits/';
+const KB='/valimail/kits/',KV='20260929b';
 function seed(){const blank=()=>[[false,false,false],[false,false,false,false],[false,false],[false,false,false],[false]];const mk=(o)=>{const c=blank();c[1][0]=true;c[1][1]=true;return Object.assign({s:{intro:{done:false,date:''},form:{done:false,date:''},onb:{done:false,date:''},kit:{done:false,date:''},shared:{done:false,date:''}},checks:c,next:'Schedule the intro meeting',due:'2026-10-06',blocked:false,block:'',notes:'',meetings:[]},o)};return{v:5,sel:'bb',log:[],
 partners:[
 mk({id:'bb',name:'Blue Bits',pid:'82997420',legal:'Công ty Cổ phần Chứng Thực Số Toàn Cầu Việt Nam',site:'bluebit.vn',market:'Vietnam · MSP',contact:'bluebit@bluebit.vn'}),
@@ -291,8 +291,8 @@ ${pa.length?`<h5 style="margin-top:6px">Past meetings</h5><table class="mini"><t
 <div class="blk"><div class="tg"><button class="switch" role="switch" aria-checked="${p.blocked}" aria-label="Blocked" data-a="block"></button><span>Blocked</span></div>
 ${p.blocked?`<div class="f"><label for="bl">What is blocking them?</label><input class="inp" id="bl" data-k="block" value="${esc(p.block)}"></div>`:''}</div>
 <div class="blk"><div class="f"><label for="nt">Notes</label><textarea class="inp" id="nt" data-k="notes">${esc(p.notes)}</textarea></div></div>
-<div class="blk"><h5>Kit files</h5><div class="kl">${KIT.map(k=>`<a href="${KB+p.id+'/'+k.f}" target="_blank" rel="noopener">${k.t}<span>${k.k==='PDF'?'PDF':'Web'}</span></a>`).join('')}
-<a href="${KB+p.id}/full-kit.zip" download>Full kit<span>ZIP</span></a><a href="${KB}go-to-market-strategy.pdf" target="_blank" rel="noopener">Go-to-market strategy<span>PDF</span></a></div></div>
+<div class="blk"><h5>Kit files</h5><div class="kl">${KIT.map(k=>`<a href="${KB+p.id+'/'+k.f}?v=${KV}" target="_blank" rel="noopener">${k.t}<span>${k.k==='PDF'?'PDF':'Web'}</span></a>`).join('')}
+<a href="${KB+p.id}/full-kit.zip?v=${KV}" download>Full kit<span>ZIP</span></a><a href="${KB}dmarc-essentials-go-to-market.pdf?v=${KV}" target="_blank" rel="noopener">Go-to-market strategy<span>PDF</span></a></div></div>
 </div></div></div>`}
 function icsFor(p,m){const pad=n=>String(n).padStart(2,'0');const d=m.d.replace(/-/g,'');let dt;if(m.time){const[h,mi]=m.time.split(':');const e=new Date(`${m.d}T${m.time}:00`);e.setMinutes(e.getMinutes()+45);dt=`DTSTART:${d}T${h}${mi}00\r\nDTEND:${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}T${pad(e.getHours())}${pad(e.getMinutes())}00`}else{const e=md(m.d);e.setDate(e.getDate()+1);dt=`DTSTART;VALUE=DATE:${d}\r\nDTEND;VALUE=DATE:${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}`}
  const clean=x=>String(x||'').replace(/[\r\n]+/g,' ').replace(/[,;]/g,'\\$&');
