@@ -38,5 +38,18 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "valimail.ssldemo.site"
+        }
+      ],
+      "destination": "/tracker",
+      "permanent": false
+    }
   ]
 }
