@@ -63,6 +63,7 @@ tr.drow td{background:var(--blue-50);padding:0 12px 16px;border-bottom:1px solid
 .sgb{padding:10px 12px;display:flex;flex-direction:column;gap:10px}
 .seg2{display:flex;border:1px solid var(--blue);border-radius:6px;overflow:hidden}.seg2 button{flex:1;min-height:36px;border:0;background:#fff;color:var(--blue-d);font-weight:600;font-size:12.5px;cursor:pointer;padding:0 6px}
 .seg2 button+button{border-left:1px solid var(--blue)}.seg2 button[aria-pressed="true"]{background:var(--blue);color:#fff}.sg:not(.done) .seg2 button[data-v="0"][aria-pressed="true"]{background:var(--blue-100);color:var(--navy)}
+.duehint{margin:0;font-size:12.5px;color:var(--muted)}.dr{display:block;font-size:11.5px;color:var(--muted);font-weight:400;max-width:130px;line-height:1.3}
 .sdesc{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
 button.cell{border:0;cursor:pointer;font-family:inherit}button.cell.none{background:none;color:var(--muted)}button.cell.none:hover,button.cell.part:hover{background:var(--blue-50)}button.cell.done:hover{background:var(--blue-d)}
 .sg h4 small{color:var(--muted);font-weight:500}.sg.done h4{background:var(--blue);color:#fff}.sg.done h4 small{color:#D6EAF9}.sg.cur h4{background:var(--blue-100);color:var(--navy)}
@@ -149,7 +150,7 @@ try{const c=JSON.parse(localStorage.getItem('valimail-auth')||'null');if(c){ME=c
 async function rpc(fn,body){const r=await fetch(SB+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
  if(r.status===404)throw new Error('not_setup');const j=await r.json().catch(()=>null);if(!r.ok){throw new Error(j&&j.message&&j.message.includes('invalid_code')?'invalid_code':'server')}return j}
 function setSync(st){SYNC=st;const e=document.getElementById('sync');if(e)e.outerHTML=syncPill()}
-function normalize(){S.partners.forEach(p=>{migrate(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
+function normalize(){S.partners.forEach(p=>{migrate(p);(p.meetings=p.meetings||[]);if(p.meetings.every(m=>m.status!=='planned'||true))refreshDue(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
 function syncPill(){const t={idle:LAST?'Saved, '+fmt(LAST.at)+(LAST.by?' by '+esc(LAST.by):''):'Connected',saving:'Saving…',error:'Could not save. Retrying…',local:'Not connected: saved on this device only'}[SYNC];
  return`<span id="sync" class="sync ${SYNC}">${SYNC==='saving'?'<i class="spin"></i>':SYNC==='error'||SYNC==='local'?'⚠':'●'} ${t}</span>`}
 function save(){if(LOCAL){try{localStorage.setItem('valimail-local',JSON.stringify(S))}catch(e){}setSync('local');return}dirty=true;setSync('saving');clearTimeout(timer);timer=setTimeout(push,700)}
@@ -198,7 +199,7 @@ ${msg?`<div class="gerr" role="alert">${esc(msg)}</div>`:''}<div class="f"><labe
  document.getElementById('gform').addEventListener('submit',async e=>{e.preventDefault();ME=document.getElementById('g-name').value.trim();CODE=document.getElementById('g-code').value;const b=e.target.querySelector('button');b.textContent='Signing in…';b.disabled=true;
   try{await pull(true);try{localStorage.setItem('valimail-auth',JSON.stringify({name:ME,code:CODE}))}catch(x){}start()}catch(x){if(x.message!=='invalid_code')gate('Could not reach the tracker. Check your connection and try again.')}});
  setTimeout(()=>document.getElementById(ME?'g-code':'g-name')?.focus(),30)}
-function normalize(){S.partners.forEach(p=>{migrate(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
+function normalize(){S.partners.forEach(p=>{migrate(p);(p.meetings=p.meetings||[]);if(p.meetings.every(m=>m.status!=='planned'||true))refreshDue(p);(p.meetings=p.meetings||[]).forEach((m,i)=>{if(!m.status)m.status='done';if(!m.id)m.id='m'+i+p.id;if(!m.type)m.type='Other'})})}
 function syncPill(){const t={idle:LAST?'Saved '+fmt(LAST.at)+(LAST.by?' by '+esc(LAST.by):''):'Connected',saving:'Saving…',error:'Could not save, retrying',local:'Not connected: saved on this device only'}[SYNC];
  return`<span id="sync" class="sync ${SYNC}">${SYNC==='saving'?'<i class="spin"></i>':SYNC==='idle'?'●':'⚠'} ${t}</span>`}
 let OPEN=null;
@@ -215,7 +216,7 @@ document.getElementById('app').innerHTML=`
 <div class="kpi ${blk.length?'red':''}"><span>Blocked</span><b>${blk.length}</b><em>${blk.length?esc(blk.map(p=>p.name).join(', ')):'None'}</em></div></div>
 <div class="tbox"><div class="tscroll"><table class="main"><thead><tr><th>Partner</th>${STAGES.map((s,i)=>`<th><span class="n">${i+1}</span>${s.t}</th>`).join('')}<th>Next action</th><th>Due</th><th>Status</th><th><span class="sr" style="position:absolute;left:-9999px">Details</span></th></tr></thead><tbody>
 ${ps.map(p=>`<tr class="prow ${OPEN===p.id?'open':''}" data-row="${p.id}" tabindex="0"><td><div class="pn">${logo(p)}<div><b>${esc(p.name)}</b><small>ID ${p.pid}</small></div></div></td>
-${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:260px">${nextCell(p)}</td><td><span class="due ${late(p.due)?'late':''}">${mon(p.due)} ${dom(p.due)}</span></td><td>${status(p)}</td>
+${STAGES.map((s,i)=>`<td>${cellFor(p,i)}</td>`).join('')}<td style="max-width:260px">${nextCell(p)}</td><td><span class="due ${late(p.due)?'late':''}" title="${esc(dueReason(p))}">${mon(p.due)} ${dom(p.due)}</span><small class="dr">${esc(dueReason(p).replace(/^Date of the next scheduled meeting$/,'Next meeting').replace(/^Set by hand.*/,'Set by hand'))}</small></td><td>${status(p)}</td>
 <td><button class="chev" data-row="${p.id}" aria-expanded="${OPEN===p.id}" aria-label="${OPEN===p.id?'Hide':'Show'} details for ${esc(p.name)}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></td></tr>
 ${OPEN===p.id?`<tr class="drow"><td colspan="10">${detail(p)}</td></tr>`:''}`).join('')}
 </tbody></table></div></div>
@@ -245,8 +246,14 @@ const suggest=p=>{const s=stageOf(p);const list=MTYPES.filter(x=>x.st===s);retur
 const t12=t=>{if(!t)return'';const[h,m]=t.split(':');const H=+h;return`${H%12||12}:${m} ${H<12?'AM':'PM'}`};
 const dlong=d=>md(d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+const GAP=[null,5,7,7,3],GAP_DONE=30;
+const addTo=(d,n)=>{const x=md(d||today());x.setDate(x.getDate()+n);return`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+function lastDone(p){let best='';STAGES.forEach((st,i)=>{const d=p.s[st.k];if(d.done&&(d.date||'')>best)best=d.date});return best}
+function autoDue(p){const s=stageOf(p);if(s===0)return null;if(s===5)return addTo(lastDone(p),GAP_DONE);const prev=p.s[STAGES[s-1].k].date||today();return addTo(prev,GAP[s])}
+function dueReason(p){if(planned(p).length)return'Date of the next scheduled meeting';if(p.dueManual)return'Set by hand';const s=stageOf(p);if(s===0)return'Set by hand for the intro meeting';if(s===5)return`${GAP_DONE} days after the last step, for a check-in`;return`${GAP[s]} days after ${STAGES[s-1].t.toLowerCase()} ${STAGES[s-1].yes.toLowerCase()}`}
+function refreshDue(p){if(planned(p).length)return;if(p.dueManual)return;const a=autoDue(p);if(a)p.due=a}
 function syncNext(p){const up=planned(p);if(up.length){const m=up[0];p.next=m.t;p.due=m.d;p.nextMeeting=m.id}
- else if(p.nextMeeting){p.nextMeeting=null;const sg=suggest(p)[0];p.next=live(p)?'Schedule a check-in':'Schedule the '+sg.t.toLowerCase();p.due=addDays(7)}}
+ else if(p.nextMeeting){p.nextMeeting=null;const sg=suggest(p)[0];p.next=live(p)?'Schedule a check-in':'Schedule the '+sg.t.toLowerCase();p.due=addDays(7);refreshDue(p)}}
 function nextCell(p){const up=planned(p)[0];return up?`<span class="mtag">Meeting</span> ${esc(up.t)}${up.time?`<small class="muted"> · ${t12(up.time)}</small>`:''}`:esc(p.next)}
 function draftFor(p,type){const x=mt(type);return{type:x.t,t:x.t==='Other'?'':x.t,d:addDays(3),time:'10:00',fmt:'Video call',who:'',agenda:x.t==='Other'?'':x.d}}
 function detail(p){const s=stageOf(p),up=planned(p),pa=past(p),sg=suggest(p);if(!DRAFT||DRAFT.pid!==p.id)DRAFT=Object.assign(draftFor(p,sg[0].t),{pid:p.id});
@@ -254,7 +261,7 @@ return`<div class="dwrap">
 <div class="dh"><span><b>${esc(p.legal)}</b></span><span>Partner ID ${p.pid}</span><span>${esc(p.site)}</span><span>${esc(p.market)}</span><span>${esc(p.contact)}</span></div>
 <div class="sgrid">${STAGES.map((st,i)=>{const d=p.s[st.k];return`<div class="sg ${d.done?'done':i===s?'cur':''}"><h4>${i+1}. ${st.t}</h4><div class="sgb">
 <div class="seg2" role="group" aria-label="${st.t}"><button data-a="set" data-i="${i}" data-v="1" aria-pressed="${!!d.done}">${st.yes}</button><button data-a="set" data-i="${i}" data-v="0" aria-pressed="${!d.done}">${st.no}</button></div>
-${d.done?`<div class="f"><label for="sd-${i}">${st.yes} on</label><input class="inp" type="date" id="sd-${i}" data-sd="${i}" value="${d.date||''}"></div>`:`<p class="sdesc">${st.d}</p>`}</div></div>`}).join('')}</div>
+${d.done?`<div class="f"><label for="sd-${i}">${st.yes} on</label><input class="inp" type="date" id="sd-${i}" data-sd="${i}" value="${d.date||''}"></div>`:`<p class="sdesc">${st.d}${i>0?`<br><b>Due ${GAP[i]} days after ${STAGES[i-1].t.toLowerCase()}</b>`:''}</p>`}</div></div>`}).join('')}</div>
 <div class="mgrid">
 <div class="blk mbox">
 <div class="nextbar"><span class="nl">Next step</span>${up.length?`<b>${esc(up[0].t)}</b><span>${dlong(up[0].d)}${up[0].time?', '+t12(up[0].time):''}${up[0].fmt?' · '+esc(up[0].fmt):''}</span>`:`<b>${esc(p.next)}</b><span>Due ${dlong(p.due)}</span>`}</div>
@@ -281,7 +288,8 @@ ${EXP&&EXP.id===m.id&&EXP.mode==='move'?`<div class="inl"><div class="row2"><div
 ${pa.length?`<h5 style="margin-top:6px">Past meetings</h5><table class="mini"><thead><tr><th>Date</th><th>Meeting</th><th>Outcome</th></tr></thead><tbody>${pa.map(m=>`<tr><td style="white-space:nowrap">${mon(m.d)} ${dom(m.d)}</td><td>${esc(m.t)}</td><td>${esc(m.n||'')}</td></tr>`).join('')}</tbody></table>`:''}
 </div>
 <div class="side2">
-<div class="blk"><h5>Next step without a meeting</h5><p class="empty" style="margin-top:-4px">Used when nothing is scheduled.</p><div class="row2"><div class="f"><label for="nx">What happens next</label><input class="inp" id="nx" data-k="next" value="${esc(up.length?'':p.next)}" ${up.length?'disabled placeholder="Set by the upcoming meeting"':''}></div><div class="f"><label for="du">Due</label><input class="inp" id="du" type="date" data-k="due" value="${up.length?'':p.due}" ${up.length?'disabled':''}></div></div></div>
+<div class="blk"><h5>Next step without a meeting</h5><p class="empty" style="margin-top:-4px">Used when nothing is scheduled.</p><div class="row2"><div class="f"><label for="nx">What happens next</label><input class="inp" id="nx" data-k="next" value="${esc(up.length?'':p.next)}" ${up.length?'disabled placeholder="Set by the upcoming meeting"':''}></div><div class="f"><label for="du">Due</label><input class="inp" id="du" type="date" data-k="due" value="${up.length?'':p.due}" ${up.length?'disabled':''}></div></div>
+<p class="duehint">Due date: ${esc(dueReason(p))}.${p.dueManual&&!up.length&&stageOf(p)!==0?' <button class="lnk" data-a="autodue">Use automatic date</button>':''}</p></div>
 <div class="blk"><div class="tg"><button class="switch" role="switch" aria-checked="${p.blocked}" aria-label="Blocked" data-a="block"></button><span>Blocked</span></div>
 ${p.blocked?`<div class="f"><label for="bl">What is blocking them?</label><input class="inp" id="bl" data-k="block" value="${esc(p.block)}"></div>`:''}</div>
 <div class="blk"><div class="f"><label for="nt">Notes</label><textarea class="inp" id="nt" data-k="notes">${esc(p.notes)}</textarea></div></div>
@@ -296,11 +304,12 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data
  if(t.dataset.row&&!e.target.closest('.drow')){if(t.dataset.go){OPEN=t.dataset.row;render();document.querySelector(`tr.prow[data-row="${OPEN}"]`)?.scrollIntoView({block:'start',behavior:'smooth'});return}OPEN=OPEN===t.dataset.row?null:t.dataset.row;EXP=null;const y=window.scrollY;render();window.scrollTo(0,y);return}
  const a0=t.dataset.a;
  if(a0==='tog'||a0==='set'){const q=P(t.dataset.p||OPEN);if(!q)return;const i=+t.dataset.i,st=STAGES[i],cur=q.s[st.k];const v=a0==='tog'?!cur.done:t.dataset.v==='1';if(v===!!cur.done)return;
-  const before=stageOf(q);cur.done=v;cur.date=v?today():'';DRAFT=null;if(!planned(q).length&&/^Schedule/i.test(q.next)&&stageOf(q)!==before){q.next=live(q)?'Schedule a check-in':'Schedule the '+suggest(q)[0].t.toLowerCase()}log(q,`${st.t}: ${(v?st.yes:st.no).toLowerCase()}`);const after=stageOf(q);const y=window.scrollY;render();window.scrollTo(0,y);
+  const before=stageOf(q);cur.done=v;cur.date=v?today():'';DRAFT=null;q.dueManual=false;refreshDue(q);if(!planned(q).length&&/^Schedule/i.test(q.next)&&stageOf(q)!==before){q.next=live(q)?'Schedule a check-in':'Schedule the '+suggest(q)[0].t.toLowerCase()}refreshDue(q);log(q,`${st.t}: ${(v?st.yes:st.no).toLowerCase()}`);const after=stageOf(q);const y=window.scrollY;render();window.scrollTo(0,y);
   toast(after===5?q.name+': all steps complete':`${q.name}: ${st.t} ${(v?st.yes:st.no).toLowerCase()}`);return}
  const p=P(OPEN),a=t.dataset.a;
  const rr=()=>{const y=window.scrollY;render();window.scrollTo(0,y)};
  if(a==='mtype'&&p){DRAFT=Object.assign(draftFor(p,t.dataset.t),{pid:p.id,d:DRAFT.d,time:DRAFT.time,fmt:DRAFT.fmt,who:DRAFT.who});rr();document.getElementById('ms-d')?.focus();return}
+ if(a==='autodue'&&p){p.dueManual=false;refreshDue(p);log(p,'due date set to automatic');rr();toast('Due date updated');return}
  if(a==='mmore'){document.getElementById('ms-type')?.focus();return}
  if(a==='msched'&&p){if(!DRAFT.t.trim()){toast('Add a title for the meeting');document.getElementById('ms-t').focus();return}if(!DRAFT.d){toast('Choose a date');document.getElementById('ms-d').focus();return}
   const m={id:'m'+Date.now(),type:DRAFT.type,t:DRAFT.t.trim(),d:DRAFT.d,time:DRAFT.time,fmt:DRAFT.fmt,who:DRAFT.who.trim(),agenda:DRAFT.agenda.trim(),status:'planned'};p.meetings.push(m);syncNext(p);
@@ -308,7 +317,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data
  if(a==='mexp'){EXP={id:t.dataset.m,mode:t.dataset.mode};rr();setTimeout(()=>document.getElementById((EXP.mode==='done'?'oc-':'rd-')+EXP.id)?.focus(),30);return}
  if(a==='mclose'){EXP=null;rr();return}
  if(a==='mdone'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);if(!m)return;m.status='done';m.n=(document.getElementById('oc-'+m.id)?.value||'').trim();const x=mt(m.type);const tk=document.getElementById('tk-'+m.id);const before=stageOf(p);
-  if(x.tick!==null&&tk&&tk.checked){const k=STAGES[x.tick].k;p.s[k].done=true;p.s[k].date=m.d}syncNext(p);EXP=null;log(p,`completed ${m.t}`+(m.n?`: ${m.n}`:''));const after=stageOf(p);rr();toast(after!==before?(after===5?p.name+': all steps complete':p.name+': next is '+STAGES[after].t.toLowerCase()):'Meeting marked done');return}
+  if(x.tick!==null&&tk&&tk.checked){const k=STAGES[x.tick].k;p.s[k].done=true;p.s[k].date=m.d}p.dueManual=false;syncNext(p);refreshDue(p);EXP=null;log(p,`completed ${m.t}`+(m.n?`: ${m.n}`:''));const after=stageOf(p);rr();toast(after!==before?(after===5?p.name+': all steps complete':p.name+': next is '+STAGES[after].t.toLowerCase()):'Meeting marked done');return}
  if(a==='mmove'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);const nd=document.getElementById('rd-'+m.id).value,nt=document.getElementById('rt-'+m.id).value;if(!nd){toast('Choose a date');return}m.d=nd;m.time=nt;syncNext(p);EXP=null;log(p,`rescheduled ${m.t} to ${dlong(nd)}${nt?', '+t12(nt):''}`);rr();toast('Meeting rescheduled');return}
  if(a==='mcancel'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);if(!confirm('Cancel '+m.t+'?'))return;m.status='cancelled';syncNext(p);log(p,'cancelled '+m.t);rr();toast('Meeting cancelled');return}
  if(a==='ics'&&p){const m=p.meetings.find(x=>x.id===t.dataset.m);const blob=new Blob([icsFor(p,m)],{type:'text/calendar'});const u=URL.createObjectURL(blob);const l=document.createElement('a');l.href=u;l.download=(p.name+' '+m.t).replace(/[^\w]+/g,'-')+'.ics';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return}
@@ -318,10 +327,10 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-row],[data
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('tr.prow')){e.preventDefault();OPEN=OPEN===e.target.dataset.row?null:e.target.dataset.row;render()}});
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.dr&&DRAFT){DRAFT[t.dataset.dr]=t.value}});
 document.addEventListener('change',e=>{const t=e.target,p=P(OPEN);if(!p)return;
- if(t.dataset.sd!==undefined){const st=STAGES[+t.dataset.sd];p.s[st.k].date=t.value;log(p,`${st.t} date set to ${t.value?dlong(t.value):'none'}`);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved');return}
+ if(t.dataset.sd!==undefined){const st=STAGES[+t.dataset.sd];p.s[st.k].date=t.value;refreshDue(p);log(p,`${st.t} date set to ${t.value?dlong(t.value):'none'}`);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved');return}
  if(t.dataset.dr){DRAFT[t.dataset.dr]=t.value;if(t.dataset.dr==='type'){const x=mt(t.value);if(!DRAFT.t||MTYPES.some(y=>y.t===DRAFT.t))DRAFT.t=x.t==='Other'?'':x.t;if(!DRAFT.agenda||MTYPES.some(y=>y.d===DRAFT.agenda))DRAFT.agenda=x.t==='Other'?'':x.d;const y=window.scrollY;render();window.scrollTo(0,y)}return}
  if(t.dataset.i!==undefined&&t.type==='checkbox'){const i=+t.dataset.i,j=+t.dataset.j,before=stageOf(p);p.checks[i][j]=t.checked;log(p,(t.checked?'done: ':'reopened: ')+STAGES[i].items[j].charAt(0).toLowerCase()+STAGES[i].items[j].slice(1));const after=stageOf(p);const y=window.scrollY;render();window.scrollTo(0,y);document.querySelector(`input[data-i="${i}"][data-j="${j}"]`)?.focus();if(after!==before)toast(after===5?p.name+' is onboarded and live':p.name+' moved to '+STAGES[after].t);return}
- if(t.dataset.k){const k=t.dataset.k;p[k]=t.value||(k==='due'?today():'');log(p,{next:'next action updated',due:'due date changed',block:'blocker updated',notes:'notes updated'}[k]);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved')}});
+ if(t.dataset.k){const k=t.dataset.k;p[k]=t.value||(k==='due'?today():'');if(k==='due')p.dueManual=true;log(p,{next:'next action updated',due:'due date changed',block:'blocker updated',notes:'notes updated'}[k]);const y=window.scrollY;render();window.scrollTo(0,y);toast('Saved')}});
 
 if(ME&&CODE){document.getElementById('app').innerHTML='<p class="empty" style="text-align:center;padding:80px 0">Loading the tracker…</p>';pull(true).then(start).catch(e=>{if(e.message!=='invalid_code')gate('Could not reach the tracker. Check your connection and try again.')})}else gate();
 </script>
